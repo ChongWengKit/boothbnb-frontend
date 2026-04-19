@@ -1,0 +1,120 @@
+'use client'
+import { useFormContext } from "react-hook-form";
+import { Trash2, Plus } from "lucide-react";
+
+export const BoothSection = () => {
+  const { watch, setValue, register } = useFormContext();
+  const booths = watch("booths") || [];
+
+  const handleUpdateBooth = (index: number, field: string, value: any) => {
+    const updatedBooths = [...booths];
+    updatedBooths[index] = { ...updatedBooths[index], [field]: value };
+    setValue("booths", updatedBooths, { shouldValidate: true });
+  };
+
+  const handleDeleteBooth = (id: string) => {
+    const updatedBooths = booths.filter((b: any) => b.id !== id);
+    setValue("booths", updatedBooths, { shouldValidate: true });
+  };
+
+  return (
+    <div className="w-full flex flex-col gap-4">
+      <div className="flex justify-between items-center">
+        <h3 className="text-sm font-bold uppercase tracking-tight text-foreground">Manage Booths</h3>
+        <button 
+          type="button"
+          className="flex items-center gap-1 rounded-lg bg-primary px-3 py-1.5 text-sm text-primary-foreground transition-colors hover:bg-primary/90"
+          onClick={() => setValue("booths", [...booths, { 
+            id: `booth-${Date.now()}`, 
+            name: `Booth ${booths.length + 1}`, 
+            type: "AVAILABLE", 
+            price: 0,
+            width: 80, 
+            height: 80,
+            x:0,
+            y:0
+          }], { shouldValidate: true })}
+        >
+          <Plus size={16} />
+          Add Booth
+        </button>
+      </div>
+
+      {booths.length > 0 ? (
+        <div className="border rounded-xl bg-background overflow-hidden shadow-sm">
+          <div className="max-h-[400px] overflow-y-auto">
+            {booths.map((booth: any, index: number) => (
+              <div key={booth.id} className="flex flex-col gap-3 border-b p-4 transition-colors last:border-b-0 hover:bg-accent/30">
+                
+                <div className="flex justify-between items-center gap-4">
+                  <input
+                    className="flex-1 border-none bg-transparent p-0 text-lg font-bold text-foreground placeholder:text-muted-foreground focus:ring-0"
+                    placeholder="Booth Name (e.g. A1)"
+                    value={booth.name}
+                    onChange={(e) => handleUpdateBooth(index, "name", e.target.value)}
+                  />
+                  <button 
+                    type="button" 
+                    onClick={() => handleDeleteBooth(booth.id)} 
+                    className="p-1 text-muted-foreground transition-colors hover:text-destructive"
+                  >
+                    <Trash2 size={18} />
+                  </button>
+                </div>
+
+                <div className="flex flex-wrap gap-3 items-center">
+                  <select
+                    value={booth.type}
+                    onChange={(e) => handleUpdateBooth(index, "type", e.target.value)}
+                    className="rounded-md border border-border bg-background px-2 py-1 text-xs font-bold uppercase text-foreground focus:ring-1 focus:ring-ring"
+                  >
+                    <option value="AVAILABLE">Available</option>
+                    <option value="RESERVED">Reserved</option>
+                    <option value="SOLD">Sold</option>
+                    <option value="LOCKED">Locked</option>
+                  </select>
+
+                  <div className="flex items-center rounded-md border border-border bg-background px-2 py-1">
+                    <span className="mr-1 text-xs font-bold text-foreground">$</span>
+                    <input
+                      type="number"
+                      className="bg-transparent border-none p-0 w-20 text-xs font-bold focus:ring-0"
+                      value={booth.price}
+                      onChange={(e) => handleUpdateBooth(index, "price", Number(e.target.value))}
+                    />
+                  </div>
+
+                  <div className="flex items-center gap-2 ml-auto">
+                    <span className="text-[10px] text-muted-foreground">width(cm)</span>
+                    <input
+                      type="number"
+                      className="w-12 rounded border border-border bg-background p-1 text-center text-[10px] text-foreground"
+                      value={booth.width}
+                      onChange={(e) => handleUpdateBooth(index, "width", Number(e.target.value))}
+                    />
+                    <span className="text-[10px] text-muted-foreground">height(cm)</span>
+                    <input
+                      type="number"
+                      className="w-12 rounded border border-border bg-background p-1 text-center text-[10px] text-foreground"
+                      value={booth.height}
+                      onChange={(e) => handleUpdateBooth(index, "height", Number(e.target.value))}
+                    />
+                  </div>
+                </div>
+
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-border bg-card p-12 text-center">
+          <div className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center mb-3">
+            <Plus className="text-primary-foreground" />
+          </div>
+          <p className="font-medium text-foreground">No booths added yet</p>
+          <p className="mt-1 text-xs text-muted-foreground">Click "Add Booth" to start building your layout</p>
+        </div>
+      )}
+    </div>
+  );
+};

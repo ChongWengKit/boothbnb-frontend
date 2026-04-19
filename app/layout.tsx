@@ -1,33 +1,35 @@
-import { Geist, Geist_Mono } from "next/font/google"
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "@/app/globals.css";
+import App from "./App";
+import SessionProvider from "../components/SessionProvider";
+import { Toaster } from "react-hot-toast";
+import { ThemeProvider } from "../components/theme-provider";
+import ThemeToggle from "../components/ThemeToggle";
+const inter = Inter({ subsets: ["latin"] });
 
-import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
-import { cn } from "@/lib/utils";
-
-const fontSans = Geist({
-  subsets: ["latin"],
-  variable: "--font-sans",
-})
-
-const fontMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-})
+export const metadata: Metadata = {
+  title: "BoothBnb",
+  description: "Unlock your own booth space in minutes. Host your event, exhibition, or food & beverage service with ease.",
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      className={cn("antialiased", fontMono.variable, "font-sans", fontSans.variable)}
-    >
-      <body>
-        <ThemeProvider>{children}</ThemeProvider>
+    
+    <html lang="en" suppressHydrationWarning>
+      <body className={inter.className}>
+        <SessionProvider>
+          <ThemeProvider>
+          <App>{children}</App>
+          <ThemeToggle />
+          </ThemeProvider>
+        </SessionProvider>
+        <Toaster position="top-center" />
       </body>
     </html>
-  )
+  );
 }

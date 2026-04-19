@@ -1,0 +1,183 @@
+'use client'
+import { useForm, Controller, FormProvider } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import React, { useState, useEffect } from "react";
+import { type DateRange } from "react-day-picker";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import { format } from "date-fns";
+import { createEventAction } from "@/app/(main)/(host)/create-event/actions";
+import ImageUploader from "@/app/(main)/(host)/components/ImageUploader";
+import BoothLayoutEditor, { type Booth } from "@/app/(main)/(host)/components/BoothLayoutEditor";
+import { FormField } from "@/components/event-form/form-field";
+import { DateTimeSection } from "@/components/event-form/date-field";
+import { LocationSection } from "@/components/event-form/location-field";
+import { BoothSection } from "@/components/event-form/booth-field";
+import { validateResponse } from "@/app/contexts/auth";
+
+const eventSchema = z.object({
+    name: z.string().min(3, { message: "Name must be at least 3 characters" }),
+    description: z.string().min(10, { message: "Description must be at least 10 characters" }),
+    address: z.string().min(1, { message: "Address is required" }),
+    latitude: z.number({ required_error: "Location is required", invalid_type_error: "Location is required" }),
+    longitude: z.number({ required_error: "Location is required", invalid_type_error: "Location is required" }),
+    startDate: z.date({ required_error: "Start date is required" }),
+    startTime: z.string().min(1, { message: "Start time is required" }),
+    endDate: z.date({ required_error: "End date is required" }),
+    endTime: z.string().min(1, { message: "End time is required" }),
+    category: z.string().min(1, { message: "Category is required" }),
+    booths: z.array(z.any()).min(1, { message: "At least one booth is required" }),
+    images: z.array(z.string()).max(5, { message: "Maximum 5 images allowed" })
+});
+
+const CATEGORIES = [
+    { value: "ART_CRAFT", label: "Art & Craft" },
+    { value: "FOOD_BEVERAGE", label: "Food & Beverage" },
+    { value: "FASHION_BEAUTY", label: "Fashion & Beauty" },
+    { value: "TECH_GADGETS", label: "Tech & Gadgets" },
+    { value: "HOME_LIVING", label: "Home & Living" },
+    { value: "CORPORATE_TRADE", label: "Corporate & Trade" },
+    { value: "ANIME_COMIC", label: "Anime & Comic (ACG)" },
+    { value: "THRIFT_VINTAGE", label: "Thrift & Vintage" },
+    { value: "WELLNESS_FITNESS", label: "Wellness & Fitness" },
+    { value: "PET_FAIR", label: "Pet Fair" },
+    { value: "EDUCATIONAL", label: "Educational" },
+    { value: "OTHERS", label: "Others" },
+];
+
+const combineDateTime = (date: Date, time: string) => {
+    const combined = new Date(date);
+    const [hours, minutes] = time.split(':');
+    combined.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+    return combined.toISOString();
+};
+
+const CreateEvent = () => {
+    const router = useRouter();
+    const methods = useForm({
+        resolver: zodResolver(eventSchema),
+        defaultValues: {
+            name: "",
+            description: "",
+            address: "",
+            startTime: "10:30",
+            endTime: "18:00",
+            startDate: new Date(new Date().setHours(0, 0, 0, 0)),
+            endDate: new Date(Date.now() + 604800000),
+            category: "",
+            booths: [],
+            images: []
+        }
+    });
+
+    const { register, handleSubmit, formState: { errors }, setValue, watch, reset } = methods;
+
+    const [locationKey, setLocationKey] = useState(0);
+    const [isLayoutEditorOpen, setIsLayoutEditorOpen] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const booths = watch("booths") || [];
+    const address = watch("address");
+
+    const handleReset = () => {
+        localStorage.removeItem("create-event-data");
+        reset();
+        setLocationKey((prev) => prev + 1);
+        toast.success("Form reset");
+    };
+
+    const onSubmit = async (data: z.infer<typeof eventSchema>) => {
+        setIsSubmitting(true);
+        try {
+            const eventData = {
+                title: data.name,
+                description: data.description,
+                address: data.address,
+                latitude: data.latitude,
+                longitude: data.longitude,
+                start_date: combineDateTime(data.startDate, data.startTime),
+                end_date: combineDateTime(data.endDate, data.endTime),
+                images: data.images,
+                category: data.category,
+                booths: data.booths
+            };
+
+            const result = await createEventAction(eventData);
+            console.log(result)
+            validateResponse(result.status);
+            if (result.success) {
+                console.log("before" + localStorage.getItem("create-event-data"));
+
+                localStorage.removeItem("create-event-data");
+                console.log("after" + localStorage.getItem("create-event-data"));
+                toast.success("Event created successfully");
+                router.push("/host-dashboard");
+            } else {
+                toast.error(result.message || "Failed to create event");
+                setIsSubmitting(false);
+            }
+        } catch (error) {
+            console.log("Error during event creation:", error);
+            console.error(error);
+            setIsSubmitting(false);
+        }
+    };
+
+    return (
+        <FormProvider {...methods}>
+            <form className="flex flex-col gap-8 rounded-lg border border-border bg-card p-8 shadow-lg" onSubmit={handleSubmit(onSubmit)}>
+                <h1 className="text-3xl font-bold">Event details</h1>
+
+                <FormField label="Name" error={errors.name?.message}>
+                    <input className="w-full rounded-lg border border-border bg-background px-4 py-4 text-foreground" {...register("name")} placeholder="Name" />
+                </FormField>
+
+                <FormField label="Description" error={errors.description?.message}>
+                    <textarea className="min-h-[120px] w-full rounded-lg border border-border bg-background px-4 py-4 text-foreground" {...register("description")} placeholder="Description" />
+                </FormField>
+
+                <FormField label="Category" error={errors.category?.message as string}>
+                    <select className="w-full rounded-lg border border-border bg-background px-4 py-4 text-foreground" {...register("category")}>
+                        <option value="">Select a category</option>
+                        {CATEGORIES.map((cat) => (
+                            <option key={cat.value} value={cat.value}>{cat.label}</option>
+                        ))}
+                    </select>
+                </FormField>
+
+                <FormField label="Start Date & Time" error={errors.startDate?.message}>
+                    <DateTimeSection dateName="startDate" timeName="startTime" />
+                </FormField>
+
+                <FormField label="End Date & Time" error={errors.endDate?.message}>
+                    <DateTimeSection dateName="endDate" timeName="endTime" minDate={watch("startDate")} />
+                </FormField>
+
+                <FormField label="Address" error={errors.address?.message}>
+                    <LocationSection key={locationKey} initialAddress={address} />
+                </FormField>
+
+                <FormField label="Event Images" description="Upload up to 5 photos" error={errors.images?.message}>
+                    <ImageUploader maxImages={5} />
+                </FormField>
+
+                <FormField label="Booth Layout" description="Design your floor plan" error={errors.booths?.message as string}>
+                    <BoothSection /> 
+                </FormField>
+
+                
+                <div className="flex flex-end justify-end gap-8 ">
+                    <button className="cursor-pointer rounded-xl bg-secondary px-4 py-4 text-sm font-bold text-secondary-foreground" type="button" onClick={handleReset}>Reset</button>
+                    <button className="cursor-pointer rounded-xl bg-primary px-4 py-4 text-sm font-bold text-primary-foreground hover:bg-primary/90" type="submit" disabled={isSubmitting}>
+                        {isSubmitting ? "Creating..." : "Create Event"}
+                    </button>
+                </div>
+            </form>
+        </FormProvider>
+    );
+
+
+}
+
+export default CreateEvent
