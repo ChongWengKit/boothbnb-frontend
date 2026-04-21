@@ -14,8 +14,54 @@ import EventMap from "@/components/event-detail/EventMap";
 import BookmarkToggle from "@/components/dashboard/BookmarkToggle";
 import { User } from "@/app/contexts/UserContext";
 import { formatEventDate } from "@/app/lib/util";
+import { Booth } from "@/app/(main)/(host)/create-event/actions";
 
-export default async function DashboardEventDetailClient({ event, isHost = false }: { event: any; isHost?: boolean }) {
+interface BookingSummary {
+    booth_name: string;
+    booked_at: string;
+    price: number | string;
+    status: string;
+    vendor: {
+        username: string;
+        profile_photo?: string | null;
+    };
+}
+
+interface Booking {
+  payment_status: string;
+  vendor?: {
+    username: string;
+    email: string;
+  };
+  booked_at?: string;
+}
+
+interface EventDetail {
+    id: number;
+    title: string;
+    slug: string;
+    description: string;
+    address: string;
+    latitude: number;
+    longitude: number;
+    start_date: string;
+    end_date: string;
+    category: string;
+    available_booths: number;
+    total_capacity: number;
+    images: { url: string }[];
+    booths: (Booth & { bookings?: Booking[] })[];
+    host_id: number;
+    username: string;
+    profile_photo?: string | null;
+    is_bookmarked: boolean;
+    bookmarks_count: number;
+    status: string;
+    total_money_made?: number;
+    booking_summaries?: BookingSummary[];
+}
+
+export default async function DashboardEventDetailClient({ event, isHost = false }: { event: EventDetail; isHost?: boolean }) {
     const cookieStore = await cookies();
     const token = cookieStore.get('authentication_token')?.value;
 
@@ -116,8 +162,8 @@ export default async function DashboardEventDetailClient({ event, isHost = false
                                     <section className="mb-10 border-t pt-8">
                                         <h2 className="text-2xl font-bold mb-4">Bookings Summary</h2>
                                         <div className="flex flex-col gap-3">
-                                            {event.booking_summaries?.length > 0 ? (
-                                                event.booking_summaries.map((booking: any, idx: number) => (
+                                            {event.booking_summaries && event.booking_summaries.length > 0 ? (
+                                                event.booking_summaries.map((booking: BookingSummary, idx: number) => (
                                                     <div key={idx} className="flex items-center justify-between rounded-lg border border-border bg-background p-4 transition-colors hover:bg-accent/30">
                                                         <Link href={`/account/${booking.vendor.username}`} className="flex items-center gap-3">
                                                             <Image

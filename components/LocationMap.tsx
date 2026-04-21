@@ -2,11 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
 import { RiFullscreenFill, RiFullscreenExitLine } from "react-icons/ri";
-
-import markerIconPng from "leaflet/dist/images/marker-icon.png"
-import { Icon } from 'leaflet'
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css'
 
 interface LocationMapProps {
     latitude: number;
@@ -18,8 +16,11 @@ interface LocationMapProps {
 function RecenterAutomatically({ lat, lng }: { lat: number; lng: number }) {
     const map = useMap();
     useEffect(() => {
-        map.invalidateSize();
-        map.setView([lat, lng], map.getZoom());
+        const timeoutId = setTimeout(() => {
+            map.invalidateSize();
+            map.setView([lat, lng], map.getZoom());
+        }, 0);
+        return () => clearTimeout(timeoutId);
     }, [lat, lng, map]);
     return null;
 }
@@ -64,7 +65,20 @@ const LocationMap: React.FC<LocationMapProps> = ({ latitude, longitude, onMapCli
                 <RecenterAutomatically lat={latitude} lng={longitude} />
                 <MapClickHandler setCoordinates={onMapClick} />
 
-                <Marker position={[latitude, longitude]} icon={new Icon({ iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41] })} />
+                {typeof window !== 'undefined' && (
+                    <Marker 
+                        position={[latitude, longitude]} 
+                        icon={new L.Icon({
+                            iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+                            iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+                            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+                            iconSize: [25, 41],
+                            iconAnchor: [12, 41],
+                            popupAnchor: [1, -34],
+                            shadowSize: [41, 41]
+                        })}
+                    />
+                )}
             </MapContainer>
         </div>
     );

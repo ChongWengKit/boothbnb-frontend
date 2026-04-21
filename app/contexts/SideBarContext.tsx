@@ -1,7 +1,11 @@
 "use client"
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, Dispatch, SetStateAction } from 'react';
+interface SideBarContextType {
+  sidebarExpanded: boolean;
+  setSidebarExpanded: Dispatch<SetStateAction<boolean>>;
+}
 
-export const SideBarContext = createContext<any>(null);
+export const SideBarContext = createContext<SideBarContextType | null>(null);
 
 export const SideBarProvider = ({ children, initialExpanded }: { children: ReactNode, initialExpanded: boolean }) => {
   const [sidebarExpanded, setSidebarExpanded] = useState(initialExpanded);

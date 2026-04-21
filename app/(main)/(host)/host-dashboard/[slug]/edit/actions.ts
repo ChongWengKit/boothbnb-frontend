@@ -1,9 +1,10 @@
 'use server'
 
 import { getAuthToken, validateResponse } from "@/app/contexts/auth";
+import { CreateEventRequest } from "@/app/(main)/(host)/create-event/actions";
 import { revalidatePath } from "next/cache";
 
-export async function updateEventAction(slug: string, data: any) {
+export async function updateEventAction(slug: string, data: CreateEventRequest) {
     const token = await getAuthToken();
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/event/${slug}`, {

@@ -1,6 +1,6 @@
 'use client';
 
-import React from "react";
+import React, { useState } from "react";
 import { formatEventDate } from "@/app/lib/util";
 import { Button } from "@/components/ui/button";
 import { updateApprovalAction } from "../actions";
@@ -10,7 +10,7 @@ interface AdminRequest {
     user: {
         id: number;
         username: string;
-        email:string;
+        email: string;
     };
     action_type: ActionType;
     status: "PENDING" | "APPROVED" | "REJECTED";
@@ -28,14 +28,20 @@ interface AdminApprovalProps {
     requests: AdminRequest[];
 }
 
-const AdminApproval: React.FC<AdminApprovalProps> = ({ requests }) => {
-    console.log(requests);
+const AdminApproval: React.FC<AdminApprovalProps> = ({ requests: initialRequests }) => {
+    const [requests, setRequests] = useState<AdminRequest[]>(initialRequests);
+
     const handleAction = async (id: number, status: "APPROVED" | "REJECTED") => {
+        setRequests(requests.map(req =>
+            req.id === id ? { ...req, status } : req
+        ));
+
         const result = await updateApprovalAction(id, status);
         if (result.success) {
             toast.success(result.message);
         } else {
             toast.error(result.message);
+            setRequests(initialRequests);
         }
     };
 
@@ -78,13 +84,13 @@ const AdminApproval: React.FC<AdminApprovalProps> = ({ requests }) => {
                     <div className="md:col-span-3 flex md:justify-end gap-2">
                         {request.status === "PENDING" && (
                             <>
-                                <Button 
+                                <Button
                                     className="p-2 bg-green-500 rounded-lg text-white font-bold hover:bg-green-700 cursor-pointer"
                                     onClick={() => handleAction(request.id, "APPROVED")}
                                 >
                                     Approve
                                 </Button>
-                                <Button 
+                                <Button
                                     variant="destructive"
                                     className="p-2 cursor-pointer rounded-lg text-white font-bold"
                                     onClick={() => handleAction(request.id, "REJECTED")}

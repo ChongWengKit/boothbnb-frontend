@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import EventCard from "@/app/(main)/(public)/components/EventCard";
+import type { Event } from "@/app/(main)/(vendor)/hooks/useBookmarks";
 import { Spinner } from "@/components/ui/spinner";
 
 const markerIcon = typeof window !== 'undefined' ? new L.Icon({
@@ -48,7 +49,7 @@ function MapEvents({ onMove, onMoveEnd }: { onMove: (coords: [number, number]) =
 
 
 
-export default function DashboardMapView({ events: serverEvents }: { events: any[] }) {
+export default function DashboardMapView({ events: serverEvents }: { events: Event[] }) {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [isLoading, setIsLoading] = useState(false);
@@ -65,6 +66,7 @@ export default function DashboardMapView({ events: serverEvents }: { events: any
             isNaN(parsedLon) ? defaultCenter[1] : parsedLon
         ];
     }, [searchParams]);
+    const centerRef = useRef<[number, number]>(getUrlCoords());
 
     const [center, setCenter] = useState<[number, number]>(getUrlCoords());
     const lastFiltersRef = useRef("");
@@ -84,16 +86,35 @@ export default function DashboardMapView({ events: serverEvents }: { events: any
 
     const boundsRef = useRef<MapBounds | null>(null);
     const timerRef = useRef<NodeJS.Timeout | null>(null);
+    const loadingStartRef = useRef<number | null>(null);
 
     useEffect(() => {
-        setIsLoading(false);
-    }, [serverEvents]);
+        if (isLoading) {
+            if (!loadingStartRef.current) {
+                loadingStartRef.current = Date.now();
+            }
+        } else {
+            loadingStartRef.current = null;
+        }
+    }, [isLoading]);
 
-    const handleMove = (coords: [number, number]) => {
-        setCenter(coords);
-    };
+    useEffect(() => {
+        if (isLoading && loadingStartRef.current) {
+            const elapsed = Date.now() - loadingStartRef.current;
+            const remainingTime = Math.max(0, 3000 - elapsed);
+            
+            const timeoutId = setTimeout(() => {
+                setIsLoading(false);
+            }, remainingTime);
+            return () => clearTimeout(timeoutId);
+        }
+    }, [isLoading]); 
 
-    const handleMoveEnd = (coords: [number, number], newZoom: number, bounds: MapBounds) => {
+    const handleMove = useCallback((coords: [number, number]) => {
+        centerRef.current = coords;
+    }, []);
+
+    const handleMoveEnd = useCallback((coords: [number, number], newZoom: number, bounds: MapBounds) => {
         setIsLoading(true);
 
         if (timerRef.current) {
@@ -110,17 +131,19 @@ export default function DashboardMapView({ events: serverEvents }: { events: any
             params.set("sw_lng", bounds.sw_lng.toFixed(6));
             router.replace(`${window.location.pathname}?${params.toString()}`, { scroll: false });
         }, 1500);
-    };
+    }, [router]);
 
     useEffect(() => {
         if (timerRef.current) clearTimeout(timerRef.current);
 
         const urlCoords = getUrlCoords();
 
-        setIsLoading(false);
-
-        if (Math.abs(urlCoords[0] - center[0]) > 0.0001 || Math.abs(urlCoords[1] - center[1]) > 0.0001) {
+        if (
+            Math.abs(urlCoords[0] - centerRef.current[0]) > 0.0001 ||
+            Math.abs(urlCoords[1] - centerRef.current[1]) > 0.0001
+        ) {
             setCenter(urlCoords);
+            centerRef.current = urlCoords;
         }
 
         return () => { if (timerRef.current) clearTimeout(timerRef.current); };

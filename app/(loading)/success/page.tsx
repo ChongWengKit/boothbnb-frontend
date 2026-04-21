@@ -1,9 +1,11 @@
 "use client"
+import { Suspense } from "react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Spinner } from "@/components/ui/spinner";
+;
 
-export default function Success() {
+function SuccessContent() {
     const router = useRouter();
     const [seconds, setSeconds] = useState(3);
 
@@ -33,5 +35,13 @@ export default function Success() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function Success() {
+    return (
+        <Suspense>
+            <SuccessContent />
+        </Suspense>
     );
 }

@@ -1,5 +1,6 @@
 import { getAuthToken, validateResponse } from "@/app/contexts/auth";
-import AccountDetailClient from "./AccountDetailClient";
+import AccountDetailClient, { Account, PaginationMeta } from "./AccountDetailClient";
+
 
 async function getAccountDetail(slug: string, page: string = '1') {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/account/${slug}?page=${page}`, {
@@ -9,7 +10,10 @@ async function getAccountDetail(slug: string, page: string = '1') {
         throw new Error('Failed to fetch event');
     }
     const data = await response.json();
-    return { account: data.data, meta: data.meta };
+    return { 
+        account: data.data as Account, 
+        meta: data.meta as PaginationMeta 
+    };
 }
 
 export default async function AccountDetailPage({ params, searchParams }: { params: Promise<{ slug: string }>, searchParams: Promise<{ page?: string }> }) {

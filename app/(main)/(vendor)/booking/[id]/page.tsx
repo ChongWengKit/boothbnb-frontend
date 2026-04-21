@@ -4,7 +4,6 @@ import Link from "next/link";
 import { IoArrowBack } from "react-icons/io5";
 import { format } from "date-fns";
 import { redirect } from "next/navigation";
-import PrintButton from "@/components/ui/PrintButton";
 import Image from "next/image";
 import { formatEventDate } from "@/app/lib/util";
 
@@ -51,28 +50,27 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
                             <DetailItem label="Vendor ID" value={booking.vendor_id} />
                             <DetailItem label="Price Paid" value={`$${Number(booth.price).toLocaleString()}`} />
                             {booking.cardBrand && (
-                                <DetailItem 
-                                    label="Payment Method" 
-                                    value={<span className="capitalize">{booking.cardBrand} •••• {booking.cardLast4}</span>} 
+                                <DetailItem
+                                    label="Payment Method"
+                                    value={<span className="capitalize">{booking.cardBrand} •••• {booking.cardLast4}</span>}
                                 />
                             )}
                             {booking.stripeChargeId && (
                                 <DetailItem label="Transaction ID" value={booking.stripeChargeId} />
                             )}
                             <DetailItem label="Status" value={
-                                <span className={`px-2 py-0.5 rounded text-xs font-bold ${
-                                    booking.payment_status === 'PAID' ? 'bg-green-100 text-green-700' : 'bg-primary text-primary-foreground'
-                                }`}>
+                                <span className={`px-2 py-0.5 rounded text-xs font-bold ${booking.payment_status === 'PAID' ? 'bg-green-100 text-green-700' : 'bg-primary text-primary-foreground'
+                                    }`}>
                                     {booking.payment_status}
                                 </span>
                             } />
                             <DetailItem label="Booked On" value={formatEventDate(booking.booked_at)} />
-                            
+
                             {booking.receiptUrl && (
                                 <div className="pt-2 no-print">
-                                    <a 
-                                        href={booking.receiptUrl} 
-                                        target="_blank" 
+                                    <a
+                                        href={booking.receiptUrl}
+                                        target="_blank"
                                         rel="noopener noreferrer"
                                         className="text-xs text-blue-600 hover:underline font-semibold flex items-center gap-1"
                                     >
@@ -87,10 +85,10 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
                         <h3 className="mb-4 font-bold text-foreground">Vendor Information</h3>
                         <div className="flex items-center gap-3">
                             {booking.vendor.profile_photo ? (
-                                <Image 
-                                    src={booking.vendor.profile_photo} 
-                                    className="w-12 h-12 rounded-full border" 
-                                    alt="Vendor profile" 
+                                <Image
+                                    src={booking.vendor.profile_photo}
+                                    className="w-12 h-12 rounded-full border"
+                                    alt="Vendor profile"
                                     width={48}
                                     height={48}
                                 />
@@ -105,8 +103,7 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
                     </div>
 
                     <div className="flex flex-col gap-3 no-print">
-                        <PrintButton />
-                        <Link 
+                        <Link
                             href={`/dashboard/${event.slug}`}
                             className="block w-full rounded-xl bg-primary py-4 text-center font-bold text-primary-foreground transition-all hover:bg-primary/90"
                         >
@@ -115,10 +112,11 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
                     </div>
                 </div>
 
-                
+
             </div>
-            
-            <style dangerouslySetInnerHTML={{ __html: `
+
+            <style dangerouslySetInnerHTML={{
+                __html: `
                 @media print {
                     @page { size: A4; margin: 15mm; }
                     

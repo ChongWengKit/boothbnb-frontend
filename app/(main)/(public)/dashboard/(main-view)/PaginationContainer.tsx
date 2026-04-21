@@ -2,8 +2,13 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import Pagination from "@/components/Pagination";
-
-export default function PaginationContainer({ currentPage, totalPages, hasNextPage, hasPreviousPage }: any) {
+interface PaginationProps {
+  currentPage: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}
+export default function PaginationContainer({ currentPage, totalPages, hasNextPage, hasPreviousPage }: PaginationProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
     const isMapView = searchParams.get("view") === "map";

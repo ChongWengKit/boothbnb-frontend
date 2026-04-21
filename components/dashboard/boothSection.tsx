@@ -8,12 +8,37 @@ import { useUserContext } from "@/app/contexts/UserContext";
 
 import { publishEventAction, closeEventAction } from "@/app/(main)/(host)/host-dashboard/[slug]/actions";
 import { checkoutAction } from "@/app/(main)/(public)/dashboard/[slug]/actions";
-import { IoClose } from "react-icons/io5";
+import { Booth } from "@/app/(main)/(host)/create-event/actions";
 
 const BoothLayoutViewer = dynamic(() => import("@/components/boothlayout/boothLayoutViewer"), { ssr: false });
 
+interface Booking {
+  payment_status: string;
+  vendor?: {
+    username: string;
+    email: string;
+  };
+  booked_at?: string;
+}
+
+interface BoothWithBookings extends Booth {
+  bookings?: Booking[];
+}
+
+interface DashboardEvent {
+  id: string | number;
+  host_id: number | string;
+  title: string;
+  slug: string;
+  status: string;
+  available_booths: number;
+  total_capacity: number;
+  total_money_made?: number;
+  booths: BoothWithBookings[];
+}
+
 interface BoothSectionProps {
-  event: any;
+  event: DashboardEvent;
   isHost?: boolean;
 }
 
@@ -61,8 +86,8 @@ export default function BoothSection({ event, isHost = false }: BoothSectionProp
     ].map(row => row.join(",")).join("\n");
 
     const headers = ["ID", "Name", "Status", "Price", "Vendor", "Email", "Booked At"].join(",");
-    const rows = event.booths.map((booth: any) => {
-      const booking = booth.bookings?.find((b: any) => b.payment_status !== 'FAILED');
+    const rows = event.booths.map((booth) => {
+      const booking = booth.bookings?.find((b) => b.payment_status !== 'FAILED');
       return [
         booth.id,
         `"${booth.name || ''}"`,
@@ -84,20 +109,20 @@ export default function BoothSection({ event, isHost = false }: BoothSectionProp
     window.URL.revokeObjectURL(url);
   };
 
-  const handleCheckout = async (booth: any) => {
+  const handleCheckout = async (booth: BoothWithBookings) => {
     if (!user) {
       router.push("/login");
       return;
     }
     try {
-      const result = await checkoutAction(event.id, booth.id, event.slug);
+      const result = await checkoutAction(String(event.id), booth.id, event.slug);
       if (result.data?.success && result.data.data) {
         toast.success(`Redirecting to checkout...`);
         router.push(result.data.data);
       } else {
         toast.error(result.message || "Checkout failed.");
       }
-    } catch (error) {
+    } catch {
       toast.error("An error occurred during checkout.");
     }
   };
@@ -116,11 +141,11 @@ export default function BoothSection({ event, isHost = false }: BoothSectionProp
             <div className="pt-2 border-t text-sm">
               <div className="flex items-center gap-2">
                 <span className="w-3 h-3 bg-green-500 rounded-full"></span>
-                Available: {event.booths.filter((b: any) => b.type === "AVAILABLE").length}
+                Available: {event.booths.filter((b) => b.type === "AVAILABLE").length}
               </div>
               <div className="flex items-center gap-2">
                 <span className="w-3 h-3 bg-red-500 rounded-full"></span>
-                Sold: {event.booths.filter((b: any) => b.type === "SOLD").length}
+                Sold: {event.booths.filter((b) => b.type === "SOLD").length}
               </div>
             </div>
           )}

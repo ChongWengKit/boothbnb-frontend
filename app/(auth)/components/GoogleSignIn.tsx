@@ -1,12 +1,12 @@
 "use client"
-import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
+import { GoogleLogin, CredentialResponse, GoogleOAuthProvider } from "@react-oauth/google";
 import { Toaster } from 'react-hot-toast';
 import { useAuth } from '@/app/(auth)/hooks/useAuth';
 
 const GoogleSignIn = () => {
     const { googleSignIn } = useAuth();
 
-    const handleGoogleSuccess = async (credentialResponse: any) => {
+    const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
         if (credentialResponse.credential) {
             await googleSignIn(credentialResponse.credential);
         }

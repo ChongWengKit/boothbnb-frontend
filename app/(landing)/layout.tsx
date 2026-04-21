@@ -1,5 +1,7 @@
 import React from 'react';
 import Image from "next/image";
+
+
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="relative min-h-screen w-full">

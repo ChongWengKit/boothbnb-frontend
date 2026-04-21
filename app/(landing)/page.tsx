@@ -5,6 +5,7 @@ import Image from "next/image";
 import EventMap from "../../components/event-detail/EventMap";
 import EventCard from "../(main)/(public)/components/EventCard";
 import { validateResponse } from "@/app/contexts/auth";
+import type { Event } from "@/app/(main)/(vendor)/hooks/useBookmarks";
 
 async function getLatestEvents() {
     try {
@@ -74,7 +75,7 @@ async function Landing() {
                     <div className="w-full md:flex-1 flex flex-col gap-6 h-full overflow-hidden ">
                         <h2 id="latest-heading" className="text-3xl font-bold text-foreground">Latest Booths</h2>
                         <div className="flex flex-row md:flex-col gap-4 overflow-x-auto pb-4 border border-border rounded-lg p-4">
-                            {events.map((event: any) => (
+                            {events.map((event: Event) => (
                                 <article key={event.id} className="min-w-[280px]">
                                     <EventCard event={event} variant="horizontal" />
                                 </article>

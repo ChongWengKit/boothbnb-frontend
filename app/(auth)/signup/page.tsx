@@ -7,19 +7,7 @@ import { Toaster, toast } from 'react-hot-toast';
 import RoleSelection from "@/app/(auth)/components/RoleSelection";
 import BasicInfoForm from "@/app/(auth)/components/BasicInfoForm";
 import PublicLayout from "@/app/(auth)/layout";
-
-export const signUpSchema = z
-  .object({
-    email: z.string().email({ message: "Invalid email" }),
-    password: z.string().min(8, { message: "Password must be at least 8 characters" }),
-    username: z.string().min(3, { message: "Username must be at least 3 characters" }),
-    confirmPassword: z.string(),
-    role: z.enum(["VENDOR", "HOST"]),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
+import { signUpSchema } from "./schema";
 
 type SignupSchemaType = z.infer<typeof signUpSchema>;
 
@@ -47,40 +35,44 @@ const SignUp = () => {
     };
 
   }
-    const prevStep = () => setStep(1);
+  const prevStep = () => setStep(1);
 
-    const onSubmit = async (data: SignupSchemaType) => {
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/auth/signup`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        });
-        const result = await response.json();
-        if (!response.ok) {
-          return toast.error(result.message);
-        }
-        toast.success(result.message);
+  const onSubmit = async (data: SignupSchemaType) => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/auth/signup`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        return toast.error(result.message);
+      }
+      toast.success(result.message);
 
-      } catch (error: any) {
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
         toast.error("An error occurred during signup.");
       }
-    };
+    }
+  };
 
-    return (
-      <div className="bg-background p-8 rounded-2xl shadow-lg">
-        <Toaster position="top-center" reverseOrder={false} />
-        <h2 className="text-2xl font-bold mb-4">Sign Up</h2>
-        <FormProvider {...methods}>
-          <form onSubmit={methods.handleSubmit(onSubmit)}>
-            {step === 1 && <BasicInfoForm onNext={nextStep} />}
-            {step === 2 && <RoleSelection onBack={prevStep} />}
-          </form>
-        </FormProvider>
-      </div>
-    );
-  }
+  return (
+    <div className="bg-background p-8 rounded-2xl shadow-lg">
+      <Toaster position="top-center" reverseOrder={false} />
+      <h2 className="text-2xl font-bold mb-4">Sign Up</h2>
+      <FormProvider {...methods}>
+        <form onSubmit={methods.handleSubmit(onSubmit)}>
+          {step === 1 && <BasicInfoForm onNext={nextStep} />}
+          {step === 2 && <RoleSelection onBack={prevStep} />}
+        </form>
+      </FormProvider>
+    </div>
+  );
+}
 
-  export default SignUp;
+export default SignUp;

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Toaster, toast } from 'react-hot-toast';
 import { useRouter, useSearchParams } from "next/navigation";
 import PublicLayout from "../layout";
+;
 
 const ResetPassword = () => {
     const [password, setPassword] = useState('');

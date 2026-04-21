@@ -1,5 +1,6 @@
 import {getAuthToken, validateResponse } from "@/app/contexts/auth";
 import AdminDashboardClient from "@/app/(main)/(admin)/admin-dashboard/AdminDashboardClient";
+
 interface AdminRequest {
     user: {
         id: number;

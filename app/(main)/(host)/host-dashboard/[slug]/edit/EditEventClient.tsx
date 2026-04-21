@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import { format } from "date-fns";
 import { FormField } from "@/components/event-form/form-field";
 import { DateTimeSection } from "@/components/event-form//date-field";
-import ImageUploader from "@/app/(main)/(host)/components/ImageUploader";
+import ImageUploader from "@/app/(main)/(host)/components/ImageUploader"; 
 import { updateEventAction } from "./actions";
 import { LocationSection } from "@/components/event-form/location-field";
 import { BoothSection } from "@/components/event-form/booth-field";
@@ -20,6 +20,8 @@ const combineDateTime = (date: Date, time: string) => {
     combined.setHours(parseInt(hours), parseInt(minutes), 0, 0);
     return combined.toISOString();
 };
+
+import { Booth } from "@/app/(main)/(host)/create-event/actions"; 
 
 const CATEGORIES = [
     { value: "ART_CRAFT", label: "Art & Craft" },
@@ -40,30 +42,55 @@ const eventSchema = z.object({
     name: z.string().min(3, { message: "Name must be at least 3 characters" }),
     description: z.string().min(10, { message: "Description must be at least 10 characters" }),
     address: z.string().min(1, { message: "Address is required" }),
-    latitude: z.number({ required_error: "Location is required" }),
-    longitude: z.number({ required_error: "Location is required" }),
-    startDate: z.date({ required_error: "Start date is required" }),
+    latitude: z.number({ error: "Location is required" }),
+    longitude: z.number({ error: "Location is required" }),
+    startDate: z.date({ error: "Start date is required" }),
     startTime: z.string().min(1, { message: "Start time is required" }),
-    endDate: z.date({ required_error: "End date is required" }),
-    endTime: z.string().min(1, { message: "Start time is required" }),
+    endDate: z.date({ error: "End date is required" }),
+    endTime: z.string().min(1, { message: "End time is required" }),
     category: z.string().min(1, { message: "Category is required" }),
-    booths: z.array(z.object({
-        id: z.string(),
+    booths: z.array(z.object({ 
+        id: z.string(), 
+        name: z.string().min(1, "Booth name is required"),
+        type: z.enum(["AVAILABLE", "RESERVED", "SOLD", "LOCKED"]),
+        price: z.number().min(0), 
+        width: z.number().int().min(1),
+        height: z.number().int().min(1),
         x: z.number().int(),
         y: z.number().int(),
-        width: z.number().int(),
-        height: z.number().int(),
-        type: z.enum(['AVAILABLE', 'RESERVED', 'SOLD', 'LOCKED']),
-        price: z.number().optional(),
-        name: z.string().optional(),
-        rotation: z.number().int().optional(),
-    })),
+        rotation: z.number().int(),
+    })).min(1, "At least one booth is required"),
     images: z.array(z.string()).max(5, { message: "Maximum 5 images allowed" })
-
 });
 
+interface RawBoothData {
+    id: number;
+    name: string;
+    type: "AVAILABLE" | "RESERVED" | "SOLD" | "LOCKED";
+    price: number | string;
+    width: number;
+    height: number;
+    x: number;
+    y: number;
+    rotation?: number;
+}
+
+interface EventDetailResponse {
+    slug: string;
+    title: string;
+    description: string;
+    address: string;
+    latitude: number;
+    longitude: number;
+    start_date: string; 
+    end_date: string;  
+    category: string;
+    images: { url: string }[];
+    booths: RawBoothData[];
+}
+
 interface EditEventClientProps {
-    event: any;
+    event: EventDetailResponse;
 }
 
 const EditEventClient: React.FC<EditEventClientProps> = ({ event }) => {
@@ -84,11 +111,11 @@ const EditEventClient: React.FC<EditEventClientProps> = ({ event }) => {
             endDate: end,
             endTime: format(end, "HH:mm"), 
             category: event.category || "",
-            images: event.images.map((img: { url: string }) => img.url) || [],
-            booths: event.booths.map((booth: any) => ({ 
+            images: event.images.map((img: { url: string }) => img.url),
+            booths: event.booths.map((booth: RawBoothData) => ({ 
                 ...booth,
                 id: String(booth.id),
-                price: parseFloat(booth.price),
+                price: typeof booth.price === 'string' ? parseFloat(booth.price) : booth.price,
                 name: booth.name || `Booth ${booth.id}`,
                 rotation: booth.rotation ?? 0, 
             })) || [],
@@ -96,8 +123,6 @@ const EditEventClient: React.FC<EditEventClientProps> = ({ event }) => {
     });
 
     const { register, handleSubmit, formState: { errors }, setValue, watch } = methods;
-    const [isLayoutEditorOpen, setIsLayoutEditorOpen] = useState(false);
-    const booths = watch("booths") || [];
 
     const onSubmit = async (data: z.infer<typeof eventSchema>) => {
         try {
@@ -136,13 +161,13 @@ const EditEventClient: React.FC<EditEventClientProps> = ({ event }) => {
         <FormProvider {...methods}>
             <form className="flex flex-col gap-8 rounded-lg border border-border bg-card p-8 shadow-lg" onSubmit={handleSubmit(onSubmit)}>
                 <h1 className="text-3xl font-bold">Edit Event</h1>
-                <FormField label="Name" error={errors.name?.message}>
+                <FormField label="Name" error={errors.name?.message as string}>
                     <input
                         className="w-full rounded-lg border border-border bg-background px-4 py-4 text-foreground"
                         {...register("name")}
                     />
                 </FormField>
-                <FormField label="Description" error={errors.description?.message}>
+                <FormField label="Description" error={errors.description?.message as string}>
                     <textarea
                         className="min-h-[120px] w-full rounded-lg border border-border bg-background px-4 py-4 text-foreground"
                         {...register("description")}
@@ -171,20 +196,20 @@ const EditEventClient: React.FC<EditEventClientProps> = ({ event }) => {
                         minDate={watch("startDate")}
                     />
                 </FormField>
-                <FormField label="Location" error={errors.address?.message}>
+                <FormField label="Location" error={errors.address?.message as string}>
                     <LocationSection initialAddress={event.address} />
                 </FormField>
 
                 <FormField
                     label="Event Images"
                     description="Upload up to 5 photos"
-                    error={errors.images?.message}
+                    error={errors.images?.message as string}
                 >
                     <ImageUploader
                         maxImages={5}
                     />
                 </FormField>
-                <FormField label="Booth Layout" description="Design your floor plan" error={errors.booths?.message}>
+                <FormField label="Booth Layout" description="Design your floor plan" error={errors.booths?.message as string}>
                     <BoothSection />
                 </FormField>
 

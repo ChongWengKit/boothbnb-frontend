@@ -4,7 +4,6 @@ import { useRouter } from 'next/navigation';
 import React from 'react';
 import { deleteAuthToken } from '@/app/contexts/auth';
 
-export const UserContext = createContext<any>(null);
 export interface User {
   id: number;
   email: string;
@@ -13,13 +12,32 @@ export interface User {
   is_stripe_connected: boolean;
   profile_photo?: string | null;
 }
+
+export interface UserContextType {
+  user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  logout: () => Promise<void>;
+  isLoading: boolean;
+}
+
+export const UserContext = createContext<UserContextType | null>(null);
+
 export const UserProvider = ({ children, initialUser }: { children: ReactNode, initialUser: User | null }) => {
   const [user, setUser] = useState<User | null>(initialUser);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
-
+  
   useEffect(() => {
-    console.log(user)
-    setUser(initialUser);
+    const timeoutId = setTimeout(() => {
+
+      setUser(prevUser => {
+        if (initialUser?.id === prevUser?.id) return prevUser;
+        return initialUser;
+      });
+      setIsLoading(false);
+    }, 0);
+
+    return () => clearTimeout(timeoutId);
   }, [initialUser]);
 
   const logout = useCallback(async () => {
@@ -30,7 +48,7 @@ export const UserProvider = ({ children, initialUser }: { children: ReactNode, i
   }, [router]);
 
   return (
-    <UserContext.Provider value={{ user, setUser, logout }}>
+    <UserContext.Provider value={{ user, setUser, logout, isLoading }}>
       {children}
     </UserContext.Provider>
   );

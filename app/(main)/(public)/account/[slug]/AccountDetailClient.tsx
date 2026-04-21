@@ -7,7 +7,38 @@ import EventResultsList from "@/app/(main)/(public)/components/EventResultsList"
 import Pagination from "@/components/Pagination";
 import Image from "next/image";
 
-export default function AccountDetailClient({ account, paginationMeta }) {
+export interface AccountEvent {
+  id: number;
+  title: string;
+  start_date: string;
+  end_date: string;
+  address: string;
+  thumbnail: string | null;
+  slug: string;
+  total_bookings: number;
+  total_capacity: number;
+  available_booths: number;
+  latitude: number;
+  longitude: number;
+}
+
+export interface Account {
+    username: string;
+    email: string;
+    role: string;
+    profile_photo: string | null;
+    created_at: string;
+    events: AccountEvent[];
+}
+
+export interface PaginationMeta {
+    currentPage: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+}
+
+export default function AccountDetailClient({ account, paginationMeta }: { account: Account, paginationMeta: PaginationMeta }) {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { user } = useUserContext();

@@ -5,7 +5,7 @@ import EventCard from '@/app/(main)/(public)/components/EventCard';
 import type { Event } from '@/app/(main)/(vendor)/hooks/useBookmarks';
 
 interface EventResultsListProps {
-  events: any[];
+  events: Event[];
   isLoading: boolean;
   emptyTitle: string;
   emptySubtitle: string;

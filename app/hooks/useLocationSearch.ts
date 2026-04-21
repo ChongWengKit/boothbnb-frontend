@@ -22,8 +22,8 @@ export const useLocationSearch = (initialQuery = '', debounceMs = 1000) => {
 
     useEffect(() => {
         if (isSelecting) {
-            setIsSelecting(false);
-            return;
+            const frame = requestAnimationFrame(() => setIsSelecting(false));
+            return () => cancelAnimationFrame(frame);
         }
 
         const timer = setTimeout(() => {

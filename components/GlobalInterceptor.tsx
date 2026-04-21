@@ -8,7 +8,7 @@ const GlobalFetchInterceptor = () => {
   const router = useRouter();
   const { logout } = useUserContext();
 
-  const BACKEND_URL = process.env.NEXT_PUBLIC_API_DOMAIN;
+  const BACKEND_URL = process.env.NEXT_PUBLIC_API_DOMAIN ;
 
   useEffect(() => {
 
@@ -19,16 +19,17 @@ const GlobalFetchInterceptor = () => {
       const url = typeof resource === 'string' ? resource : resource instanceof Request ? resource.url : '';
       try {
         const response = await originalFetch(...args);
-        const isMyBackend = url.startsWith(BACKEND_URL);
+        
+        const isMyBackend = url.startsWith(BACKEND_URL as string);
         console.log("INTERCEPTOR RESPONSE:", response.status, response.url);
         if (isMyBackend && response.status === 401) {
           router.push(`/login?reason=session_expired`);
         }
 
         return response;
-      } catch (error) {
-
-        toast.error(`Network Error: ${error.message}.`);
+      } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : "An unknown network error occurred";
+        toast.error(`Network Error: ${errorMessage}.`);
         throw error;
       }
     };

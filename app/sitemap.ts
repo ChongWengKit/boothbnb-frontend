@@ -14,7 +14,7 @@ export default async function sitemap() {
         const result = await response.json();
         const slugs = result.data || [];
 
-        const eventUrls = slugs.map((slug) => ({
+        const eventUrls = slugs.map((slug: string) => ({
             url: `${BASE_URL}/dashboard/${slug}`,
             lastModified: new Date(),
             changeFrequency: 'weekly',

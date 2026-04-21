@@ -25,12 +25,20 @@ interface BookmarkClientProps {
 const BookmarkClient: React.FC<BookmarkClientProps> = ({ initialBookmarks, paginationMeta }) => {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const [bookmarks, setBookmarks] = useState<Event[]>(initialBookmarks);
+    const [bookmarks, setBookmarks] = useState<Event[]>(() => initialBookmarks);
+    const lastProcessedInitialBookmarksRef = React.useRef<Event[]>(initialBookmarks);
     const { toggleBookmark } = useToggleBookmark();
     
     useEffect(() => {
-        setBookmarks(initialBookmarks);
-    }, [initialBookmarks]);
+
+        const hasContentChanged = initialBookmarks.length !== lastProcessedInitialBookmarksRef.current.length ||
+                                  initialBookmarks.some((event, index) => event.id !== lastProcessedInitialBookmarksRef.current[index]?.id);
+
+        if (hasContentChanged) {
+            setBookmarks(initialBookmarks);
+            lastProcessedInitialBookmarksRef.current = initialBookmarks; 
+        }
+    }, [initialBookmarks]); 
 
     const handleToggleBookmark = async (eventToToggle: Event) => {
 

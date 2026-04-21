@@ -9,17 +9,24 @@ import Pagination from "@/components/Pagination";
 import { type EventStatus } from "@/app/(main)/(public)/components/EventCard";
 import { Button } from "@/components/ui/button";
 
-interface HostEvent {
-    id: number;
-    title: string;
-    start_date: string;
-    end_date: string;
-    slug: string;
-    thumbnail: string | null;
-    status: EventStatus;
-    total_bookings: number;
-    total_capacity: number;
+;
+
+
+export interface HostEvent {
+  id: number;
+  title: string;
+  start_date: string;
+  end_date: string;
+  address: string;
+  thumbnail: string | null;
+  slug: string;
+  total_bookings: number;
+  total_capacity: number;
+  available_booths: number;
+  latitude: number;
+  longitude: number;
 }
+
 
 interface PaginationMeta {
     totalItems: number;

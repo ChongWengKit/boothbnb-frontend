@@ -14,19 +14,21 @@ interface PageProps {
         limit?: string;
         title?: string;
         category?: string;
+        view?: string | undefined;
+
     }>;
 }
 
 const Dashboard = async (props: PageProps) => {
     const searchParams = await props.searchParams;
-    
+
     const suspenseKey = `${searchParams.view || 'list'}`;
 
     return (
         <div className="flex flex-col justify-center">
             <DashboardSearch />
-            <Suspense 
-                key={suspenseKey} 
+            <Suspense
+                key={suspenseKey}
                 fallback={
                     <div className="flex items-center justify-center py-20">
                         <Spinner className="size-8" />

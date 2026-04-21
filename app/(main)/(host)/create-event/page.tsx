@@ -9,28 +9,38 @@ import toast from "react-hot-toast";
 import { format } from "date-fns";
 import { createEventAction } from "@/app/(main)/(host)/create-event/actions";
 import ImageUploader from "@/app/(main)/(host)/components/ImageUploader";
-import BoothLayoutEditor, { type Booth } from "@/app/(main)/(host)/components/BoothLayoutEditor";
 import { FormField } from "@/components/event-form/form-field";
 import { DateTimeSection } from "@/components/event-form/date-field";
 import { LocationSection } from "@/components/event-form/location-field";
 import { BoothSection } from "@/components/event-form/booth-field";
 import { validateResponse } from "@/app/contexts/auth";
 
+
+const boothSchema = z.object({
+    id: z.string(),
+    name: z.string().min(1, "Booth name is required"),
+    type: z.enum(["AVAILABLE", "RESERVED", "SOLD", "LOCKED"]),
+    price: z.number().min(0),
+    width: z.number().min(1),
+    height: z.number().min(1),
+    x: z.number(),
+    y: z.number(),
+    rotation: z.number().int().default(0)
+});
 const eventSchema = z.object({
     name: z.string().min(3, { message: "Name must be at least 3 characters" }),
     description: z.string().min(10, { message: "Description must be at least 10 characters" }),
     address: z.string().min(1, { message: "Address is required" }),
-    latitude: z.number({ required_error: "Location is required", invalid_type_error: "Location is required" }),
-    longitude: z.number({ required_error: "Location is required", invalid_type_error: "Location is required" }),
-    startDate: z.date({ required_error: "Start date is required" }),
+    latitude: z.number({ error: "Location is required" }),
+    longitude: z.number({ error: "Location is required" }),
+    startDate: z.date({ error: "Start date is required" }),
     startTime: z.string().min(1, { message: "Start time is required" }),
-    endDate: z.date({ required_error: "End date is required" }),
+    endDate: z.date({ error: "End date is required" }),
     endTime: z.string().min(1, { message: "End time is required" }),
     category: z.string().min(1, { message: "Category is required" }),
-    booths: z.array(z.any()).min(1, { message: "At least one booth is required" }),
-    images: z.array(z.string()).max(5, { message: "Maximum 5 images allowed" })
+    booths: z.array(boothSchema).min(1, "At least one booth is required"),
+    images: z.array(z.string()).max(5, "Maximum 5 images allowed")
 });
-
 const CATEGORIES = [
     { value: "ART_CRAFT", label: "Art & Craft" },
     { value: "FOOD_BEVERAGE", label: "Food & Beverage" },
@@ -77,7 +87,6 @@ const CreateEvent = () => {
     const [isLayoutEditorOpen, setIsLayoutEditorOpen] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const booths = watch("booths") || [];
     const address = watch("address");
 
     const handleReset = () => {
@@ -163,10 +172,10 @@ const CreateEvent = () => {
                 </FormField>
 
                 <FormField label="Booth Layout" description="Design your floor plan" error={errors.booths?.message as string}>
-                    <BoothSection /> 
+                    <BoothSection />
                 </FormField>
 
-                
+
                 <div className="flex flex-end justify-end gap-8 ">
                     <button className="cursor-pointer rounded-xl bg-secondary px-4 py-4 text-sm font-bold text-secondary-foreground" type="button" onClick={handleReset}>Reset</button>
                     <button className="cursor-pointer rounded-xl bg-primary px-4 py-4 text-sm font-bold text-primary-foreground hover:bg-primary/90" type="submit" disabled={isSubmitting}>

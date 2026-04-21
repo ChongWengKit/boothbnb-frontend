@@ -25,18 +25,28 @@ const CATEGORIES = [
     { value: "OTHERS", label: "Others" },
 ];
 
+interface Coordinates {
+    lat: number | null;
+    lon: number | null;
+}
+
 export default function DashboardSearch() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const viewMode = searchParams.get("view") || 'list';
 
     const [showFilters, setShowFilters] = useState(false);
-    const [date, setDate] = useState<DateRange | undefined>({
-        from: searchParams.get("start_date") ? new Date(searchParams.get("start_date")!) : new Date(),
-        to: searchParams.get("end_date") ? new Date(searchParams.get("end_date")!) : new Date(Date.now() + 604800000),
+    const [date, setDate] = useState<DateRange | undefined>(() => {
+        const startParam = searchParams.get("start_date");
+        const endParam = searchParams.get("end_date");
+
+        return {
+            from: startParam ? new Date(startParam) : new Date(),
+            to: endParam ? new Date(endParam) : new Date(Date.now() + 604800000),
+        };
     });
 
-    const [coordinates, setCoordinates] = useState({
+    const [coordinates, setCoordinates] = useState<Coordinates>({
         lat: searchParams.get("lat") ? parseFloat(searchParams.get("lat")!) : null,
         lon: searchParams.get("lon") ? parseFloat(searchParams.get("lon")!) : null
     });
@@ -49,11 +59,21 @@ export default function DashboardSearch() {
         const lat = searchParams.get("lat");
         const lon = searchParams.get("lon");
         const z = searchParams.get("zoom");
-        setCoordinates({
-            lat: lat ? parseFloat(lat) : null,
-            lon: lon ? parseFloat(lon) : null
-        });
-        setZoom(z ? parseInt(z) : null);
+
+        const newLat = lat ? parseFloat(lat) : null;
+        const newLon = lon ? parseFloat(lon) : null;
+        const newZoom = z ? parseInt(z) : null;
+
+        const timeoutId = setTimeout(() => {
+            setCoordinates(prev => {
+                if (prev.lat === newLat && prev.lon === newLon) return prev;
+                return { lat: newLat, lon: newLon };
+            });
+
+            setZoom(prev => (prev === newZoom ? prev : newZoom));
+        }, 0);
+
+        return () => clearTimeout(timeoutId);
     }, [searchParams]);
 
     const [title, setTitle] = useState(searchParams.get("title") || "");
@@ -75,7 +95,7 @@ export default function DashboardSearch() {
         if (lat && lon) {
             setIsSelecting(true);
             setCoordinates({ lat, lon });
-            setZoom(15); 
+            setZoom(15);
             setResults([]);
         }
     };
@@ -140,9 +160,8 @@ export default function DashboardSearch() {
                 <div className="flex items-center gap-2">
                     <button
                         type="button"
-                        className={`md:hidden rounded-md border p-2 transition-all ${
-                            showFilters ? "bg-accent text-accent-foreground" : "bg-background text-foreground"
-                        }`}
+                        className={`md:hidden rounded-md border p-2 transition-all ${showFilters ? "bg-accent text-accent-foreground" : "bg-background text-foreground"
+                            }`}
                         onClick={() => setShowFilters(!showFilters)}
                     >
                         <IoFilter size={20} />

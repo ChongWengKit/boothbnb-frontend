@@ -4,15 +4,19 @@ import { deleteAuthToken, getAuthToken, validateResponse } from "@/app/contexts/
 import HostDashboardClient from "./HostDashboardClient";
 import { type EventStatus } from "@/app/(main)/(public)/components/EventCard";
 
-interface HostEvent {
-    id: number;
-    title: string;
-    start_date: string;
-    end_date: string;
-    thumbnail: string | null;
-    status: EventStatus;
-    total_bookings: number;
-    total_capacity: number;
+export interface HostEvent {
+  id: number;
+  title: string;
+  start_date: string;
+  end_date: string;
+  address: string;
+  thumbnail: string | null;
+  slug: string;
+  total_bookings: number;
+  total_capacity: number;
+  available_booths: number;
+  latitude: number;
+  longitude: number
 }
 
 interface PaginationMeta {

@@ -12,6 +12,8 @@ export interface Event {
   total_bookings: number;
   total_capacity: number;
   available_booths: number;
+  latitude: number;
+  longitude: number;
 }
 
 export const useBookmarks = () => {

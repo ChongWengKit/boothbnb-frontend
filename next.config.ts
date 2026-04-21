@@ -15,6 +15,9 @@ const nextConfig = {
       allowedOrigins: ['localhost:3001'],
     },
   },
+  turbopack: {
+    root: '.',
+  },
 };
 
 module.exports = nextConfig;

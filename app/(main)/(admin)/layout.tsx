@@ -3,8 +3,8 @@ import DashboardSidebar from '@/components/DashboardSidebar';
 import DashboardTopbar from '@/components/DashboardTopbar';
 import RoleGuard from '@/components/ProtectedRoute';
 
-const Navbar = ({ children }: React.PropsWithChildren<{}>) => {
-  return (
+const Navbar = ({ children }: React.PropsWithChildren) => {
+    return (
     <div>
 
       <RoleGuard allowedRoles={['ADMIN']}>

@@ -9,7 +9,10 @@ interface EmailLog {
     id: number;
     user_id: number;
     category: string;
-    payload: any;
+    payload: {
+        email: string;
+        name: string;
+    };
     status: "PENDING" | "SUCCESSFUL" | "FAILED" | "BOUNCED" | "COMPLAINED";
     email_id: string | null;
     attempts: number;

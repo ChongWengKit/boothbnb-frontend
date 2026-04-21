@@ -1,20 +1,39 @@
 'use client'
 import { useFormContext } from "react-hook-form";
 import { Trash2, Plus } from "lucide-react";
+import { useRef } from "react";
+import { Booth } from "@/app/(main)/(host)/create-event/actions";
 
 export const BoothSection = () => {
-  const { watch, setValue, register } = useFormContext();
-  const booths = watch("booths") || [];
+  const { watch, setValue } = useFormContext();
+  const nextBoothId = useRef(0);
+  const booths: Booth[] = watch("booths") || [];
 
-  const handleUpdateBooth = (index: number, field: string, value: any) => {
+  const handleUpdateBooth = (index: number, field: keyof Booth, value: string | number) => {
     const updatedBooths = [...booths];
-    updatedBooths[index] = { ...updatedBooths[index], [field]: value };
+    updatedBooths[index] = { ...updatedBooths[index], [field]: value } as Booth;
     setValue("booths", updatedBooths, { shouldValidate: true });
   };
 
   const handleDeleteBooth = (id: string) => {
-    const updatedBooths = booths.filter((b: any) => b.id !== id);
+    const updatedBooths = booths.filter((b) => b.id !== id);
     setValue("booths", updatedBooths, { shouldValidate: true });
+  };
+
+  const handleAddBooth = () => {
+    nextBoothId.current += 1;
+    const newBooth: Booth = { 
+      id: `booth-${nextBoothId.current}`, 
+      name: `Booth ${booths.length + 1}`, 
+      type: "AVAILABLE", 
+      price: 0,
+      width: 80, 
+      height: 80,
+      x: 0,
+      y: 0,
+      rotation: 0
+    };
+    setValue("booths", [...booths, newBooth], { shouldValidate: true });
   };
 
   return (
@@ -24,16 +43,7 @@ export const BoothSection = () => {
         <button 
           type="button"
           className="flex items-center gap-1 rounded-lg bg-primary px-3 py-1.5 text-sm text-primary-foreground transition-colors hover:bg-primary/90"
-          onClick={() => setValue("booths", [...booths, { 
-            id: `booth-${Date.now()}`, 
-            name: `Booth ${booths.length + 1}`, 
-            type: "AVAILABLE", 
-            price: 0,
-            width: 80, 
-            height: 80,
-            x:0,
-            y:0
-          }], { shouldValidate: true })}
+          onClick={handleAddBooth}
         >
           <Plus size={16} />
           Add Booth
@@ -43,7 +53,7 @@ export const BoothSection = () => {
       {booths.length > 0 ? (
         <div className="border rounded-xl bg-background overflow-hidden shadow-sm">
           <div className="max-h-[400px] overflow-y-auto">
-            {booths.map((booth: any, index: number) => (
+            {booths.map((booth, index) => (
               <div key={booth.id} className="flex flex-col gap-3 border-b p-4 transition-colors last:border-b-0 hover:bg-accent/30">
                 
                 <div className="flex justify-between items-center gap-4">
@@ -65,7 +75,7 @@ export const BoothSection = () => {
                 <div className="flex flex-wrap gap-3 items-center">
                   <select
                     value={booth.type}
-                    onChange={(e) => handleUpdateBooth(index, "type", e.target.value)}
+                    onChange={(e) => handleUpdateBooth(index, "type", e.target.value as Booth["type"])}
                     className="rounded-md border border-border bg-background px-2 py-1 text-xs font-bold uppercase text-foreground focus:ring-1 focus:ring-ring"
                   >
                     <option value="AVAILABLE">Available</option>
@@ -112,7 +122,7 @@ export const BoothSection = () => {
             <Plus className="text-primary-foreground" />
           </div>
           <p className="font-medium text-foreground">No booths added yet</p>
-          <p className="mt-1 text-xs text-muted-foreground">Click "Add Booth" to start building your layout</p>
+          <p className="mt-1 text-xs text-muted-foreground">Click &quot;Add Booth&quot; to start building your layout</p>
         </div>
       )}
     </div>

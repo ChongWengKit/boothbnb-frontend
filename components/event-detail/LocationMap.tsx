@@ -1,29 +1,35 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
+import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
 import { RiFullscreenFill, RiFullscreenExitLine } from "react-icons/ri";
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css'
 
-import markerIconPng from "leaflet/dist/images/marker-icon.png"
-import { Icon } from 'leaflet'
+export interface MapEvent {
+    id: number | string;
+    latitude: number;
+    longitude: number;
+}
 
 interface LocationMapProps {
     latitude?: number;
     longitude?: number;
-    events?: any[];
+    events?: MapEvent[];
     className?: string;
     interactive?: boolean;
     zoom?: number;
 }
 
-// Helper components can live in the same file if they are only used here
 function RecenterAutomatically({ lat, lng }: { lat: number | undefined; lng: number | undefined }) {
     const map = useMap();
     useEffect(() => {
         if (lat !== undefined && lng !== undefined) {
-            map.invalidateSize();
-            map.setView([lat, lng], map.getZoom());
+            const timeoutId = setTimeout(() => {
+                map.invalidateSize();
+                map.setView([lat, lng], map.getZoom());
+            }, 0);
+            return () => clearTimeout(timeoutId);
         }
     }, [lat, lng, map]);
     return null;
@@ -32,7 +38,15 @@ function RecenterAutomatically({ lat, lng }: { lat: number | undefined; lng: num
 const LocationMap: React.FC<LocationMapProps> = ({ latitude, longitude, events, className, interactive = true, zoom}) => {
     const [isMapExpanded, setMapExpand] = useState(false);
     const globalCenter: [number, number] = [20, 0];
-    const markerIcon = new Icon({ iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41] });
+    const markerIcon = typeof window !== 'undefined' ? new L.Icon({
+        iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+        iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    }) : null;
 
     return (
         <div
@@ -68,12 +82,12 @@ const LocationMap: React.FC<LocationMapProps> = ({ latitude, longitude, events, 
                 {!events && latitude !== undefined && longitude !== undefined && (
                     <>
                         <RecenterAutomatically lat={latitude} lng={longitude} />
-                        <Marker position={[latitude, longitude]} icon={markerIcon} />
+                        {markerIcon && <Marker position={[latitude, longitude]} icon={markerIcon} />}
                     </>
                 )}
 
                 {events?.map((event) => (
-                    <Marker key={event.id} position={[event.latitude, event.longitude]} icon={markerIcon} />
+                    markerIcon && <Marker key={event.id} position={[event.latitude, event.longitude]} icon={markerIcon} />
                 ))}
             </MapContainer>
         </div>

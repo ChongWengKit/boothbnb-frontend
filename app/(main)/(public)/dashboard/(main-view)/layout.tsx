@@ -1,8 +1,8 @@
 import DashboardSidebar from '@/components/DashboardSidebar';
 import DashboardTopbar from '@/components/DashboardTopbar';
-import RoleGuard from '@/components/ProtectedRoute';
 import DashboardBottombar from '@/components/DashboardBottombar';
-const Navbar = ({ children }: React.PropsWithChildren<{}>) => {
+
+const Navbar = ({ children }: React.PropsWithChildren) => {
   return (
     <div>
       <DashboardTopbar />

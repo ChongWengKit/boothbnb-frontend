@@ -1,6 +1,6 @@
 "use client"
 import { useFormContext } from "react-hook-form";
-import { signUpSchema } from "@/app/(auth)/signup/page";
+import { signUpSchema } from "@/app/(auth)/signup/schema";
 import { z } from "zod";
 
 type SignupSchemaType = z.infer<typeof signUpSchema>;

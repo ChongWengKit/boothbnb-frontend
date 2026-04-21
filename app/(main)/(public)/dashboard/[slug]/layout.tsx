@@ -4,7 +4,8 @@ import RoleGuard from '@/components/ProtectedRoute';
 import DashboardBottombar from '@/components/DashboardBottombar';
 import { IoArrowBack } from 'react-icons/io5';
 import Link from 'next/dist/client/link';
-const Navbar = ({ children }: React.PropsWithChildren<{}>) => {
+
+const Navbar = ({ children }: React.PropsWithChildren) => {
   return (
     <div>
       <DashboardTopbar />
