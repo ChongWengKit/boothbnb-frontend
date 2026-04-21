@@ -1,6 +1,5 @@
 import toast from 'react-hot-toast';
 import { useHandleAuthSuccess } from '@/app/(auth)/hooks/useHandleAuthSuccess';
-import { useNavigate } from 'react-router-dom';
 import { useRouter } from 'next/navigation';
 interface credentials {
   email: string;
