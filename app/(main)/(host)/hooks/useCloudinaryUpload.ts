@@ -63,7 +63,6 @@ export const useCloudinaryUpload = (): UseCloudinaryUpload => {
       const uploadedImageData = await uploadResponse.json();
       return uploadedImageData.secure_url || uploadedImageData.url;
     } catch (error) {
-      console.error("Upload failed:", error);
       return undefined;
     } finally {
       setIsUploading(false);

@@ -73,7 +73,6 @@ export default async function DashboardEventDetailClient({ event, isHost = false
             isHost = user.role === "HOST";
             isOwner = Number(user.id) === Number(event.host_id);
         } catch (e) {
-            console.error("Failed to decode token", e);
         }
     }
 

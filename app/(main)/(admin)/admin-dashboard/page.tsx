@@ -64,7 +64,6 @@ const AdminDashboard = async ({ searchParams }: PageProps) => {
             paginationMeta = data.meta;
         }
     } catch (error) {
-        console.error(error);
     }
     if (response) {
         await validateResponse(response.status);

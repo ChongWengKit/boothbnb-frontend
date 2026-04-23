@@ -13,7 +13,7 @@ async function getEvent(slug: string) {
 
     await validateResponse(response.status);
     if (!response.ok) {
-        console.log(response)
+        
         throw new Error('Failed to fetch event');
 
     }

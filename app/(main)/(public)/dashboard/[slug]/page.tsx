@@ -19,7 +19,6 @@ async function getEvent(slug: string) {
 export default async function DashboardEventDetailPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
     const event = await getEvent(slug);
-    console.log(event)
 
     return (<>
         <Link href="/dashboard" className="m-8 flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground">

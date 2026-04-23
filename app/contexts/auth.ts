@@ -7,12 +7,10 @@ import toast from 'react-hot-toast';
 
 export async function getAuthToken() {
   const cookieStore = await cookies();
-  console.log(cookieStore.get('authentication_token'));
   return cookieStore.get('authentication_token')?.value;
 }
 export async function getProfilePhoto() {
   const cookieStore = await cookies();
-  console.log(cookieStore.get('profile_photo'));
   return cookieStore.get('profile_photo')?.value;
 }
 

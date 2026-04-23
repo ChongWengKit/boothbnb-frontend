@@ -22,7 +22,6 @@ async function getEvent(slug: string) {
 export default async function DashboardEventDetailPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
     const event = await getEvent(slug);
-    console.log(event)
 
     return (
         <>

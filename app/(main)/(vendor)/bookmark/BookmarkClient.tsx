@@ -49,7 +49,6 @@ const BookmarkClient: React.FC<BookmarkClientProps> = ({ initialBookmarks, pagin
         try {
             await toggleBookmark(eventToToggle, true);
         } catch (error) {
-            console.error(error);
             toast.error('Failed to update bookmark');
             setBookmarks(originalBookmarks);
         }

@@ -23,7 +23,6 @@ export async function updateApprovalAction(id: number, status: "APPROVED" | "REJ
         }
         return { success: false, message: data.message || "Failed to update request" };
     } catch (error) {
-        console.error("Action error:", error);
         return { success: false, message: "An error occurred while updating the request" };
     }
 }

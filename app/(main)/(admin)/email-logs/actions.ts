@@ -19,7 +19,6 @@ export async function getEmailLogsAction(page: number = 1, limit: number = 10) {
         await validateResponse(response.status);
         return await response.json();
     } catch (error) {
-        console.error("Action error:", error);
         return { success: false, message: "An error occurred while fetching email logs" };
     }
 }
@@ -44,7 +43,6 @@ export async function resendEmailAction(logId: number) {
         }
         return { success: false, message: data.message || "Failed to resend email" };
     } catch (error) {
-        console.error("Action error:", error);
         return { success: false, message: "An error occurred while resending the email" };
     }
 }

@@ -38,7 +38,6 @@ export const useBookmarks = () => {
         const data = await response.json();
         setBookmarks(data.data || []);
       } catch (error) {
-        console.error(error); 
         setBookmarks([]);
       } finally {
         setIsBookmarksLoading(false);

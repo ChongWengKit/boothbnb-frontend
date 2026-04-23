@@ -53,7 +53,6 @@ async function fetchBookmarks(token: string | undefined): Promise<number[]> {
 
         await validateResponse(response.status);
     } catch (e) {
-        console.error("Error fetching bookmarks:", e);
     }
     return [];
 }
@@ -94,7 +93,6 @@ async function fetchEvents(searchParams: SearchParams, token: string | undefined
             return data || { data: [], meta: paginationMetaDefault };
         }
     } catch (e) {
-        console.error("Error fetching events:", e);
     }
     return { data: [], meta: paginationMetaDefault };
 }

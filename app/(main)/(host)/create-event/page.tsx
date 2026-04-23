@@ -113,13 +113,10 @@ const CreateEvent = () => {
             };
 
             const result = await createEventAction(eventData);
-            console.log(result)
             validateResponse(result.status);
             if (result.success) {
-                console.log("before" + localStorage.getItem("create-event-data"));
 
                 localStorage.removeItem("create-event-data");
-                console.log("after" + localStorage.getItem("create-event-data"));
                 toast.success("Event created successfully");
                 router.push("/host-dashboard");
             } else {
@@ -127,8 +124,7 @@ const CreateEvent = () => {
                 setIsSubmitting(false);
             }
         } catch (error) {
-            console.log("Error during event creation:", error);
-            console.error(error);
+
             setIsSubmitting(false);
         }
     };

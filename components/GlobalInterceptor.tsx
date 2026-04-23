@@ -21,7 +21,6 @@ const GlobalFetchInterceptor = () => {
         const response = await originalFetch(...args);
         
         const isMyBackend = url.startsWith(BACKEND_URL as string);
-        console.log("INTERCEPTOR RESPONSE:", response.status, response.url);
         if (isMyBackend && response.status === 401) {
           router.push(`/login?reason=session_expired`);
         }

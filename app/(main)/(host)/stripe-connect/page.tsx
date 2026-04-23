@@ -60,7 +60,7 @@ export default function ConnectStripePage() {
                 toast.error(data.message || "Failed to start onboarding");
             }
         } catch (error) {
-            console.log(error)
+            
             toast.error("An error occurred");
         } finally {
             setLoading(false);

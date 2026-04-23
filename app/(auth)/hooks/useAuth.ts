@@ -51,7 +51,6 @@ export const useAuth = () => {
         body: JSON.stringify({ token: credential }),
       });
       const data = await res.json();
-      console.log(data);
       if (res.ok) {
         handleAuthSuccess(data.data.authentication_token, data.data.profile_photo);
       } else {

@@ -38,7 +38,7 @@ export async function checkoutAction(eventId: string, boothId: string, slug: str
     await validateResponse(response.status);
 
     if (!response.ok) {
-        console.log(response)
+        
         const errorData = await response.json().catch(() => ({}));
         return { success: false, message: errorData.message || 'Failed to initiate checkout' };
     }

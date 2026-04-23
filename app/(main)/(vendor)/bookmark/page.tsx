@@ -41,11 +41,9 @@ const Bookmark = async ({ searchParams }: PageProps) => {
                 if (response.ok) {
             const data = await response.json();
             bookmarks = data.data || [];
-            console.log("sadasdasd:" + response)
             paginationMeta = data.meta;
         }
     } catch (error) {
-        console.error(error);
     }
 
     return <BookmarkClient initialBookmarks={bookmarks} paginationMeta={paginationMeta} />;

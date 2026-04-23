@@ -139,7 +139,6 @@ const EditEventClient: React.FC<EditEventClientProps> = ({ event }) => {
                 booths: data.booths
             };
 
-            console.log("Submitting Update:", eventData);
 
             const result = await updateEventAction(event.slug, eventData);
 
@@ -152,7 +151,6 @@ const EditEventClient: React.FC<EditEventClientProps> = ({ event }) => {
             }
 
         } catch (error) {
-            console.error(error);
             toast.error("Failed to update event");
         }
     };

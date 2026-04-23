@@ -38,7 +38,6 @@ export const useLocationSearch = (initialQuery = '', debounceMs = 1000) => {
                 .then(data => {
                     setResults(data.features);
                 })
-                .catch(error => console.error("Error fetching location data:", error))
                 .finally(() => setIsLoading(false));
         }, debounceMs);
 
