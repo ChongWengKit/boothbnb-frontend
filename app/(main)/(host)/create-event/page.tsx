@@ -40,8 +40,8 @@ const boothSchema = z.object({
     rotation: z.number().int().default(0)
 });
 const eventSchema = z.object({
-    name: z.string().min(3, { message: "Name must be at least 3 characters" }),
-    description: z.string().min(10, { message: "Description must be at least 10 characters" }),
+    name: z.string().min(3, { message: "Name must be at least 3 characters" }).max(100, { message: "Name must be at most 100 characters" }),
+    description: z.string().min(10, { message: "Description must be at least 10 characters" }).max(2000, { message: "Description must be at most 2000 characters" }),
     address: z.string().min(1, { message: "Address is required" }),
     latitude: z.number({ error: "Location is required" }),
     longitude: z.number({ error: "Location is required" }),
