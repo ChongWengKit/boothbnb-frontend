@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 import { format } from "date-fns";
 import { FormField } from "@/components/event-form/form-field";
 import { DateTimeSection } from "@/components/event-form//date-field";
-import ImageUploader from "@/app/(main)/(host)/components/ImageUploader"; 
+import ImageUploader from "@/app/(main)/(host)/components/ImageUploader";
 import { updateEventAction } from "./actions";
 import { LocationSection } from "@/components/event-form/location-field";
 import { BoothSection } from "@/components/event-form/booth-field";
@@ -16,12 +16,19 @@ import { BoothSection } from "@/components/event-form/booth-field";
 
 const combineDateTime = (date: Date, time: string) => {
     const combined = new Date(date);
-    const [hours, minutes] = time.split(':');
-    combined.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+    const match = time.match(/(\d+):(\d+)\s*(am|pm)?/i);
+    if (match) {
+        let h = parseInt(match[1]);
+        const m = parseInt(match[2]);
+        const p = match[3]?.toLowerCase();
+        if (p === 'pm' && h < 12) h += 12;
+        if (p === 'am' && h === 12) h = 0;
+        combined.setHours(h, m, 0, 0);
+    }
     return combined.toISOString();
 };
 
-import { Booth } from "@/app/(main)/(host)/create-event/actions"; 
+import { Booth } from "@/app/(main)/(host)/create-event/actions";
 
 const CATEGORIES = [
     { value: "ART_CRAFT", label: "Art & Craft" },
@@ -44,16 +51,16 @@ const eventSchema = z.object({
     address: z.string().min(1, { message: "Address is required" }),
     latitude: z.number({ error: "Location is required" }),
     longitude: z.number({ error: "Location is required" }),
-    startDate: z.date({ error: "Start date is required" }),
+    startDate: z.preprocess((val) => val ? new Date(val as string) : undefined, z.date({ error: "Start date is required" })),
     startTime: z.string().min(1, { message: "Start time is required" }),
-    endDate: z.date({ error: "End date is required" }),
+    endDate: z.preprocess((val) => val ? new Date(val as string) : undefined, z.date({ error: "End date is required" })),
     endTime: z.string().min(1, { message: "End time is required" }),
     category: z.string().min(1, { message: "Category is required" }),
-    booths: z.array(z.object({ 
-        id: z.string(), 
+    booths: z.array(z.object({
+        id: z.string(),
         name: z.string().min(1, "Booth name is required"),
         type: z.enum(["AVAILABLE", "RESERVED", "SOLD", "LOCKED"]),
-        price: z.number().min(0), 
+        price: z.number().min(0),
         width: z.number().int().min(1),
         height: z.number().int().min(1),
         x: z.number().int(),
@@ -61,7 +68,22 @@ const eventSchema = z.object({
         rotation: z.number().int(),
     })).min(1, "At least one booth is required"),
     images: z.array(z.string()).max(5, { message: "Maximum 5 images allowed" })
-});
+}).refine((data) => {
+    const now = new Date();
+    const start = new Date(combineDateTime(data.startDate, data.startTime));
+    return start.getTime() >= now.getTime();
+}, {
+    message: "Start date and time cannot be in the past",
+    path: ["startDate"],
+})
+    .refine((data) => {
+        const start = new Date(combineDateTime(data.startDate, data.startTime));
+        const end = new Date(combineDateTime(data.endDate, data.endTime));
+        return end.getTime() > start.getTime();
+    }, {
+        message: "End date and time must be after start date and time",
+        path: ["endDate"],
+    });
 
 interface RawBoothData {
     id: number;
@@ -82,8 +104,8 @@ interface EventDetailResponse {
     address: string;
     latitude: number;
     longitude: number;
-    start_date: string; 
-    end_date: string;  
+    start_date: string;
+    end_date: string;
     category: string;
     images: { url: string }[];
     booths: RawBoothData[];
@@ -109,15 +131,15 @@ const EditEventClient: React.FC<EditEventClientProps> = ({ event }) => {
             startDate: start,
             startTime: format(start, "HH:mm"),
             endDate: end,
-            endTime: format(end, "HH:mm"), 
+            endTime: format(end, "HH:mm"),
             category: event.category || "",
             images: event.images.map((img: { url: string }) => img.url),
-            booths: event.booths.map((booth: RawBoothData) => ({ 
+            booths: event.booths.map((booth: RawBoothData) => ({
                 ...booth,
                 id: String(booth.id),
                 price: typeof booth.price === 'string' ? parseFloat(booth.price) : booth.price,
                 name: booth.name || `Booth ${booth.id}`,
-                rotation: booth.rotation ?? 0, 
+                rotation: booth.rotation ?? 0,
             })) || [],
         }
     });

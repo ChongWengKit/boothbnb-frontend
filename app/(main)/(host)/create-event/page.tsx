@@ -15,7 +15,19 @@ import { LocationSection } from "@/components/event-form/location-field";
 import { BoothSection } from "@/components/event-form/booth-field";
 import { validateResponse } from "@/app/contexts/auth";
 
-
+const combineDateTime = (date: Date, time: string) => {
+    const combined = new Date(date);
+    const match = time.match(/(\d+):(\d+)\s*(am|pm)?/i);
+    if (match) {
+        let h = parseInt(match[1]);
+        const m = parseInt(match[2]);
+        const p = match[3]?.toLowerCase();
+        if (p === 'pm' && h < 12) h += 12;
+        if (p === 'am' && h === 12) h = 0;
+        combined.setHours(h, m, 0, 0);
+    }
+    return combined.toISOString();
+};
 const boothSchema = z.object({
     id: z.string(),
     name: z.string().min(1, "Booth name is required"),
@@ -33,14 +45,30 @@ const eventSchema = z.object({
     address: z.string().min(1, { message: "Address is required" }),
     latitude: z.number({ error: "Location is required" }),
     longitude: z.number({ error: "Location is required" }),
-    startDate: z.date({ error: "Start date is required" }),
+    startDate: z.preprocess((val) => val ? new Date(val as string) : undefined, z.date({ error: "Start date is required" })),
+
     startTime: z.string().min(1, { message: "Start time is required" }),
     endDate: z.date({ error: "End date is required" }),
     endTime: z.string().min(1, { message: "End time is required" }),
     category: z.string().min(1, { message: "Category is required" }),
     booths: z.array(boothSchema).min(1, "At least one booth is required"),
     images: z.array(z.string()).max(5, "Maximum 5 images allowed")
-});
+}).refine((data) => {
+    const now = new Date();
+    const start = new Date(combineDateTime(data.startDate, data.startTime));
+    return start.getTime() >= now.getTime();
+}, {
+    message: "Start date and time cannot be in the past",
+    path: ["startDate"],
+})
+    .refine((data) => {
+        const start = new Date(combineDateTime(data.startDate, data.startTime));
+        const end = new Date(combineDateTime(data.endDate, data.endTime));
+        return end.getTime() > start.getTime();
+    }, {
+        message: "End date and time must be after start date and time",
+        path: ["endDate"],
+    });
 const CATEGORIES = [
     { value: "ART_CRAFT", label: "Art & Craft" },
     { value: "FOOD_BEVERAGE", label: "Food & Beverage" },
@@ -56,18 +84,12 @@ const CATEGORIES = [
     { value: "OTHERS", label: "Others" },
 ];
 
-const combineDateTime = (date: Date, time: string) => {
-    const combined = new Date(date);
-    const [hours, minutes] = time.split(':');
-    combined.setHours(parseInt(hours), parseInt(minutes), 0, 0);
-    return combined.toISOString();
-};
-
 const CreateEvent = () => {
+
     const router = useRouter();
     const methods = useForm({
         resolver: zodResolver(eventSchema),
-        defaultValues: {
+        mode: "all", defaultValues: {
             name: "",
             description: "",
             address: "",
@@ -97,6 +119,7 @@ const CreateEvent = () => {
     };
 
     const onSubmit = async (data: z.infer<typeof eventSchema>) => {
+        console.log("submitted", data);
         setIsSubmitting(true);
         try {
             const eventData = {
@@ -131,7 +154,7 @@ const CreateEvent = () => {
 
     return (
         <FormProvider {...methods}>
-            <form className="flex flex-col gap-8 rounded-lg border border-border bg-card p-8 shadow-lg" onSubmit={handleSubmit(onSubmit)}>
+            <form className="flex flex-col gap-8 rounded-lg border border-border bg-card p-8 shadow-lg" onSubmit={handleSubmit(onSubmit, (errors) => console.log("VALIDATION ERRORS", errors))}>
                 <h1 className="text-3xl font-bold">Event details</h1>
 
                 <FormField label="Name" error={errors.name?.message}>
