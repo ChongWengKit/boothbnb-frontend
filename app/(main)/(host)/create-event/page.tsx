@@ -45,10 +45,10 @@ const eventSchema = z.object({
     address: z.string().min(1, { message: "Address is required" }),
     latitude: z.number({ error: "Location is required" }),
     longitude: z.number({ error: "Location is required" }),
-    startDate: z.preprocess((val) => val ? new Date(val as string) : undefined, z.date({ error: "Start date is required" })),
+    startDate: z.date({ message: "Start date is required" }),
 
     startTime: z.string().min(1, { message: "Start time is required" }),
-    endDate: z.date({ error: "End date is required" }),
+    endDate: z.date({ message: "End date is required" }),
     endTime: z.string().min(1, { message: "End time is required" }),
     category: z.string().min(1, { message: "Category is required" }),
     booths: z.array(boothSchema).min(1, "At least one booth is required"),

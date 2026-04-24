@@ -51,9 +51,9 @@ const eventSchema = z.object({
     address: z.string().min(1, { message: "Address is required" }),
     latitude: z.number({ error: "Location is required" }),
     longitude: z.number({ error: "Location is required" }),
-    startDate: z.preprocess((val) => val ? new Date(val as string) : undefined, z.date({ error: "Start date is required" })),
+    startDate: z.date({ message: "Start date is required" }),
     startTime: z.string().min(1, { message: "Start time is required" }),
-    endDate: z.preprocess((val) => val ? new Date(val as string) : undefined, z.date({ error: "End date is required" })),
+    endDate: z.date({ message: "End date is required" }),
     endTime: z.string().min(1, { message: "End time is required" }),
     category: z.string().min(1, { message: "Category is required" }),
     booths: z.array(z.object({
@@ -120,7 +120,7 @@ const EditEventClient: React.FC<EditEventClientProps> = ({ event }) => {
     const start = new Date(event.start_date);
     const end = new Date(event.end_date);
 
-    const methods = useForm({
+    const methods = useForm<z.infer<typeof eventSchema>>({
         resolver: zodResolver(eventSchema),
         defaultValues: {
             name: event.title,
