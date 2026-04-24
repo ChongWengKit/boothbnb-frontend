@@ -1,6 +1,6 @@
 'use client';
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { resendEmailAction } from "../actions";
 import toast from "react-hot-toast";
@@ -23,12 +23,27 @@ interface EmailLogsListProps {
 }
 
 const EmailLogsList: React.FC<EmailLogsListProps> = ({ logs }) => {
+    const [loadingIds, setLoadingIds] = useState<Set<number>>(new Set());
+    const [successIds, setSuccessIds] = useState<Set<number>>(new Set());
+
     const handleResend = async (id: number) => {
-        const result = await resendEmailAction(id);
-        if (result.success) {
-            toast.success(result.message);
-        } else {
-            toast.error(result.message);
+        setLoadingIds((prev) => new Set(prev).add(id));
+        try {
+            const result = await resendEmailAction(id);
+            if (result.success) {
+                toast.success(result.message);
+                setSuccessIds((prev) => new Set(prev).add(id));
+            } else {
+                toast.error(result.message);
+            }
+        } catch (error) {
+            toast.error("An unexpected error occurred");
+        } finally {
+            setLoadingIds((prev) => {
+                const next = new Set(prev);
+                next.delete(id);
+                return next;
+            });
         }
     };
 
@@ -83,8 +98,9 @@ const EmailLogsList: React.FC<EmailLogsListProps> = ({ logs }) => {
                             <Button
                                 className="text-xs cursor-pointer"
                                 onClick={() => handleResend(log.id)}
+                                disabled={loadingIds.has(log.id) || successIds.has(log.id)}
                             >
-                                Resend
+                                {loadingIds.has(log.id) ? "Sending..." : "Resend"}
                             </Button>
                         )}
                     </div>
