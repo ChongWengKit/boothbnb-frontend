@@ -64,7 +64,7 @@ function SignIn() {
                             {...register("password")} />
                         {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
                         <div className="flex justify-end items-end">
-                            <button onClick={() => router.push('/forget-password')} className="cursor-pointer text-muted-foreground transition-colors hover:text-foreground">
+                            <button onClick={() => router.push('/forget-password')} type="button" className="cursor-pointer text-muted-foreground transition-colors hover:text-foreground">
                                 Forgot Password?
                             </button>
                         </div>
