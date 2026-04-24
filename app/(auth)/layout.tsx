@@ -16,9 +16,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
           </Link>
         </header>
         <main className="flex-col flex items-center justify-center flex-1">
-          <div className="max-w-md">
             {children}
-          </div>
         </main>
       </div>
       <footer className="bg-card text-card-foreground text-center py-8 border-t border-border">
