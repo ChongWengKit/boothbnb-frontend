@@ -35,7 +35,7 @@ async function Landing() {
         <>
             <TopBar />
 
-            <main className="flex min-h-screen flex-col overflow-x-hidden font-sans text-foreground">
+            <div className="flex min-h-screen flex-col overflow-x-hidden font-sans text-foreground">
                 <section className="relative w-full overflow-hidden" aria-labelledby="hero-heading">
                     <div className="grid grid-cols-1">
                         <div className="col-start-1 row-start-1 grid grid-cols-2 md:grid-cols-3 gap-4 px-8 pb-8">
@@ -104,7 +104,7 @@ async function Landing() {
                     </Link>
                     <p className="mt-4 text-md text-primary-foreground/90 md:text-xl">Join a community of successful vendors</p>
                 </section>
-            </main>
+            </div>
         </>
     );
 }

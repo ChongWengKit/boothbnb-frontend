@@ -19,7 +19,7 @@ export default function TopBar() {
 
             <nav
                 id="mobile-sidebar"
-                className={`fixed inset-y-0 left-0 z-[101] flex w-64 flex-col gap-10 border-r border-border bg-card/90 p-8 backdrop-blur-2xl transition-transform duration-300 md:hidden ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
+                className={`fixed inset-y-0 left-0 z-[101] flex w-64 flex-col gap-10  p-8 backdrop-blur-2xl transition-transform duration-300 md:hidden ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
                 aria-label="Main navigation"
             >
                 <div className="flex justify-between items-center">
@@ -66,7 +66,7 @@ export default function TopBar() {
                             </li>
                             <li>
                                 <Link href="/getstarted" onClick={() => setIsOpen(false)}>
-                                    <span className="text-lg font-medium transition-colors">Get Started</span>
+                                    <span className="text-lg font-medium text-white transition-colors">Get Started</span>
                                 </Link>
                             </li>
                         </>
