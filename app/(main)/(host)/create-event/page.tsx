@@ -119,7 +119,6 @@ const CreateEvent = () => {
     };
 
     const onSubmit = async (data: z.infer<typeof eventSchema>) => {
-        console.log("submitted", data);
         setIsSubmitting(true);
         try {
             const eventData = {
