@@ -59,9 +59,9 @@ const EmailLogsList: React.FC<EmailLogsListProps> = ({ logs }) => {
                     <div className="border-t border-border pt-4 md:col-span-2 md:border-t-0 md:border-l md:pt-0 md:pl-6 text-center">
                         <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Status</p>
                         <span className={`inline-block px-2 py-1 text-[10px] font-bold rounded-full ${log.status === 'BOUNCED' || log.status === 'COMPLAINED' ? 'bg-primary text-primary-foreground' :
-                                log.status === 'SUCCESSFUL' ? 'bg-green-100 text-green-700' :
-                                    log.status === 'FAILED' ? 'bg-red-100 text-red-700' :
-                                        'bg-yellow-100 text-yellow-700'
+                            log.status === 'SUCCESSFUL' ? 'bg-green-100 text-green-700' :
+                                log.status === 'FAILED' ? 'bg-red-100 text-red-700' :
+                                    'bg-yellow-100 text-yellow-700'
                             }`}>
                             {log.status}
                         </span>
@@ -73,18 +73,19 @@ const EmailLogsList: React.FC<EmailLogsListProps> = ({ logs }) => {
                     </div>
 
                     <div className="md:col-span-2 flex md:justify-end gap-2">
-                        {log.status === "FAILED" && (
+    
+                        {log.status === "SUCCESSFUL" && (
+                            <div className="bg-green-500/10 border border-green-500/20 p-2 rounded-lg">
+                                <p className="text-green-600 text-xs font-bold text-center">Sent</p>
+                            </div>
+                        )}
+                        {(log.status === "SUCCESSFUL" || log.status === "FAILED") && (
                             <Button
                                 className="text-xs cursor-pointer"
                                 onClick={() => handleResend(log.id)}
                             >
                                 Resend
                             </Button>
-                        )}
-                        {log.status === "SUCCESSFUL" && (
-                            <div className="bg-green-500/10 border border-green-500/20 p-2 rounded-lg">
-                                <p className="text-green-600 text-xs font-bold text-center">Sent</p>
-                            </div>
                         )}
                     </div>
                 </div>
