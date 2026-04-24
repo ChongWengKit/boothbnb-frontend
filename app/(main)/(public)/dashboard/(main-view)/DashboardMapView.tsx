@@ -102,13 +102,13 @@ export default function DashboardMapView({ events: serverEvents }: { events: Eve
         if (isLoading && loadingStartRef.current) {
             const elapsed = Date.now() - loadingStartRef.current;
             const remainingTime = Math.max(0, 3000 - elapsed);
-            
+
             const timeoutId = setTimeout(() => {
                 setIsLoading(false);
             }, remainingTime);
             return () => clearTimeout(timeoutId);
         }
-    }, [isLoading]); 
+    }, [isLoading]);
 
     const handleMove = useCallback((coords: [number, number]) => {
         centerRef.current = coords;
@@ -150,7 +150,7 @@ export default function DashboardMapView({ events: serverEvents }: { events: Eve
     }, [searchParams, getUrlCoords]);
 
     return (
-        <div className="relative h-dvh md:h-[120vh] rounded-none md:rounded-xl border-none md:border shadow-inner mt-0 md:mt-4">
+        <div className="relative h-dvh md:h-[80vh] rounded-none md:rounded-xl border-none md:border shadow-inner mt-0 md:mt-4">
             <style dangerouslySetInnerHTML={{
                 __html: `
                 /* Complete Leaflet Popup Reset */
@@ -171,7 +171,13 @@ export default function DashboardMapView({ events: serverEvents }: { events: Eve
                 }
                 .leaflet-container a {
                     color: inherit !important;
+                    --tw-text-opacity: 1;
+    color: rgb(0 0 0 / var(--tw-text-opacity)) !important;
                 }
+    .leaflet-control-zoom {
+    filter: invert(0) !important; /* Ensure no dark mode inversion is leaking in */
+}
+
             `}} />
 
             <MapContainer center={center} zoom={13} className="h-full w-full z-0">
