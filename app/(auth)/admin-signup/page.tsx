@@ -12,7 +12,7 @@ const ResetPassword = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const token = searchParams.get('token');
-
+    const [loading, isLoading] = useState(false);
     useEffect(() => {
         if (!token) {
             toast.error('Invalid token');
@@ -55,8 +55,9 @@ const ResetPassword = () => {
                 <Toaster position="top-center" />
                 <h2 className="text-2xl font-bold mb-4">Register</h2>
                 <div className="flex flex-col gap-4">
+                    <label htmlFor="username" className="block text-foreground">Username</label>
                     <input
-                    
+
                         type="text"
                         className="w-full rounded-lg border border-border bg-background px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                         value={username}
@@ -64,8 +65,9 @@ const ResetPassword = () => {
                         placeholder="Enter your username"
                         required
                     />
+                    <label htmlFor="password" className="block text-foreground">Password</label>
                     <input
-                    
+
                         type="password"
                         className="w-full rounded-lg border border-border bg-background px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                         value={password}
@@ -73,6 +75,7 @@ const ResetPassword = () => {
                         placeholder="Enter your password"
                         required
                     />
+                    <label htmlFor="confirmPassword" className="block text-foreground">Confirm Password</label>
                     <input
                         type="password"
                         className="w-full rounded-lg border border-border bg-background px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
@@ -84,8 +87,9 @@ const ResetPassword = () => {
                     <button
                         className="w-full rounded-full bg-primary px-6 py-3 font-bold text-primary-foreground transition-colors hover:bg-primary/90"
                         type="submit"
+                        disabled={loading}
                     >
-                        Submit
+                        {loading ? 'Loading...' : 'Register'}
                     </button>
                 </div>
             </div>
