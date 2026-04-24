@@ -13,6 +13,7 @@ export interface Booth {
     x: number;
     y: number;
     rotation: number;
+    description?: string;
 }
 
 export interface CreateEventRequest {

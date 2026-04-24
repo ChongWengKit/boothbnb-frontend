@@ -37,7 +37,8 @@ const boothSchema = z.object({
     height: z.number().min(1),
     x: z.number(),
     y: z.number(),
-    rotation: z.number().int().default(0)
+    rotation: z.number().int().default(0),
+    description: z.string().optional()
 });
 const eventSchema = z.object({
     name: z.string().min(3, { message: "Name must be at least 3 characters" }).max(100, { message: "Name must be at most 100 characters" }),
@@ -153,8 +154,8 @@ const CreateEvent = () => {
 
     return (
         <FormProvider {...methods}>
-            <form className="flex flex-col gap-8 rounded-lg border border-border bg-card p-8 shadow-lg" onSubmit={handleSubmit(onSubmit, (errors) => console.log("VALIDATION ERRORS", errors))}>
-                <h1 className="text-3xl font-bold">Event details</h1>
+            <form className="flex flex-col gap-8 rounded-lg border border-border bg-card p-8 shadow-lg" onSubmit={handleSubmit(onSubmit)}>
+                <h1 className="text-3xl font-bol">Event details</h1>
 
                 <FormField label="Name" error={errors.name?.message}>
                     <input className="w-full rounded-lg border border-border bg-background px-4 py-4 text-foreground" {...register("name")} placeholder="Name" />
@@ -197,7 +198,7 @@ const CreateEvent = () => {
                 <div className="flex flex-end justify-end gap-8 ">
                     <button className="cursor-pointer rounded-xl bg-secondary px-4 py-4 text-sm font-bold text-secondary-foreground" type="button" onClick={handleReset}>Reset</button>
                     <button className="cursor-pointer rounded-xl bg-primary px-4 py-4 text-sm font-bold text-primary-foreground hover:bg-primary/90" type="submit" disabled={isSubmitting}>
-                        {isSubmitting ? "Creating..." : "Create Event"}
+                        {isSubmitting ? "Creating..." : "Save"}
                     </button>
                 </div>
             </form>

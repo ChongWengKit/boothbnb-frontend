@@ -31,7 +31,8 @@ export const BoothSection = () => {
       height: 80,
       x: 0,
       y: 0,
-      rotation: 0
+      rotation: 0,
+      description: ""
     };
     setValue("booths", [...booths, newBooth], { shouldValidate: true });
   };
@@ -88,6 +89,7 @@ export const BoothSection = () => {
                     <span className="mr-1 text-xs font-bold text-foreground">$</span>
                     <input
                       type="number"
+                      min="0"
                       className="bg-transparent border-none p-0 w-20 text-xs font-bold focus:ring-0"
                       value={booth.price}
                       onChange={(e) => handleUpdateBooth(index, "price", Number(e.target.value))}
@@ -98,6 +100,7 @@ export const BoothSection = () => {
                     <span className="text-[10px] text-muted-foreground">width(cm)</span>
                     <input
                       type="number"
+                      min="1"
                       className="w-12 rounded border border-border bg-background p-1 text-center text-[10px] text-foreground"
                       value={booth.width}
                       onChange={(e) => handleUpdateBooth(index, "width", Number(e.target.value))}
@@ -105,13 +108,22 @@ export const BoothSection = () => {
                     <span className="text-[10px] text-muted-foreground">height(cm)</span>
                     <input
                       type="number"
+                      min="1"
                       className="w-12 rounded border border-border bg-background p-1 text-center text-[10px] text-foreground"
                       value={booth.height}
                       onChange={(e) => handleUpdateBooth(index, "height", Number(e.target.value))}
                     />
                   </div>
                 </div>
-
+                <div className="flex flex-col gap-1">
+                  <span className="text-[10px] font-bold uppercase text-muted-foreground px-1">Description</span>
+                  <textarea
+                    className="w-full rounded-md border border-border bg-background px-3 py-2 text-xs text-foreground focus:ring-1 focus:ring-ring min-h-[100px]"
+                    placeholder="Describe booth features or location..."
+                    value={booth.description || ""}
+                    onChange={(e) => handleUpdateBooth(index, "description", e.target.value)}
+                  />
+                </div>
               </div>
             ))}
           </div>
