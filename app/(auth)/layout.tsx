@@ -10,7 +10,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
         style={{ backgroundImage: 'url(https://res.cloudinary.com/di3qccrxy/image/upload/v1775736549/photo-1497366216548-37526070297c_cvi9gq.avif)' }}
       />
       <header className="px-4 md:px-8 py-6">
-        <Link href="/" className="text-xl font-bold text-foreground tracking-tight md:text-2xl">
+        <Link href="/" className="text-xl font-bold text-white tracking-tight md:text-2xl">
           BoothBnB
         </Link>
       </header>
