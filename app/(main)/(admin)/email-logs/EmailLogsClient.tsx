@@ -59,7 +59,7 @@ const EmailLogsClient: React.FC<EmailLogsClientProps> = ({ emailLogs, pagination
         <>
             <div className="flex flex-col gap-6">
 
-                <div className="flex flex-wrap items-center gap-4 rounded-lg bg-background p-4 border shadow-sm">
+                <div className="flex flex-wrap items-center gap-4 rounded-lg bg-background p-4">
                     <div className="flex-1 min-w-[200px]">
                         <input
                             type="text"

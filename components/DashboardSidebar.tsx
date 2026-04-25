@@ -34,7 +34,7 @@ const DashboardSidebar = () => {
   ];
 
   return (
-    <aside className={`hidden flex-col gap-2 border-r border-border bg-card shadow-lg transition-all duration-300 md:flex ${sidebarExpanded ? 'w-[300px]' : 'w-[80px]'}`}>
+    <aside className={`hidden flex-col md:sticky md:bottom-0 md:left-0 md:top-[64px] md:h-[calc(100vh-64px)] h-screen gap-2 border-r border-border bg-card shadow-lg transition-all duration-300 md:flex ${sidebarExpanded ? 'w-[300px]' : 'w-[80px]'}`}>
       <button className="flex justify-end cursor-pointer p-4 text-xl" onClick={toggleSidebar}>
         {sidebarExpanded ? '✕' : '☰'}
       </button>
