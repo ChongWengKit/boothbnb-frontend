@@ -4,9 +4,9 @@ import DashboardBottombar from '@/components/DashboardBottombar';
 
 const Navbar = ({ children }: React.PropsWithChildren) => {
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       <DashboardTopbar />
-      <div className="flex min-h-screen">
+      <div className="flex flex-1"> 
         <DashboardSidebar />
 
           <main className="flex-1 min-w-0">
@@ -14,7 +14,6 @@ const Navbar = ({ children }: React.PropsWithChildren) => {
         </main>
       </div>
       <DashboardBottombar />
-
     </div>
   );
 };

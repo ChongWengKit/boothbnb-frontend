@@ -5,11 +5,11 @@ import RoleGuard from '@/components/ProtectedRoute';
 
 const Navbar = ({ children }: React.PropsWithChildren) => {
     return (
-    <div>
+    <div className="flex flex-col min-h-screen">
 
       <RoleGuard allowedRoles={['ADMIN']}>
         <DashboardTopbar />
-        <div className="flex min-h-screen">
+        <div className="flex flex-1">
           <DashboardSidebar />
           <main className="flex-1 min-w-0">
             {children}

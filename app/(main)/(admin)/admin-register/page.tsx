@@ -40,8 +40,8 @@ const AdminRegisterPage = () => {
     };
 
     return (
-        <div className="flex h-full min-h-[80vh] items-center justify-center bg-background">
-            <form onSubmit={handleRegister} className="flex w-full max-w-md flex-col gap-4 p-6">
+        <div className="flex h-full items-center justify-center bg-background">
+            <form onSubmit={handleRegister} className="flex w-full max-w-md flex-col gap-4 p-6 rounded-2xl border border-border bg-card shadow-sm">
                 <div className="text-center">
                     <h1 className="text-2xl font-bold">Register New Admin</h1>
                     <p className="text-sm text-muted-foreground">Send an invitation to a new administrator.</p>
