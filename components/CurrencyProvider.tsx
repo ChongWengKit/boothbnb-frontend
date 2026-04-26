@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import countryToCurrency from 'country-to-currency';
 import { setCurrency } from '@/app/contexts/currency';
 
@@ -20,40 +20,34 @@ export const CurrencyProvider = ({
   initialCountryCode?: string | null;
   initialCurrencyCode?: string | null;
 }) => {
-  const [currencyCode, setCurrencyCode] = useState('');
+  const [currencyCode, setCurrencyCode] = useState(() => {
+    if (initialCurrencyCode) return initialCurrencyCode;
+    
+    if (initialCountryCode) {
+      const code = countryToCurrency[initialCountryCode as keyof typeof countryToCurrency];
+      return code || 'USD';
+    }
+    
+    return 'USD';
+  });
 
-  const handleSetCurrencyCode = (code: string) => {
+  const handleSetCurrencyCode = useCallback((code: string) => {
     setCurrencyCode(code);
     setCurrency(code);
-  };
+  }, []);
 
   useEffect(() => {
-    if (!initialCurrencyCode) {
-      if (initialCountryCode) {
-        const code = countryToCurrency[initialCountryCode as keyof typeof countryToCurrency];
-        if (code) {
-          fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/currency?currencyCode=${code}`)
-            .then(async (res) => {
-              if (res.ok) {
-                handleSetCurrencyCode(code);
-              } else {
-                handleSetCurrencyCode('USD');
-              }
-            })
-            .catch(() => handleSetCurrencyCode('USD'));
-        }
-        else {
-          handleSetCurrencyCode('USD');
-        }
-      }
-      else {
-        handleSetCurrencyCode('USD');
+    if (!initialCurrencyCode && initialCountryCode) {
+      const code = countryToCurrency[initialCountryCode as keyof typeof countryToCurrency];
+      if (code) {
+        fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/currency?currencyCode=${code}`)
+          .then((res) => {
+            if (!res.ok) handleSetCurrencyCode('USD');
+          })
+          .catch(() => handleSetCurrencyCode('USD'));
       }
     }
-    else {
-      handleSetCurrencyCode(initialCurrencyCode);
-    }
-  }, [initialCountryCode]);
+  }, [initialCountryCode, initialCurrencyCode, handleSetCurrencyCode]);
 
   return (
     <CurrencyContext.Provider value={{ currencyCode, handleSetCurrencyCode }}>
