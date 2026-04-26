@@ -13,7 +13,15 @@ export async function getProfilePhoto() {
   const cookieStore = await cookies();
   return cookieStore.get('profile_photo')?.value;
 }
-
+export async function setProfilePhoto(url: string) {
+  const cookieStore = await cookies();
+  cookieStore.set('profile_photo', url, {
+    expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    secure: true,
+    sameSite: 'lax',
+    path: '/'
+  });
+}
 export async function validateResponse(status: number) {
   if (status === 401) {
     redirect('/login?reason=session_expired');

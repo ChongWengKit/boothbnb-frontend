@@ -4,22 +4,27 @@ import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { useUserContext } from "@/app/contexts/UserContext";
 import EventResultsList from "@/app/(main)/(public)/components/EventResultsList";
+import { updateProfileAction } from "../[slug]/action";
 import Pagination from "@/components/Pagination";
 import Image from "next/image";
+import { useCloudinaryUpload } from '@/app/hooks/useCloudinaryUpload';
+import React from "react";
+import { Camera } from "lucide-react";
+import { setProfilePhoto } from "@/app/contexts/auth";
 
 export interface AccountEvent {
-  id: number;
-  title: string;
-  start_date: string;
-  end_date: string;
-  address: string;
-  thumbnail: string | null;
-  slug: string;
-  total_bookings: number;
-  total_capacity: number;
-  available_booths: number;
-  latitude: number;
-  longitude: number;
+    id: number;
+    title: string;
+    start_date: string;
+    end_date: string;
+    address: string;
+    thumbnail: string | null;
+    slug: string;
+    total_bookings: number;
+    total_capacity: number;
+    available_booths: number;
+    latitude: number;
+    longitude: number;
 }
 
 export interface Account {
@@ -41,7 +46,36 @@ export interface PaginationMeta {
 export default function AccountDetailClient({ account, paginationMeta }: { account: Account, paginationMeta: PaginationMeta }) {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const { user } = useUserContext();
+    const { user,  } = useUserContext();
+    const [tempPhoto, setTempPhoto] = React.useState<string | null>(null);
+    const { uploadFile, isUploading } = useCloudinaryUpload();
+    const isOwnProfile = user?.email === account?.email;
+
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const url = await uploadFile(file);
+        if (url) {
+            setTempPhoto(url);
+            toast.success("Photo uploaded! Click save to update profile.");
+        }
+    };
+
+    const handleSaveProfile = async () => {
+        if (!tempPhoto) return;
+        
+        const result = await updateProfileAction({ profile_photo: tempPhoto });
+        
+        if (result.success) {
+            toast.success("Profile updated successfully");
+            setTempPhoto(null);
+            setProfilePhoto(tempPhoto);
+            router.refresh();
+        } else {
+            toast.error(result.message || "Failed to update profile");
+        }
+    };
 
     const handlePageChange = (newPage: number) => {
         const params = new URLSearchParams(searchParams.toString());
@@ -55,21 +89,35 @@ export default function AccountDetailClient({ account, paginationMeta }: { accou
             <div className="bg-background rounded-lg shadow-lg p-8">
                 <div className="flex flex-col gap-8">
                     <div className="flex items-center gap-8">
-                        {account?.profile_photo ? (<>
-                            <div className="relative">
-                                <Image 
-                                    className="w-32 h-32 rounded-full object-cover" 
-                                    src={account?.profile_photo} 
+                        <div className="relative">
+                            {(tempPhoto || account?.profile_photo) ? (
+                                <Image
+                                    className="w-32 h-32 rounded-full object-cover"
+                                    src={tempPhoto || account?.profile_photo || ""}
                                     alt={account?.username}
                                     width={128}
                                     height={128}
                                 />
-                            </div>
-
-                        </>
-                        ) : (
-                            <div className="w-32 h-32 rounded-full bg-muted shrink-0" />
-                        )}
+                            ) : (
+                                <div className="w-32 h-32 rounded-full bg-muted shrink-0" />
+                            )}
+                            {isOwnProfile && (
+                                <label className="absolute -top-2 -right-2 p-2 bg-primary text-primary-foreground rounded-full cursor-pointer hover:bg-primary/90 transition-colors shadow-md">
+                                    {isUploading ? (
+                                        <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                                    ) : (
+                                        <Camera size={20} />
+                                    )}
+                                    <input
+                                        type="file"
+                                        className="hidden"
+                                        accept="image/png, image/jpeg, image/webp"
+                                        onChange={handleImageUpload}
+                                        disabled={isUploading}
+                                    />
+                                </label>
+                            )}
+                        </div>
 
                         <div className="flex flex-col gap-4">
                             <h1 className="text-3xl font-bold">Profile</h1>
@@ -78,6 +126,15 @@ export default function AccountDetailClient({ account, paginationMeta }: { accou
                             <div>Email:<span className="font-semibold ml-2">{account?.email}</span></div>
                             <div>Created in:<span className="font-semibold ml-2">{account?.created_at ? new Date(account.created_at).toLocaleDateString('en-US') : ''}</span></div>
                         </div>
+
+                        {tempPhoto && (
+                            <button
+                                onClick={handleSaveProfile}
+                                className="ml-auto rounded-xl bg-primary px-6 py-2 text-sm font-bold text-primary-foreground hover:bg-primary/90 transition-all"
+                            >
+                                Save Changes
+                            </button>
+                        )}
                     </div>
 
 
