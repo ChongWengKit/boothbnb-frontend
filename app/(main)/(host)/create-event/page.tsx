@@ -47,7 +47,6 @@ const eventSchema = z.object({
     latitude: z.number({ error: "Location is required" }),
     longitude: z.number({ error: "Location is required" }),
     startDate: z.date({ message: "Start date is required" }),
-
     startTime: z.string().min(1, { message: "Start time is required" }),
     endDate: z.date({ message: "End date is required" }),
     endTime: z.string().min(1, { message: "End time is required" }),
