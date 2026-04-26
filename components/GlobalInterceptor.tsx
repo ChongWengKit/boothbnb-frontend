@@ -27,8 +27,6 @@ const GlobalFetchInterceptor = () => {
 
         return response;
       } catch (error: unknown) {
-        const errorMessage = error instanceof Error ? error.message : "An unknown network error occurred";
-        toast.error(`Network Error: ${errorMessage}.`);
         throw error;
       }
     };

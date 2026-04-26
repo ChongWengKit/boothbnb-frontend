@@ -1,5 +1,6 @@
 'use client'
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { useCurrency } from "@/components/CurrencyProvider";
 import { IoClose } from "react-icons/io5";
 interface BoothLayoutViewerProps {
     booths: Booth[];
@@ -29,6 +30,7 @@ export default function BoothLayoutViewer({
     onClose
 }: BoothLayoutViewerProps) {
     const [selectedBooth, setSelectedBooth] = useState<Booth | null>(null);
+    const { currencyCode } = useCurrency();
 
     return (
         <div className="mx-auto flex max-h-screen w-full max-w-lg flex-col items-center justify-center rounded-lg border border-border bg-card p-4 shadow-lg">
@@ -83,7 +85,7 @@ export default function BoothLayoutViewer({
                                     <div className="text-right">
                                         <span className="font-bold uppercase text-muted-foreground">Price</span>
                                         <p className="text-xl font-black text-foreground">
-                                            ${booth.price}
+                                            <span className="text-sm font-normal text-muted-foreground mr-1">Est. </span>{booth.price} {currencyCode}
                                         </p>
                                     </div>
                                 </div>

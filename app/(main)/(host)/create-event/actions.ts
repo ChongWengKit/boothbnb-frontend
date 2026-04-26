@@ -1,6 +1,7 @@
 'use server';
 
-import { validateResponse } from "@/app/contexts/auth";
+import { getAuthToken, validateResponse } from "@/app/contexts/auth";
+import { getCurrency } from "@/app/contexts/currency";
 import { cookies } from "next/headers";
 
 export interface Booth {
@@ -30,13 +31,15 @@ export interface CreateEventRequest {
 }
 
 export async function createEventAction(eventData: CreateEventRequest) {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('authentication_token')?.value;
+    const token = await getAuthToken();
+    const currency = await getCurrency();
+
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/event`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `bearer ${token}`
+            'Authorization': `bearer ${token}`,
+            ...(currency && { 'currency': currency })
         },
         body: JSON.stringify(eventData)
     });

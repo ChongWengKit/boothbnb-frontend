@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { getBookingByIdAction } from "../action";
 import Link from "next/link";
 import { IoArrowBack } from "react-icons/io5";
@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import { formatEventDate } from "@/app/lib/util";
+import PrintButton from "./components/printButton";
 
 
 export default async function BookingDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -48,7 +49,7 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
                             <DetailItem label="Event ID" value={booth.event_id} />
                             <DetailItem label="Booth ID" value={booking.booth_id} />
                             <DetailItem label="Vendor ID" value={booking.vendor_id} />
-                            <DetailItem label="Price Paid" value={`$${Number(booth.price).toLocaleString()}`} />
+                            <DetailItem label="Price Paid" value={`${booking.currency_code?.toUpperCase()} ${Number(booth.price).toLocaleString()}`} />
                             {booking.cardBrand && (
                                 <DetailItem
                                     label="Payment Method"
@@ -103,6 +104,7 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
                     </div>
 
                     <div className="flex flex-col gap-3 no-print">
+                        <PrintButton />
                         <Link
                             href={`/dashboard/${event.slug}`}
                             className="block w-full rounded-xl bg-primary py-4 text-center font-bold text-primary-foreground transition-all hover:bg-primary/90"

@@ -3,9 +3,11 @@ import { useFormContext } from "react-hook-form";
 import { Trash2, Plus } from "lucide-react";
 import { useRef } from "react";
 import { Booth } from "@/app/(main)/(host)/create-event/actions";
+import { useCurrency } from "@/components/CurrencyProvider";
 
 export const BoothSection = () => {
   const { watch, setValue } = useFormContext();
+  const { currencyCode } = useCurrency();
   const nextBoothId = useRef(0);
   const booths: Booth[] = watch("booths") || [];
 
@@ -86,10 +88,11 @@ export const BoothSection = () => {
                   </select>
 
                   <div className="flex items-center rounded-md border border-border bg-background px-2 py-1">
-                    <span className="mr-1 text-xs font-bold text-foreground">$</span>
+                    <span className="mr-1 text-xs font-bold text-muted-foreground">{currencyCode}</span>
                     <input
                       type="number"
                       min="0"
+                      step="0.01"
                       className="bg-transparent border-none p-0 w-20 text-xs font-bold focus:ring-0"
                       value={booth.price}
                       onChange={(e) => handleUpdateBooth(index, "price", Number(e.target.value))}

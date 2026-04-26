@@ -19,15 +19,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    
+
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <SessionProvider>
-          <ThemeProvider>
-          <App>{children}</App>
-          <ThemeToggle />
-          </ThemeProvider>
-        </SessionProvider>
+        <App>{children}</App>
         <Toaster position="top-center" />
       </body>
     </html>

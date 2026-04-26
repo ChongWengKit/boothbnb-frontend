@@ -1,13 +1,16 @@
 import React from 'react';
 import { getAuthToken, validateResponse } from "@/app/contexts/auth";
+import { getCurrency } from "@/app/contexts/currency";
 import EditEventClient from './EditEventClient';
 
 async function getEvent(slug: string) {
     const token = await getAuthToken();
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/event/${slug}/detail`, {
+    const currency = await getCurrency();
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/event/${slug}/edit`, {
         cache: 'no-store',
         headers: {
             'Authorization': `bearer ${token}`,
+            'currency': currency || '',
         },
     });
 

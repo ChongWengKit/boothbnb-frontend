@@ -1,13 +1,19 @@
 import DashboardEventDetailClient from "@/components/dashboard/eventSection";
 import { getAuthToken, validateResponse } from "@/app/contexts/auth";
+import { getCurrency } from "@/app/contexts/currency";
 import Link from "next/dist/client/link";
 import { IoArrowBack } from "react-icons/io5";
 
 async function getEvent(slug: string) {
     const token = await getAuthToken();
+    const currency = await getCurrency();
+    const headers: Record<string, string> = {};
+    if (token) headers['Authorization'] = `bearer ${token}`;
+    if (currency) headers['currency'] = currency;
+
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/event/${slug}`, {
         cache: 'no-store',
-        headers: token ? { 'Authorization': `bearer ${token}` } : {},
+        headers,
     });
         if (!response.ok) {
         throw new Error('Failed to fetch event');
