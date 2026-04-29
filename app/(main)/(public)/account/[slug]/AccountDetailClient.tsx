@@ -121,10 +121,10 @@ export default function AccountDetailClient({ account, paginationMeta }: { accou
 
                         <div className="flex flex-col gap-4">
                             <h1 className="text-3xl font-bold">Profile</h1>
-                            <div>Username:<span className="font-semibold select-none ml-2">{account?.username}</span></div>
-                            <div>Role:<span className="font-semibold ml-2">{account?.role}</span></div>
-                            <div>Email:<span className="font-semibold ml-2">{account?.email}</span></div>
-                            <div>Created in:<span className="font-semibold ml-2">{account?.created_at ? new Date(account.created_at).toLocaleDateString('en-US') : ''}</span></div>
+                            <div className="flex flex-wrap items-center">Username:<span className="font-semibold">{account?.username}</span></div>
+                            <div className="flex flex-wrap items-center">Role:<span className="font-semibold">{account?.role}</span></div>
+                            <div className="flex flex-wrap items-center">Email:<span className="font-semibold">{account?.email}</span></div>
+                            <div className="flex flex-wrap items-center">Created in:<span className="font-semibold">{account?.created_at ? new Date(account.created_at).toLocaleDateString('en-US') : ''}</span></div>
                         </div>
 
                         {tempPhoto && (
