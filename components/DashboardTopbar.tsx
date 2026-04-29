@@ -34,11 +34,11 @@ const DashboardTopbar = () => {
       <Link href="/">
         <div className="text-2xl cursor-pointer text-foreground font-extrabold text-center">BoothBnB</div>
       </Link>
-      
+
       <nav className="flex items-center gap-4">
         {user?.role === "HOST" && (
           <div className="hidden md:flex items-center gap-2">
-            <Link 
+            <Link
               href="/stripe-connect"
               className={`rounded-lg border px-4 py-2 text-sm font-semibold transition-colors ${user?.is_stripe_connected ? "border-border bg-background text-foreground" : "border-primary bg-primary text-primary-foreground hover:bg-primary/90"}`}
             >
@@ -46,7 +46,7 @@ const DashboardTopbar = () => {
             </Link>
           </div>
         )}
-        
+
         <div className="relative">
           <button
             onClick={() => {
@@ -69,17 +69,17 @@ const DashboardTopbar = () => {
               />
               <ul className="max-h-48 overflow-y-auto">
                 {filteredCurrencies.map((code) => (
-                <li
-                  key={code}
-                  className={`cursor-pointer px-4 py-2 text-sm font-medium transition-colors hover:bg-accent ${currencyCode === code ? "text-primary" : "text-foreground"}`}
-                  onClick={() => {
-                    handleSetCurrencyCode(code);
-                    setIsCurrencyOpen(false);
-                  }}
-                >
-                  {code}
-                </li>
-              ))}
+                  <li
+                    key={code}
+                    className={`cursor-pointer px-4 py-2 text-sm font-medium transition-colors hover:bg-accent ${currencyCode === code ? "text-primary" : "text-foreground"}`}
+                    onClick={() => {
+                      handleSetCurrencyCode(code);
+                      setIsCurrencyOpen(false);
+                    }}
+                  >
+                    {code}
+                  </li>
+                ))}
                 {filteredCurrencies.length === 0 && (
                   <li className="px-4 py-2 text-xs text-muted-foreground">No results</li>
                 )}
@@ -93,12 +93,12 @@ const DashboardTopbar = () => {
           onClick={() => setIsOpen(!isOpen)}
         >
           {user?.profile_photo ? (
-            <Image 
-                className="w-12 h-12 rounded-full object-cover" 
-                src={user.profile_photo} 
-                alt="Profile" 
-                width={48} 
-                height={48} 
+            <Image
+              className="w-12 h-12 rounded-full object-cover"
+              src={user.profile_photo}
+              alt="Profile"
+              width={48}
+              height={48}
             />
           ) : (
             <div className="w-12 h-12 rounded-full bg-muted shrink-0" />
@@ -108,12 +108,21 @@ const DashboardTopbar = () => {
           {isOpen && (
             <ul className="absolute top-full right-0 z-50 mt-2 w-32 rounded-xl border border-border bg-popover py-2 shadow-lg">
               {user ? (
-                <li
-                  className="cursor-pointer px-4 py-2 text-sm font-medium text-destructive transition-colors hover:bg-muted/10"
-                  onClick={() => logout()}
-                >
-                  Log out
-                </li>
+                <>
+                  <li className="cursor-pointer px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-accent">
+                    <Link href={`/account/${user.username}`}>
+                      Account
+                    </Link>
+                  </li>
+                  <li
+                    className="cursor-pointer px-4 py-2 text-sm font-medium text-destructive transition-colors hover:bg-muted/10"
+                    onClick={() => logout()}
+                  >
+                    Log out
+                  </li>
+
+                </>
+
               ) : (
                 <Link href="/login">
                   <li className="cursor-pointer px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-accent">

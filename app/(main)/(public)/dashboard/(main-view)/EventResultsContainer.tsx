@@ -12,7 +12,7 @@ import dynamic from "next/dynamic";
 
 const DashboardMapView = dynamic(() => import("./DashboardMapView"), { ssr: false });
 
-export default function EventResultsContainer({ initialEvents, initialBookmarks }: { initialEvents: Event[], initialBookmarks: Event[] }) {
+export default function EventResultsContainer({ initialEvents, initialBookmarks, totalItems }: { initialEvents: Event[], initialBookmarks: Event[], totalItems: number}) {
     const router = useRouter();
     const searchParams = useSearchParams();
     const viewMode = (searchParams.get("view") as 'list' | 'map') || 'list';
@@ -46,6 +46,10 @@ export default function EventResultsContainer({ initialEvents, initialBookmarks 
             params.delete('lat');
             params.delete('lon');
             params.delete('zoom');
+            params.delete('sw_lat');
+            params.delete('sw_lng');
+            params.delete('ne_lat');
+            params.delete('ne_lng');
         }
         router.replace(`/dashboard?${params.toString()}`, { scroll: false });
     };
@@ -61,7 +65,7 @@ export default function EventResultsContainer({ initialEvents, initialBookmarks 
                 <Button
                     variant="outline"
                     onClick={handleToggleView}
-                    className={`flex items-center gap-2 bg-background/90 text-foreground shadow-sm hover:text-foreground ${viewMode === 'map' ? 'border-border backdrop-blur-sm' : ''}`}
+                    className={`flex items-center gap-2 bg-background text-foreground shadow-sm hover:text-foreground}`}
                 >
                     {viewMode === 'list' ? <MapIcon size={18} /> : <LayoutList size={18} />}
                     {viewMode === 'list' ? 'Search by Map' : 'Show List'}
@@ -74,7 +78,7 @@ export default function EventResultsContainer({ initialEvents, initialBookmarks 
                     isLoading={false}
                     emptyTitle="No events found"
                     emptySubtitle="Try adjusting your search area or dates."
-                    title={initialEvents.length > 0 ? `Found ${initialEvents.length} events` : undefined}
+                    title={totalItems> 0 ? `Found ${totalItems} events` : undefined}
                     bookmarks={bookmarks}
                     onToggleBookmark={user?.role !== 'HOST' ? handleToggleBookmark : undefined}
                 />

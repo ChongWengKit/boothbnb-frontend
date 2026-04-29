@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { formatEventDate } from "@/app/lib/util";
 import { Button } from "@/components/ui/button";
 import { updateApprovalAction } from "../actions";
@@ -30,6 +30,18 @@ interface AdminApprovalProps {
 
 const AdminApproval: React.FC<AdminApprovalProps> = ({ requests: initialRequests }) => {
     const [requests, setRequests] = useState<AdminRequest[]>(initialRequests);
+    const prevInitialRequestsRef = useRef<AdminRequest[] | null>(null);
+
+    useEffect(() => {
+    
+        if (
+            !prevInitialRequestsRef.current ||
+            JSON.stringify(initialRequests) !== JSON.stringify(prevInitialRequestsRef.current)
+        ) {
+            setRequests(initialRequests);
+            prevInitialRequestsRef.current = initialRequests;
+        }
+    }, [initialRequests]);
 
     const handleAction = async (id: number, status: "APPROVED" | "REJECTED") => {
         setRequests(requests.map(req =>
@@ -39,7 +51,7 @@ const AdminApproval: React.FC<AdminApprovalProps> = ({ requests: initialRequests
         const result = await updateApprovalAction(id, status);
         if (result.success) {
             toast.success(result.message);
-        } else {
+        } else { 
             toast.error(result.message);
             setRequests(initialRequests);
         }

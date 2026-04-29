@@ -19,8 +19,12 @@ export default function PaginationContainer({ currentPage, totalPages, hasNextPa
         router.push(`/dashboard?${params.toString()}`);
     };
 
+    if (totalPages <= 1) {
+        return null; // Don't render the container if there's only one page or no pages
+    }
+
     return (
-        <div className={`${isMapView ? "fixed bottom-[60px] left-0 right-0 backdrop-blur-md py-2 border-t z-[1002] md:relative md:bottom-0 md:bg-transparent md:border-none md:z-auto" : "m-4"}`}>
+        <div className="fixed bottom-[72px] left-0 right-0 backdrop-blur-md py-2 border-t z-[1002] md:relative md:bottom-0 md:bg-transparent md:border-none md:z-auto">
             <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}

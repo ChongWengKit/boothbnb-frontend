@@ -9,7 +9,7 @@ export const useAuth = () => {
   const handleAuthSuccess = useHandleAuthSuccess();
   const router = useRouter();
   const API_DOMAIN = process.env.NEXT_PUBLIC_API_DOMAIN;
-  
+
   const signIn = async (credentials: credentials) => {
     try {
       const response = await fetch(`${API_DOMAIN}/auth/signin`, {
@@ -71,8 +71,14 @@ export const useAuth = () => {
       const result = await res.json();
       if (!res.ok) return toast.error(result.message || 'Sign up failed');
       if (result.data.authentication_token) {
-        handleAuthSuccess(result.data.authentication_token, result.data.profile_photo, 'Sign up successful!');
+        await handleAuthSuccess(result.data.authentication_token, result.data.profile_photo, 'Sign up successful!');
       }
+      else if(role == "HOST")
+      {
+        toast.success(result.message)
+      }
+     
+      return result;
     } catch (error) {
       toast.error('An error occurred during Google Sign-Up.');
     }

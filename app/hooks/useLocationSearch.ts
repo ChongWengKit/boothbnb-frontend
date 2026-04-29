@@ -8,6 +8,9 @@ export interface LocationSearchResult {
         district?: string;
         state?: string;
         country?: string;
+        type?: string;
+        extent: number[];
+
     };
     geometry: {
         coordinates: [number, number];

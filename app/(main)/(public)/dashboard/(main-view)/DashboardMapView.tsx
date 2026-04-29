@@ -53,7 +53,7 @@ export default function DashboardMapView({ events: serverEvents }: { events: Eve
     const router = useRouter();
     const searchParams = useSearchParams();
     const [isLoading, setIsLoading] = useState(false);
-    const defaultCenter: [number, number] = [3.1390, 101.6869];
+    const defaultCenter: [number, number] = [40.7128, -74.0060];
 
     const getUrlCoords = useCallback((): [number, number] => {
         const lat = searchParams.get("lat");
@@ -156,23 +156,25 @@ export default function DashboardMapView({ events: serverEvents }: { events: Eve
                 /* Complete Leaflet Popup Reset */
                 .leaflet-popup-content-wrapper {
                     padding: 0 !important;
-                    background: transparent !important;
+                    background: transparent !important; /* Fix white layer popping out */
                     box-shadow: none !important;
                     border-radius: 0 !important;
+                    border: none !important;
                 }
                 .leaflet-popup-content {
                     margin: 0 !important;
                     width: 288px !important; /* Exact match for EventCard w-72 */
                     padding: 0 !important;
-                    all: initial; /* Ignore every single inherit for the popup content */
+                    /* Block Leaflet font garbage and reset to app defaults */
+                    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+                    line-height: 1.5 !important;
+                    color: inherit !important;
                 }
                 .leaflet-popup-tip-container, .leaflet-popup-close-button {
                     display: none !important;
                 }
                 .leaflet-container a {
                     color: inherit !important;
-                    --tw-text-opacity: 1;
-    color: rgb(0 0 0 / var(--tw-text-opacity)) !important;
                 }
     .leaflet-control-zoom {
     filter: invert(0) !important; /* Ensure no dark mode inversion is leaking in */

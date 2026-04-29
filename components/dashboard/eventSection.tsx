@@ -70,7 +70,7 @@ export default async function DashboardEventDetailClient({ event, isHost = false
     if (token) {
         try {
             user = jwtDecode<User>(token);
-            isHost = user.role === "HOST";
+            isHost = user.role === "HOST" || user.role === "ADMIN";
             isOwner = Number(user.id) === Number(event.host_id);
         } catch (e) {
         }

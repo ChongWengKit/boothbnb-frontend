@@ -80,7 +80,7 @@ const EventCard: React.FC<EventCardProps> = ({
           )}
           <div className="flex justify-between items-center mt-2 pt-2 border-t">
             <span className="text-xs font-medium uppercase tracking-tighter text-muted-foreground">Capacity</span>
-            <p className="text-sm font-semibold">{`${event.available_booths} / ${event.total_capacity}`}</p>
+            <p className="text-sm text-card-foreground font-semibold">{`${event.available_booths} / ${event.total_capacity}`}</p>
           </div>
         </div>
       </div>

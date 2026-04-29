@@ -28,6 +28,11 @@ const CATEGORIES = [
 interface Coordinates {
     lat: number | null;
     lon: number | null;
+    type: string | null;
+    ne_lat: number | null;
+    ne_lng: number | null;
+    sw_lat: number | null;
+    sw_lng: number | null;
 }
 
 export default function DashboardSearch() {
@@ -48,9 +53,13 @@ export default function DashboardSearch() {
 
     const [coordinates, setCoordinates] = useState<Coordinates>({
         lat: searchParams.get("lat") ? parseFloat(searchParams.get("lat")!) : null,
-        lon: searchParams.get("lon") ? parseFloat(searchParams.get("lon")!) : null
+        lon: searchParams.get("lon") ? parseFloat(searchParams.get("lon")!) : null,
+        type: searchParams.get("type") || null,
+        ne_lat: searchParams.get("ne_lat") ? parseFloat(searchParams.get("ne_lat")!) : null,
+        ne_lng: searchParams.get("ne_lng") ? parseFloat(searchParams.get("ne_lng")!) : null,
+        sw_lat: searchParams.get("sw_lat") ? parseFloat(searchParams.get("sw_lat")!) : null,
+        sw_lng: searchParams.get("sw_lng") ? parseFloat(searchParams.get("sw_lng")!) : null,
     });
-
     const [zoom, setZoom] = useState<number | null>(
         searchParams.get("zoom") ? parseInt(searchParams.get("zoom")!) : null
     );
@@ -67,7 +76,7 @@ export default function DashboardSearch() {
         const timeoutId = setTimeout(() => {
             setCoordinates(prev => {
                 if (prev.lat === newLat && prev.lon === newLon) return prev;
-                return { lat: newLat, lon: newLon };
+                return { ...prev, lat: newLat, lon: newLon };
             });
 
             setZoom(prev => (prev === newZoom ? prev : newZoom));
@@ -88,13 +97,30 @@ export default function DashboardSearch() {
         setIsSelecting
     } = useLocationSearch(searchParams.get("query") || "");
 
-    const handleQueryChange = (value: string, lat?: number, lon?: number) => {
+    const handleQueryChange = (value: string, lat?: number, lon?: number, extent?: number[], type?: string) => {
         setQuery(value);
-        setCoordinates({ lat: null, lon: null });
+        setCoordinates({ 
+            lat: null, 
+            lon: null, 
+            type: null,
+            ne_lat: null,
+            ne_lng: null,
+            sw_lat: null,
+            sw_lng: null
+        });
 
-        if (lat && lon) {
+        if ((lat && lon) || (extent && extent.length > 0)) {
             setIsSelecting(true);
-            setCoordinates({ lat, lon });
+            setCoordinates(prev => ({ 
+                ...prev, 
+                lat: lat ?? null, 
+                lon: lon ?? null, 
+                type: type || null,
+                sw_lng: extent ? extent[0] : null,
+                sw_lat: extent ? extent[3] : null,
+                ne_lng: extent ? extent[2] : null,
+                ne_lat: extent ? extent[1] : null,
+            }));
             setZoom(15);
             setResults([]);
         }
@@ -104,25 +130,17 @@ export default function DashboardSearch() {
         const params = new URLSearchParams();
         if (coordinates.lat !== null) params.set("lat", coordinates.lat.toString());
         if (coordinates.lon !== null) params.set("lon", coordinates.lon.toString());
+        if (coordinates.type) params.set("type", coordinates.type);
+        if (coordinates.ne_lat !== null) params.set("ne_lat", coordinates.ne_lat.toString());
+        if (coordinates.ne_lng !== null) params.set("ne_lng", coordinates.ne_lng.toString());
+        if (coordinates.sw_lat !== null) params.set("sw_lat", coordinates.sw_lat.toString());
+        if (coordinates.sw_lng !== null) params.set("sw_lng", coordinates.sw_lng.toString());
         if (zoom) params.set("zoom", zoom.toString());
         if (query) params.set("query", query);
         if (date?.from) params.set("start_date", date.from.toISOString());
         if (date?.to) params.set("end_date", date.to.toISOString());
         if (title) params.set("title", title);
         if (category) params.set("category", category);
-
-        const currentUrlLat = searchParams.get("lat");
-        const currentUrlLon = searchParams.get("lon");
-        const isSameLocation = coordinates.lat?.toFixed(6) === currentUrlLat &&
-            coordinates.lon?.toFixed(6) === currentUrlLon;
-
-        if (isSameLocation) {
-            ["ne_lat", "ne_lng", "sw_lat", "sw_lng"].forEach(key => {
-                const val = searchParams.get(key);
-                if (val) params.set(key, val);
-            });
-        }
-
         const view = searchParams.get("view");
         if (view) params.set("view", view);
 
@@ -150,7 +168,7 @@ export default function DashboardSearch() {
                         results={results}
                         isLoading={isLoading}
                         onSelect={(result) =>
-                            handleQueryChange(result.properties.name, result.geometry.coordinates[1], result.geometry.coordinates[0])
+                            handleQueryChange(result.properties.name, result.geometry.coordinates[1], result.geometry.coordinates[0], result.properties.extent, result.properties.type)
                         }
                     />
                 </div>

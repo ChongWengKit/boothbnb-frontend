@@ -23,6 +23,8 @@ interface SearchParams {
     sw_lng?: string;
     lat?: string;
     lon?: string;
+    extent?: string;
+    type?: string;
     start_date?: string;
     end_date?: string;
     page?: string;
@@ -72,6 +74,7 @@ async function fetchEvents(searchParams: SearchParams, token: string | undefined
         } else {
             if (searchParams.lat) queryParams.set("latitude", searchParams.lat);
             if (searchParams.lon) queryParams.set("longitude", searchParams.lon);
+            if (searchParams.type) queryParams.set("type", searchParams.type);
         }
 
         const now = Date.now();
@@ -82,7 +85,6 @@ async function fetchEvents(searchParams: SearchParams, token: string | undefined
         queryParams.set("end_date", end_date);
 
         if (searchParams.page) queryParams.set("page", searchParams.page);
-        if (searchParams.limit) queryParams.set("limit", searchParams.limit);
 
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/event?${queryParams.toString()}`, {
             headers: token ? { Authorization: `bearer ${token}` } : {},
@@ -110,7 +112,7 @@ export default async function EventResultsLoader({ searchParams }: { searchParam
 
     return (
         <>
-            <EventResultsContainer initialEvents={events} initialBookmarks={bookmarks} />
+            <EventResultsContainer initialEvents={events} initialBookmarks={bookmarks} totalItems={paginationMeta.totalItems}/>
             <PaginationContainer
                 currentPage={paginationMeta.currentPage}
                 totalPages={paginationMeta.totalPages}
