@@ -101,7 +101,7 @@ export default function DashboardMapView({ events: serverEvents }: { events: Eve
     useEffect(() => {
         if (isLoading && loadingStartRef.current) {
             const elapsed = Date.now() - loadingStartRef.current;
-            const remainingTime = Math.max(0, 3000 - elapsed);
+            const remainingTime = Math.max(0, 1500 - elapsed);
 
             const timeoutId = setTimeout(() => {
                 setIsLoading(false);
