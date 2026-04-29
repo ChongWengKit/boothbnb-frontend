@@ -4,6 +4,24 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import countryToCurrency from 'country-to-currency';
 import { setCurrency } from '@/app/contexts/currency';
 
+const fetchAndVerifyCurrency = async (code: string): Promise<string> => {
+  const baseUrl = process.env.NEXT_PUBLIC_API_DOMAIN;
+  if (!baseUrl) {
+    return 'USD';
+  }
+
+  try {
+    const res = await fetch(`${baseUrl}/currency?currencyCode=${code}`);
+    if (res.ok) {
+      return code;
+    } else {
+      return 'USD';
+    }
+  } catch (error) {
+    return 'USD';
+  }
+};
+
 interface CurrencyContextType {
   currencyCode: string;
   handleSetCurrencyCode: (code: string) => void;
@@ -20,34 +38,42 @@ export const CurrencyProvider = ({
   initialCountryCode?: string | null;
   initialCurrencyCode?: string | null;
 }) => {
-  const [currencyCode, setCurrencyCode] = useState(() => {
-    if (initialCurrencyCode) return initialCurrencyCode;
-    
-    if (initialCountryCode) {
-      const code = countryToCurrency[initialCountryCode as keyof typeof countryToCurrency];
-      return code || 'USD';
-    }
-    
-    return 'USD';
-  });
+  const [currencyCode, setCurrencyCode] = useState(initialCurrencyCode || 'USD');
 
   const handleSetCurrencyCode = useCallback((code: string) => {
-    setCurrencyCode(code);
-    setCurrency(code);
+    fetchAndVerifyCurrency(code).then((verifiedCode) => {
+      setCurrencyCode(verifiedCode);
+      setCurrency(verifiedCode);
+    })
+
   }, []);
 
   useEffect(() => {
-    if (!initialCurrencyCode && initialCountryCode) {
-      const code = countryToCurrency[initialCountryCode as keyof typeof countryToCurrency];
-      if (code) {
-        fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/currency?currencyCode=${code}`)
-          .then((res) => {
-            if (!res.ok) handleSetCurrencyCode('USD');
-          })
-          .catch(() => handleSetCurrencyCode('USD'));
+    let isMounted = true;
+
+    const determineAndVerifyInitialCurrency = async () => {
+      let codeToVerify = '';
+      if (initialCurrencyCode) {
+        codeToVerify = initialCurrencyCode;
+      } else if (initialCountryCode) {
+        codeToVerify = countryToCurrency[initialCountryCode as keyof typeof countryToCurrency] || 'USD';
+      } else {
+        codeToVerify = 'USD';
       }
-    }
-  }, [initialCountryCode, initialCurrencyCode, handleSetCurrencyCode]);
+
+      const verifiedCode = await fetchAndVerifyCurrency(codeToVerify);
+
+      if (isMounted && verifiedCode !== currencyCode) {
+        handleSetCurrencyCode(verifiedCode);
+      }
+    };
+
+    determineAndVerifyInitialCurrency();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [initialCountryCode, initialCurrencyCode]);
 
   return (
     <CurrencyContext.Provider value={{ currencyCode, handleSetCurrencyCode }}>

@@ -10,6 +10,7 @@ import { MdOutlinePayment } from "react-icons/md";
 import { CiSquareQuestion } from "react-icons/ci";
 import { MdOutlineEmail } from "react-icons/md";
 import { MdPeople } from "react-icons/md";
+import { MdCurrencyExchange } from "react-icons/md";
 
 const DashboardSidebar = () => {
   const { sidebarExpanded, setSidebarExpanded } = useSideBarContext();
@@ -29,6 +30,7 @@ const DashboardSidebar = () => {
     { href: "/booking", label: "Bookings", icon: <FaRegCalendar className="w-6 h-6" />, show: user?.role === 'VENDOR' },
     { href: "/admin-dashboard", label: "Approvals", icon: <CiSquareQuestion className="w-6 h-6" />, show: user?.role === 'ADMIN' },
     { href: "/email-logs", label: "Email Logs", icon: <MdOutlineEmail className="w-6 h-6" />, show: user?.role === 'ADMIN' },
+    { href: "/admin-currency", label: "Admin Currency", icon: <MdCurrencyExchange className="w-6 h-6" />, show: user?.role === 'ADMIN' },
     { href: "/admin-register", label: "Admin Register", icon: <MdPeople className="w-6 h-6" />, show: user?.role === 'ADMIN' },
 
   ];

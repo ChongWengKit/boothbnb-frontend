@@ -7,7 +7,7 @@ import LocationSearchResults from '@/components/LocationSearchResults';
 
 interface LocationSearchInputProps {
   initialValue?: string;
-  onLocationSelect: (location: { name: string; lat: number; lon: number }) => void;
+  onLocationSelect: (location: { name: string; lat: number; lon: number; extent?: number[], type?: string }) => void;
   onMapIconClick: () => void;
 }
 
@@ -16,12 +16,13 @@ const LocationSearchInput: React.FC<LocationSearchInputProps> = ({ initialValue 
 
   const handleSelect = (result: LocationSearchResult) => {
     const { name } = result.properties;
+    const extent = result.properties.extent;
     const [lon, lat] = result.geometry.coordinates;
-
+    const type = result.properties.type;
     setIsSelecting(true); 
     setQuery(name);      
     setResults([]);       
-    onLocationSelect({ name, lat, lon });
+    onLocationSelect({ name, lat, lon, extent, type });
   };
 
   return (
