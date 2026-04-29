@@ -101,7 +101,7 @@ export default function DashboardMapView({ events: serverEvents }: { events: Eve
     useEffect(() => {
         if (isLoading && loadingStartRef.current) {
             const elapsed = Date.now() - loadingStartRef.current;
-            const remainingTime = Math.max(0, 3000 - elapsed);
+            const remainingTime = Math.max(0, 2000 - elapsed);
 
             const timeoutId = setTimeout(() => {
                 setIsLoading(false);
@@ -129,8 +129,10 @@ export default function DashboardMapView({ events: serverEvents }: { events: Eve
             params.set("ne_lng", bounds.ne_lng.toFixed(6));
             params.set("sw_lat", bounds.sw_lat.toFixed(6));
             params.set("sw_lng", bounds.sw_lng.toFixed(6));
+            params.delete("page");
+            
             router.replace(`${window.location.pathname}?${params.toString()}`, { scroll: false });
-        }, 1500);
+        }, 1000);
     }, [router]);
 
     useEffect(() => {
