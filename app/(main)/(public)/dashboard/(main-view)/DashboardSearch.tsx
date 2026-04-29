@@ -99,9 +99,9 @@ export default function DashboardSearch() {
 
     const handleQueryChange = (value: string, lat?: number, lon?: number, extent?: number[], type?: string) => {
         setQuery(value);
-        setCoordinates({ 
-            lat: null, 
-            lon: null, 
+        setCoordinates({
+            lat: null,
+            lon: null,
             type: null,
             ne_lat: null,
             ne_lng: null,
@@ -111,10 +111,10 @@ export default function DashboardSearch() {
 
         if ((lat && lon) || (extent && extent.length > 0)) {
             setIsSelecting(true);
-            setCoordinates(prev => ({ 
-                ...prev, 
-                lat: lat ?? null, 
-                lon: lon ?? null, 
+            setCoordinates(prev => ({
+                ...prev,
+                lat: lat ?? null,
+                lon: lon ?? null,
                 type: type || null,
                 sw_lng: extent ? extent[0] : null,
                 sw_lat: extent ? extent[3] : null,
@@ -128,14 +128,25 @@ export default function DashboardSearch() {
 
     const handleSubmit = () => {
         const params = new URLSearchParams();
-        if (coordinates.lat !== null) params.set("lat", coordinates.lat.toString());
-        if (coordinates.lon !== null) params.set("lon", coordinates.lon.toString());
+        if (viewMode !== 'map') {
+
+            if (coordinates.lat !== null) params.set("lat", coordinates.lat.toString());
+            if (coordinates.lon !== null) params.set("lon", coordinates.lon.toString());
+            if (coordinates.type) params.set("type", coordinates.type);
+
+            if (coordinates.ne_lat !== null) params.set("ne_lat", coordinates.ne_lat.toString());
+            if (coordinates.ne_lng !== null) params.set("ne_lng", coordinates.ne_lng.toString());
+            if (coordinates.sw_lat !== null) params.set("sw_lat", coordinates.sw_lat.toString());
+            if (coordinates.sw_lng !== null) params.set("sw_lng", coordinates.sw_lng.toString());
+            if (zoom) params.set("zoom", zoom.toString());
+        } else {
+            const currentParams = new URLSearchParams(window.location.search);
+            ['lat', 'lon', 'ne_lat', 'ne_lng', 'sw_lat', 'sw_lng', 'zoom'].forEach(key => {
+                const val = currentParams.get(key);
+                if (val) params.set(key, val);
+            });
+        }
         if (coordinates.type) params.set("type", coordinates.type);
-        if (coordinates.ne_lat !== null) params.set("ne_lat", coordinates.ne_lat.toString());
-        if (coordinates.ne_lng !== null) params.set("ne_lng", coordinates.ne_lng.toString());
-        if (coordinates.sw_lat !== null) params.set("sw_lat", coordinates.sw_lat.toString());
-        if (coordinates.sw_lng !== null) params.set("sw_lng", coordinates.sw_lng.toString());
-        if (zoom) params.set("zoom", zoom.toString());
         if (query) params.set("query", query);
         if (date?.from) params.set("start_date", date.from.toISOString());
         if (date?.to) params.set("end_date", date.to.toISOString());
