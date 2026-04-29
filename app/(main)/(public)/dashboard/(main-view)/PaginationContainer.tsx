@@ -16,11 +16,11 @@ export default function PaginationContainer({ currentPage, totalPages, hasNextPa
     const handlePageChange = (newPage: number) => {
         const params = new URLSearchParams(window.location.search);
         params.set("page", newPage.toString());
-        router.push(`/dashboard?${params.toString()}`);
+        router.push(`/dashboard?${params.toString()}`, { scroll: !isMapView });
     };
 
     if (totalPages <= 1) {
-        return null; // Don't render the container if there's only one page or no pages
+        return null; 
     }
 
     return (

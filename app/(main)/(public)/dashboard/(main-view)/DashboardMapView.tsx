@@ -193,7 +193,7 @@ export default function DashboardMapView({ events: serverEvents }: { events: Eve
                         position={[event.latitude, event.longitude]}
                         icon={markerIcon}
                     >
-                        <Popup className="min-w-[200px] md:min-w-[300px]"
+                        <Popup autoPan={false} className="min-w-[200px] md:min-w-[300px]"
                         >
                             <Link
                                 href={`/dashboard/${event.slug}`}
