@@ -29,10 +29,10 @@ const DashboardBottombar = () => {
 
     return (
         <>
-            <aside className="md:hidden sticky bottom-0 left-0 right-0 z-[100] w-full border-t border-border bg-card px-4 py-2">
-                <nav className="flex w-full items-center justify-around">
+            <aside className="md:hidden sticky bottom-0 left-0 right-0 z-[100] w-full border-t border-border bg-card py-2 overflow-x-auto scrollbar-hide">
+                <nav className="flex w-max min-w-full items-center justify-around px-4">
                     {navLinks.filter(link => link.show).map((link) => (
-                        <Link key={link.href} href={link.href} className="flex flex-col items-center gap-1 p-2">
+                        <Link key={link.href} href={link.href} className="flex flex-col items-center gap-1 p-2 shrink-0">
                             <div className="text-foreground hover:text-primary">
                                 {link.icon}
                             </div>
