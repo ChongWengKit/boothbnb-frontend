@@ -156,7 +156,7 @@ export default function BoothSection({ event, isHost = false }: BoothSectionProp
             onClick={() => setIsLayoutOpen(true)}
             className="w-full rounded-lg bg-primary py-4 font-bold text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            {isOwner ? "Manage Layout" : "View & Book Booths"}
+            {isOwner ? "View Booths" : "View & Book Booths"}
           </button>
 
           {isOwner && (
@@ -209,7 +209,7 @@ export default function BoothSection({ event, isHost = false }: BoothSectionProp
             onClick={() => setIsLayoutOpen(true)}
             className="w-full rounded-lg bg-primary py-2 font-bold text-primary-foreground transition-all active:scale-[0.98]"
           >
-            {isOwner ? "Manage Layout" : "View & Book Booths"}
+            View & Book Booths
           </button>
 
           {isOwner && (
