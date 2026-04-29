@@ -46,7 +46,7 @@ export interface PaginationMeta {
 export default function AccountDetailClient({ account, paginationMeta }: { account: Account, paginationMeta: PaginationMeta }) {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const { user,  } = useUserContext();
+    const { user, } = useUserContext();
     const [tempPhoto, setTempPhoto] = React.useState<string | null>(null);
     const { uploadFile, isUploading } = useCloudinaryUpload();
     const isOwnProfile = user?.email === account?.email;
@@ -64,9 +64,9 @@ export default function AccountDetailClient({ account, paginationMeta }: { accou
 
     const handleSaveProfile = async () => {
         if (!tempPhoto) return;
-        
+
         const result = await updateProfileAction({ profile_photo: tempPhoto });
-        
+
         if (result.success) {
             toast.success("Profile updated successfully");
             setTempPhoto(null);
@@ -89,7 +89,7 @@ export default function AccountDetailClient({ account, paginationMeta }: { accou
             <div className="bg-background rounded-lg shadow-lg p-8">
                 <div className="flex flex-col gap-8">
                     <div className="flex items-center gap-8">
-                        <div className="relative">
+                        <div className="relative flex-shrink-0">
                             {(tempPhoto || account?.profile_photo) ? (
                                 <Image
                                     className="w-32 h-32 rounded-full object-cover"
@@ -127,16 +127,15 @@ export default function AccountDetailClient({ account, paginationMeta }: { accou
                             <div className="flex flex-wrap items-center">Created in:<span className="font-semibold">{account?.created_at ? new Date(account.created_at).toLocaleDateString('en-US') : ''}</span></div>
                         </div>
 
-                        {tempPhoto && (
-                            <button
-                                onClick={handleSaveProfile}
-                                className="ml-auto rounded-xl bg-primary px-6 py-2 text-sm font-bold text-primary-foreground hover:bg-primary/90 transition-all"
-                            >
-                                Save Changes
-                            </button>
-                        )}
                     </div>
-
+                    {tempPhoto && (
+                        <button
+                            onClick={handleSaveProfile}
+                            className="ml-auto rounded-xl bg-primary px-6 py-2 text-sm font-bold text-primary-foreground hover:bg-primary/90 transition-all"
+                        >
+                            Save Changes
+                        </button>
+                    )}
 
                 </div>
             </div>
