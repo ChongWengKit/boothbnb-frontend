@@ -42,7 +42,14 @@ async function Landing() {
                         <div className="col-start-1 row-start-1 grid grid-cols-2 md:grid-cols-3 gap-4 px-8 pb-8">
                             {images.map((src, index) => (
                                 <div key={index} className="relative h-full w-full aspect-[4/3] overflow-hidden rounded-3xl bg-card/10 shadow-lg backdrop-blur-sm">
-                                    <Image src={src} alt={`Grid image ${index + 1}`} fill className="object-cover" />
+                                    <Image 
+                                        src={src} 
+                                        alt={`Grid image ${index + 1}`} 
+                                        fill 
+                                        className="object-cover" 
+                                        priority={index < 6}
+                                        sizes="(max-width: 768px) 50vw, 33vw"
+                                    />
                                 </div>
                             ))}
                         </div>
