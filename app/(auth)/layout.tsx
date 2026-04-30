@@ -7,7 +7,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
       <div
         aria-hidden="true"
         className="fixed inset-0 -z-10 bg-cover bg-center bg-no-repeat blur-md scale-105"
-        style={{ backgroundImage: 'url(https://res.cloudinary.com/di3qccrxy/image/upload/v1775736549/photo-1497366216548-37526070297c_cvi9gq.avif)' }}
+        style={{ backgroundImage: 'url(https://res.cloudinary.com/di3qccrxy/image/upload/v1777507176/OCR-L-BUCHANAN-0716_tffvj9.webp)' }}
       />
       <div className='h-[100dvh] flex flex-col'>
         <header className="px-4 md:px-8 py-6">

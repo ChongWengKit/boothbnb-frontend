@@ -8,7 +8,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
       <div aria-hidden="true"
         className="fixed inset-0 -z-10 overflow-hidden">
         <Image
-          src="https://res.cloudinary.com/di3qccrxy/image/upload/v1775736549/photo-1497366216548-37526070297c_cvi9gq.avif"
+          src="https://res.cloudinary.com/di3qccrxy/image/upload/v1777507176/OCR-L-BUCHANAN-0716_tffvj9.webp"
           alt="Background"
           fill
           priority

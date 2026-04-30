@@ -23,12 +23,13 @@ async function Landing() {
     const events = await getLatestEvents();
 
     const images = [
-        "https://res.cloudinary.com/di3qccrxy/image/upload/v1775736546/photo-1519671482749-fd09be7ccebf_lttrws.avif",
-        "https://res.cloudinary.com/di3qccrxy/image/upload/v1775736524/photo-1516450360452-9312f5e86fc7_weohxq.avif",
-        "https://res.cloudinary.com/di3qccrxy/image/upload/v1775736514/photo-1533174072545-7a4b6ad7a6c3_yf8oti.avif",
-        "https://res.cloudinary.com/di3qccrxy/image/upload/v1775736493/photo-1470225620780-dba8ba36b745_abzlvc.avif",
-        "https://res.cloudinary.com/di3qccrxy/image/upload/v1775736491/photo-1519750157634-b6d493a0f77c_jego1y.avif",
-        "https://res.cloudinary.com/di3qccrxy/image/upload/v1775736433/photo-1508700115892-45ecd05ae2ad_emlklb.avif"
+        "https://res.cloudinary.com/di3qccrxy/image/upload/v1777507179/a-n-v-e-s-h-DcXj70OgoPw-unsplash_1_u1o6gs.jpg",
+        "https://res.cloudinary.com/di3qccrxy/image/upload/v1777507179/josh-liu-Tjio9DgtIls-unsplash_cj6b9j.jpg",
+        "https://res.cloudinary.com/di3qccrxy/image/upload/v1777507577/jezael-melgoza-HYQvV8wWX18-unsplash_1_kulxn3.jpg",
+        "https://res.cloudinary.com/di3qccrxy/image/upload/v1777507183/tai-jyun-chang-S8qw5hyFoo8-unsplash_vjj8jo.jpg",
+        "https://res.cloudinary.com/di3qccrxy/image/upload/v1777507184/claudio-schwarz-Irxq25Os9_k-unsplash_ucwxbl.jpg",
+        "https://res.cloudinary.com/di3qccrxy/image/upload/v1777507188/kayle-kaupanger-J8ksCswaBYo-unsplash_hqftof.jpg",
+        
     ];
 
     return (
