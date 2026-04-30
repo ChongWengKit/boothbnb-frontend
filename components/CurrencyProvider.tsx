@@ -38,7 +38,7 @@ export const CurrencyProvider = ({
   initialCountryCode?: string | null;
   initialCurrencyCode?: string | null;
 }) => {
-  const [currencyCode, setCurrencyCode] = useState(initialCurrencyCode || 'USD');
+  const [currencyCode, setCurrencyCode] = useState('');
 
   const handleSetCurrencyCode = useCallback((code: string) => {
     fetchAndVerifyCurrency(code).then((verifiedCode) => {
@@ -67,7 +67,7 @@ export const CurrencyProvider = ({
         handleSetCurrencyCode(verifiedCode);
       }
     };
-
+    
     determineAndVerifyInitialCurrency();
 
     return () => {
