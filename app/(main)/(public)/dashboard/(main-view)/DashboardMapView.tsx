@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import EventCard from "@/app/(main)/(public)/components/EventCard";
-import type { Event } from "@/app/(main)/(vendor)/hooks/useBookmarks";
+import type { Event } from "@/app/(main)/(vendor)/actions/useBookmarks";
 import { Spinner } from "@/components/ui/spinner";
 
 const markerIcon = typeof window !== 'undefined' ? new L.Icon({

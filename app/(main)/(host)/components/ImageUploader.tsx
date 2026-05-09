@@ -4,7 +4,7 @@ import React from 'react';
 import { MdAdd } from 'react-icons/md';
 import { TiDelete } from 'react-icons/ti';
 import { Spinner } from '@/components/ui/spinner';
-import { useCloudinaryUpload } from '@/app/hooks/useCloudinaryUpload';
+import { useCloudinaryUpload } from '@/app/actions/useCloudinaryUpload';
 import { useFormContext } from 'react-hook-form';
 import Image from "next/image";
 

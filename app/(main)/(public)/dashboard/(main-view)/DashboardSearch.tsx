@@ -6,7 +6,7 @@ import { type DateRange } from "react-day-picker";
 import { Button } from "@/components/ui/button";
 import LocationSearchResults from "@/components/LocationSearchResults";
 import DateRangePicker from "@/app/(main)/(public)/components/DateRangePicker";
-import { useLocationSearch } from "@/app/hooks/useLocationSearch";
+import { useLocationSearch } from "@/app/actions/useLocationSearch";
 import { IoIosSearch } from "react-icons/io";
 import { IoFilter } from "react-icons/io5";
 

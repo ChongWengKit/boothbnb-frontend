@@ -1,7 +1,7 @@
 "use client"
 import { GoogleLogin, CredentialResponse, GoogleOAuthProvider } from "@react-oauth/google";
 import { Toaster } from 'react-hot-toast';
-import { useAuth } from '@/app/(auth)/hooks/useAuth';
+import { useAuth } from '@/app/(auth)/actions/useAuth';
 
 const GoogleSignIn = () => {
     const { googleSignIn } = useAuth();

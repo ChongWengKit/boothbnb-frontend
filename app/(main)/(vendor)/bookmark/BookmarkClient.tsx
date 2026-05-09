@@ -5,8 +5,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import EventResultsList from "@/app/(main)/(public)/components/EventResultsList";
 import Pagination from "@/components/Pagination";
-import type { Event } from "@/app/(main)/(vendor)/hooks/useBookmarks";
-import { useToggleBookmark} from "@/app/(main)/(vendor)/hooks/useToggleBookmark";
+import type { Event } from "@/app/(main)/(vendor)/actions/useBookmarks";
+import { useToggleBookmark} from "@/app/(main)/(vendor)/actions/useToggleBookmark";
 
 interface PaginationMeta {
     totalItems: number;

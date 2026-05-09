@@ -7,7 +7,7 @@ import EventResultsList from "@/app/(main)/(public)/components/EventResultsList"
 import { updateProfileAction } from "../[slug]/action";
 import Pagination from "@/components/Pagination";
 import Image from "next/image";
-import { useCloudinaryUpload } from '@/app/hooks/useCloudinaryUpload';
+import { useCloudinaryUpload } from '@/app/actions/useCloudinaryUpload';
 import React from "react";
 import { Camera } from "lucide-react";
 import { setProfilePhoto } from "@/app/contexts/auth";

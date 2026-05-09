@@ -2,9 +2,9 @@
 
 import React, { useState } from "react";
 import EventResultsList from "@/app/(main)/(public)/components/EventResultsList";
-import { useToggleBookmark } from "@/app/(main)/(vendor)/hooks/useToggleBookmark";
+import { useToggleBookmark } from "@/app/(main)/(vendor)/actions/useToggleBookmark";
 import { useUserContext } from "@/app/contexts/UserContext";
-import type { Event } from "@/app/(main)/(vendor)/hooks/useBookmarks";
+import type { Event } from "@/app/(main)/(vendor)/actions/useBookmarks";
 import { Button } from "@/components/ui/button";
 import { LayoutList, Map as MapIcon } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";

@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react';
-import { useLocationSearch, type LocationSearchResult } from '@/app/hooks/useLocationSearch';
+import { useLocationSearch, type LocationSearchResult } from '@/app/actions/useLocationSearch';
 import { FaMapMarkedAlt } from "react-icons/fa";
 import LocationSearchResults from '@/components/LocationSearchResults';
 

@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Spinner } from '@/components/ui/spinner';
 import EventCard from '@/app/(main)/(public)/components/EventCard';
-import type { Event } from '@/app/(main)/(vendor)/hooks/useBookmarks';
+import type { Event } from '@/app/(main)/(vendor)/actions/useBookmarks';
 
 interface EventResultsListProps {
   events: Event[];

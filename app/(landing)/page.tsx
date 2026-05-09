@@ -5,7 +5,7 @@ import Image from "next/image";
 import EventMap from "../../components/event-detail/EventMap";
 import EventCard from "../(main)/(public)/components/EventCard";
 import { validateResponse } from "@/app/contexts/auth";
-import type { Event } from "@/app/(main)/(vendor)/hooks/useBookmarks";
+import type { Event } from "@/app/(main)/(vendor)/actions/useBookmarks";
 
 async function getLatestEvents() {
     try {

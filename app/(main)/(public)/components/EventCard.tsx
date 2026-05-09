@@ -2,7 +2,7 @@ import React from 'react';
 import { format } from 'date-fns';
 import { Toggle } from '@/components/ui/toggle';
 import { BookmarkIcon } from 'lucide-react';
-import type { Event } from '@/app/(main)/(vendor)/hooks/useBookmarks';
+import type { Event } from '@/app/(main)/(vendor)/actions/useBookmarks';
 import Image from "next/image";
 
 export const statusConfig = {

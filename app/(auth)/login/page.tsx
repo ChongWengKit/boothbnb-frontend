@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from 'zod';
 import { useRouter, useSearchParams } from 'next/navigation';
 import GoogleSignIn from "@/app/(auth)/components/GoogleSignIn";
-import { useAuth } from '@/app/(auth)/hooks/useAuth';
+import { useAuth } from '@/app/(auth)/actions/useAuth';
 import PublicLayout from '@/app/(auth)/layout';
 import { deleteAuthToken } from '@/app/contexts/auth';
 

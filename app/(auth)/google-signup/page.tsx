@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import toast, { Toaster } from 'react-hot-toast';
 import RoleSelection from '@/app/(auth)/components/RoleSelection';
-import { useAuth } from '@/app/(auth)/hooks/useAuth';
+import { useAuth } from '@/app/(auth)/actions/useAuth';
 import PublicLayout from '@/app/(auth)/layout';
 
 const roleSchema = z.object({

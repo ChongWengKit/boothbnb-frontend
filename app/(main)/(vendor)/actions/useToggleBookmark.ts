@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import type { Event } from '@/app/(main)/(vendor)/hooks/useBookmarks';
+import type { Event } from '@/app/(main)/(vendor)/actions/useBookmarks';
 import { getAuthToken, validateResponse } from '@/app/contexts/auth';
 export const useToggleBookmark = () => {
   const [isToggling, setIsToggling] = useState(false);

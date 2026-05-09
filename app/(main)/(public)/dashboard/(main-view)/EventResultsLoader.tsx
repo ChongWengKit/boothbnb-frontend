@@ -1,6 +1,6 @@
 import React from "react";
 import { getAuthToken, validateResponse } from "@/app/contexts/auth";
-import type { Event } from "@/app/(main)/(vendor)/hooks/useBookmarks";
+import type { Event } from "@/app/(main)/(vendor)/actions/useBookmarks";
 import EventResultsContainer from "./EventResultsContainer";
 import PaginationContainer from "./PaginationContainer";
 

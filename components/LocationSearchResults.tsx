@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { type LocationSearchResult } from '@/app/hooks/useLocationSearch';
+import { type LocationSearchResult } from '@/app/actions/useLocationSearch';
 
 interface LocationSearchResultsProps {
   results: LocationSearchResult[];

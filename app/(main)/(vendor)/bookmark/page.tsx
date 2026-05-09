@@ -2,7 +2,7 @@ import React from "react";
 import { cookies } from "next/headers";
 import { getAuthToken, validateResponse } from "@/app/contexts/auth";
 import BookmarkClient from "./BookmarkClient";
-import type { Event } from "@/app/(main)/(vendor)/hooks/useBookmarks";
+import type { Event } from "@/app/(main)/(vendor)/actions/useBookmarks";
 
 interface PaginationMeta {
     totalItems: number;
