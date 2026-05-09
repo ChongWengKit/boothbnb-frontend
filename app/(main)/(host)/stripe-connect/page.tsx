@@ -76,7 +76,7 @@ export default function ConnectStripePage() {
                         ? "Your Stripe account is connected and ready to receive payments."
                         : status.hasAccountId
                         ? "Your Stripe account is created but payouts are not yet enabled. Please visit your Stripe Dashboard to verify your identity and complete the setup."
-                        : "To host events and receive payments, you need to connect a Stripe account. We use Stripe to ensure you get 95% of every booking instantly."}
+                        : "To host events and receive payments, you need to connect a Stripe account. We use Stripe to ensure you get 98% of every booking instantly."}
                 </p>
                 {status.hasAccountId && status.accountId && (
                     <div className="mb-8 rounded-xl border border-border bg-background p-4 text-left">
