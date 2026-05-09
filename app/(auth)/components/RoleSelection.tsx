@@ -31,7 +31,7 @@ const RoleSelection = ({ onBack }: RoleSelectionProps) => {
         >
           <div className="text-3xl mb-2">📦</div>
           <p className="font-bold text-lg">Vendor</p>
-          <p className="text-sm text-muted-foreground">Sell products, manage inventory, and grow your business.</p>
+          <p className="text-sm text-muted-foreground">Book booths for your business and take advantage of event opportunities.</p>
         </div>
 
         <div 
@@ -42,7 +42,7 @@ const RoleSelection = ({ onBack }: RoleSelectionProps) => {
         >
           <div className="text-3xl mb-2">🏠</div>
           <p className="font-bold text-lg">Host</p>
-          <p className="text-sm text-muted-foreground">List spaces, manage bookings, and earn from your property.</p>
+          <p className="text-sm text-muted-foreground">List your events, manage booth bookings, and earn from your space.</p>
         </div>
       </div>
 

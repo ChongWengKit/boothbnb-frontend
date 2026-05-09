@@ -14,7 +14,6 @@ const GoogleSignIn = () => {
 
     return (
         <div>
-            <Toaster position="top-center" reverseOrder={false} />
             <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
                 <GoogleLogin onSuccess={handleGoogleSuccess} />
             </GoogleOAuthProvider>

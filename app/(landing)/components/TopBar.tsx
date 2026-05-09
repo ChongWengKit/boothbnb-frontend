@@ -11,12 +11,6 @@ export default function TopBar() {
 
     return (
         <header>
-            <div
-                className={`fixed inset-0 z-[100] bg-black/40 backdrop-blur-sm transition-opacity md:hidden ${isOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}
-                onClick={() => setIsOpen(false)}
-                aria-hidden={!isOpen}
-            />
-
             <nav
                 id="mobile-sidebar"
                 className={`fixed inset-y-0 left-0 z-[101] flex w-64 flex-col gap-10  p-8 backdrop-blur-2xl transition-transform duration-300 md:hidden ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
@@ -92,7 +86,7 @@ export default function TopBar() {
                                 <span className="cursor-pointer text-white transition-colors">Browse Events</span>
                             </Link>
                         </li>
-                        {!isLoading && user?.role !== 'VENDOR' && (
+                        {!isLoading && user?.role && (
                             <li>
                                 <Link href="/getstarted">
                                     <span className="cursor-pointer text-white transition-colors">Become a vendor</span>

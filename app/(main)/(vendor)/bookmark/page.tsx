@@ -1,6 +1,6 @@
 import React from "react";
 import { cookies } from "next/headers";
-import { validateResponse } from "@/app/contexts/auth";
+import { getAuthToken, validateResponse } from "@/app/contexts/auth";
 import BookmarkClient from "./BookmarkClient";
 import type { Event } from "@/app/(main)/(vendor)/hooks/useBookmarks";
 
@@ -22,8 +22,7 @@ interface PageProps {
 
 const Bookmark = async ({ searchParams }: PageProps) => {
     const resolvedSearchParams = await searchParams;
-    const cookieStore = await cookies();
-    const token = cookieStore.get('authentication_token')?.value;
+    const token = await getAuthToken();
     let bookmarks: Event[] = [];
     let paginationMeta: PaginationMeta | undefined;
 

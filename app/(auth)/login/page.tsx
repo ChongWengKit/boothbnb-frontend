@@ -41,7 +41,6 @@ function SignIn() {
 
     return (
             <div className="bg-background p-8 rounded-2xl shadow-lg">
-                <Toaster position="top-center" reverseOrder={false} />
                 <h2 className="text-2xl font-bold mb-4">Sign In</h2>
                 <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col items-center gap-8">
                     <div className="flex flex-col gap-2">

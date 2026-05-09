@@ -9,8 +9,8 @@ function Verify() {
     const token = searchParams.get('token');
     const router = useRouter();
 
-    const [isLoading, setIsLoading] = useState(false);
-    const [isVerified, setIsVerified] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isVerified, setIsVerified] = useState<boolean | null>(null);
     const [countDown, setCountDown] = useState(5);
 
     useEffect(() => {

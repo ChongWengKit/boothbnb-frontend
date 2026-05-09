@@ -50,7 +50,6 @@ const ResetPassword = () => {
     return (
         <form onSubmit={handleSubmit}>
             <div className="bg-background p-8 rounded-2xl shadow-lg">
-                <Toaster position="top-center" />
                 <h2 className="text-2xl font-bold mb-4">Reset Password</h2>
                 <div className="flex flex-col gap-4">
                     <input

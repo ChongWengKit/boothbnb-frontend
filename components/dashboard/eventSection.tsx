@@ -12,9 +12,10 @@ import { EventCarousel } from "@/components/event-detail/Carousel";
 import BoothSection from "@/components/dashboard/boothSection";
 import EventMap from "@/components/event-detail/EventMap";
 import BookmarkToggle from "@/components/dashboard/BookmarkToggle";
-import { User } from "@/app/contexts/UserContext";
+import { User, useUserContext } from "@/app/contexts/UserContext";
 import { formatEventDate } from "@/app/lib/util";
 import { Booth } from "@/app/(main)/(host)/create-event/actions";
+import { getAuthToken } from "@/app/contexts/auth";
 
 interface BookingSummary {
     booth_name: string;
@@ -61,19 +62,12 @@ interface EventDetail {
     booking_summaries?: BookingSummary[];
 }
 
-export default async function DashboardEventDetailClient({ event, isHost = false }: { event: EventDetail; isHost?: boolean }) {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('authentication_token')?.value;
-
-    let user: User | null = null;
+export default function DashboardEventDetailClient({ event, isHost = false }: { event: EventDetail; isHost?: boolean }) {
+    const { user } = useUserContext();
     let isOwner = false;
-    if (token) {
-        try {
-            user = jwtDecode<User>(token);
-            isHost = user.role === "HOST" || user.role === "ADMIN";
-            isOwner = Number(user.id) === Number(event.host_id);
-        } catch (e) {
-        }
+    if (user) {
+        isHost = user.role === "HOST" || user.role === "ADMIN";
+        isOwner = Number(user.id) === Number(event.host_id);
     }
 
 
