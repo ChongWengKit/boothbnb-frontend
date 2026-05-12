@@ -6,7 +6,7 @@ export function EventDate({ date }: { date: string }) {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    if(isMounted === false) {
+    if (!isMounted) {
       setIsMounted(true);
     }
   }, []);
