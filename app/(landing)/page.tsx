@@ -10,7 +10,9 @@ import type { Event } from "@/app/(main)/(vendor)/actions/useBookmarks";
 async function getLatestEvents() {
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/event?page=1&limit=10`, {
-            cache: 'no-store'
+            next: {
+                revalidate: 3600
+            }
         });
         const json = await res.json();
         return json.data || [];
