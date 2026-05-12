@@ -2,10 +2,11 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useCurrency } from "@/components/CurrencyProvider";
 import { IoClose } from "react-icons/io5";
+import { Spinner } from '@/components/ui/spinner';
 interface BoothLayoutViewerProps {
     booths: Booth[];
     onClose?: () => void;
-    onCheckout?: (booth: Booth) => void;
+    onCheckout?: (booth: Booth) => void | Promise<void>;
     isHost?: boolean;
 }
 
@@ -30,7 +31,19 @@ export default function BoothLayoutViewer({
     onClose
 }: BoothLayoutViewerProps) {
     const [selectedBooth, setSelectedBooth] = useState<Booth | null>(null);
+    const [isPending, setIsPending] = useState(false);
     const { currencyCode } = useCurrency();
+
+    const handleCheckout = async () => {
+        if (!selectedBooth || !onCheckout || isPending) return;
+        
+        setIsPending(true);
+        try {
+            await onCheckout(selectedBooth);
+        } finally {
+            setIsPending(false);
+        }
+    };
 
     return (
         <div className="mx-auto flex max-h-screen w-full max-w-lg flex-col items-center justify-center rounded-lg border border-border bg-card p-4 shadow-lg">
@@ -104,14 +117,20 @@ export default function BoothLayoutViewer({
             {onCheckout && !isHost && (
                 <div className='w-full border-t border-border p-4 pt-6'>
                     <button
-                        disabled={!selectedBooth}
-                        className={`w-full py-3 rounded-lg font-semibold transition-colors ${selectedBooth
+                        disabled={!selectedBooth || isPending}
+                        className={`flex w-full items-center justify-center gap-2 py-3 rounded-lg font-semibold transition-colors ${selectedBooth && !isPending
                             ? 'bg-primary text-primary-foreground cursor-pointer'
                             : 'bg-muted text-muted-foreground cursor-not-allowed'
                             }`}
-                        onClick={() => selectedBooth && onCheckout(selectedBooth)}
+                        onClick={handleCheckout}
                     >
-                        {selectedBooth ? `Checkout ${selectedBooth.name}` : 'Select a Booth'}
+                        {isPending ? (
+                            <>
+                                <Spinner className="size-4" /> Processing...
+                            </>
+                        ) : (
+                            selectedBooth ? `Checkout ${selectedBooth.name}` : 'Select a Booth'
+                        )}
                     </button>
                 </div>
             )}
