@@ -1,4 +1,4 @@
-import React from "react";
+import React, { use } from "react";
 import { FaLocationDot } from "react-icons/fa6";
 import { MdCalendarToday, MdModeEdit } from "react-icons/md";
 import { IoArrowBack, IoWalletOutline } from "react-icons/io5";
@@ -62,10 +62,14 @@ interface EventDetail {
     booking_summaries?: BookingSummary[];
 }
 
-export default function DashboardEventDetailClient({ event, isHost = false }: { event: EventDetail; isHost?: boolean }) {
-    const { user } = useUserContext();
+export default async function DashboardEventDetailClient({ event, isHost = false }: { event: EventDetail; isHost?: boolean }) {
+    const token = await getAuthToken();
+    
+    let user: User | null = null;
     let isOwner = false;
-    if (user) {
+
+    if (token) {
+        user = jwtDecode<User>(token);
         isHost = user.role === "HOST" || user.role === "ADMIN";
         isOwner = Number(user.id) === Number(event.host_id);
     }
