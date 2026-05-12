@@ -99,8 +99,18 @@ async function fetchEvents(searchParams: SearchParams, token: string | undefined
     }
     return { data: [], meta: paginationMetaDefault };
 }
-
-export default async function EventResultsLoader({ searchParams }: { searchParams: SearchParams }) {
+export default function EventResultsLoader({ searchParams }: { searchParams: SearchParams }) {
+    return (
+        <Suspense fallback={
+            <div className="flex items-center justify-center py-20">
+                <Spinner className="size-8" />
+            </div>
+        }>
+            <EventDataFetcher searchParams={searchParams} />
+        </Suspense>
+    );
+}
+async function EventDataFetcher({ searchParams }: { searchParams: SearchParams }) {
     const token = await getAuthToken();
 
     const [eventsResult, bookmarksResult] = await Promise.all([
@@ -113,19 +123,13 @@ export default async function EventResultsLoader({ searchParams }: { searchParam
 
     return (
         <>
-            <Suspense fallback={
-                <div className="flex items-center justify-center py-20">
-                    <Spinner className="size-8" />
-                </div>
-            }>
-                <EventResultsContainer initialEvents={events} initialBookmarks={bookmarks} totalItems={paginationMeta.totalItems} />
-                <PaginationContainer
-                    currentPage={paginationMeta.currentPage}
-                    totalPages={paginationMeta.totalPages}
-                    hasNextPage={paginationMeta.hasNextPage}
-                    hasPreviousPage={paginationMeta.hasPreviousPage}
-                />
-            </Suspense>
+            <EventResultsContainer initialEvents={events} initialBookmarks={bookmarks} totalItems={paginationMeta.totalItems} />
+            <PaginationContainer
+                currentPage={paginationMeta.currentPage}
+                totalPages={paginationMeta.totalPages}
+                hasNextPage={paginationMeta.hasNextPage}
+                hasPreviousPage={paginationMeta.hasPreviousPage}
+            />
         </>
     );
 }
