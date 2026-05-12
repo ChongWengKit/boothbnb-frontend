@@ -91,6 +91,8 @@ async function fetchEvents(searchParams: SearchParams, token: string | undefined
             headers: token ? { Authorization: `bearer ${token}` } : {},
             cache: 'no-store'
         });
+        await new Promise(resolve => setTimeout(resolve, 2000)); 
+
         if (res.ok) {
             const data = await res.json();
             return data || { data: [], meta: paginationMetaDefault };
