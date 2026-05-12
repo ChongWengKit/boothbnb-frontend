@@ -15,6 +15,11 @@ interface PageProps {
         title?: string;
         category?: string;
         view?: string | undefined;
+        ne_lat?: string;
+        ne_lng?: string;
+        sw_lat?: string;
+        sw_lng?: string;
+        zoom?: string;
 
     }>;
 }
@@ -22,7 +27,14 @@ interface PageProps {
 const Dashboard = async (props: PageProps) => {
     const searchParams = await props.searchParams;
 
-    const suspenseKey = JSON.stringify(searchParams);
+    const filteredParams = { ...searchParams };
+    delete filteredParams.ne_lat;
+    delete filteredParams.ne_lng;
+    delete filteredParams.sw_lat;
+    delete filteredParams.sw_lng;
+    delete filteredParams.zoom;
+
+    const suspenseKey = JSON.stringify(filteredParams);
 
     return (
         <div className="flex flex-col justify-center">
