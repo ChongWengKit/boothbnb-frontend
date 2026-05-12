@@ -34,6 +34,7 @@ const Dashboard = async (props: PageProps) => {
     delete filteredParams.sw_lng;
     delete filteredParams.lat;
     delete filteredParams.lon;
+    delete filteredParams.page;
     delete filteredParams.zoom;
 
     const suspenseKey = JSON.stringify(filteredParams);
