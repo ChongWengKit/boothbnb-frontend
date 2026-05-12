@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React from "react";
 import { getAuthToken, validateResponse } from "@/app/contexts/auth";
 import type { Event } from "@/app/(main)/(vendor)/actions/useBookmarks";
 import EventResultsContainer from "./EventResultsContainer";
@@ -91,28 +91,16 @@ async function fetchEvents(searchParams: SearchParams, token: string | undefined
             headers: token ? { Authorization: `bearer ${token}` } : {},
             cache: 'no-store'
         });
-        await new Promise(resolve => setTimeout(resolve, 2000)); 
 
         if (res.ok) {
             const data = await res.json();
             return data || { data: [], meta: paginationMetaDefault };
         }
-    } catch (e) {
-    }
+    } catch (e) {}
     return { data: [], meta: paginationMetaDefault };
 }
-export default function EventResultsLoader({ searchParams }: { searchParams: SearchParams }) {
-    return (
-        <Suspense fallback={
-            <div className="flex items-center justify-center py-20">
-                <Spinner className="size-8" />
-            </div>
-        }>
-            <EventDataFetcher searchParams={searchParams} />
-        </Suspense>
-    );
-}
-async function EventDataFetcher({ searchParams }: { searchParams: SearchParams }) {
+
+export default async function EventResultsLoader({ searchParams }: { searchParams: SearchParams }) {
     const token = await getAuthToken();
 
     const [eventsResult, bookmarksResult] = await Promise.all([

@@ -22,7 +22,7 @@ interface PageProps {
 const Dashboard = async (props: PageProps) => {
     const searchParams = await props.searchParams;
 
-    const suspenseKey = `${searchParams.view || 'list'}`;
+    const suspenseKey = JSON.stringify(searchParams);
 
     return (
         <div className="flex flex-col justify-center">
