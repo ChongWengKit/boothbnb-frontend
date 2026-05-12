@@ -1,9 +1,9 @@
 import React from 'react';
-import { format } from 'date-fns';
 import { Toggle } from '@/components/ui/toggle';
 import { BookmarkIcon } from 'lucide-react';
 import type { Event } from '@/app/(main)/(vendor)/actions/useBookmarks';
 import Image from "next/image";
+import { EventDate } from '@/components/Date';
 
 export const statusConfig = {
   DRAFT: { label: "DRAFT", style: "bg-yellow-100 text-yellow-800" },
@@ -66,7 +66,7 @@ const EventCard: React.FC<EventCardProps> = ({
       <div className={`${isHorizontal ? 'py-2 md:p-0' : 'p-2'} flex flex-col flex-grow min-w-0`}>
         <h3 className="line-clamp-1 text-lg font-bold text-card-foreground">{event.title}</h3>
         <p className="mb-2 text-sm text-muted-foreground">
-          {format(new Date(event.start_date), "MMM d")} - {format(new Date(event.end_date), "MMM d, yyyy")}
+          <EventDate date={event.start_date} /> - <EventDate date={event.end_date} />
         </p>
         <div className="mt-auto">
           {showStatus && event.status ? (
