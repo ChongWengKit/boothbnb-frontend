@@ -1,8 +1,9 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { getAuthToken, validateResponse } from "@/app/contexts/auth";
 import type { Event } from "@/app/(main)/(vendor)/actions/useBookmarks";
 import EventResultsContainer from "./EventResultsContainer";
 import PaginationContainer from "./PaginationContainer";
+import { Spinner } from "@/components/ui/spinner";
 
 interface PaginationMeta {
     totalItems: number;
@@ -112,13 +113,19 @@ export default async function EventResultsLoader({ searchParams }: { searchParam
 
     return (
         <>
-            <EventResultsContainer initialEvents={events} initialBookmarks={bookmarks} totalItems={paginationMeta.totalItems}/>
-            <PaginationContainer
-                currentPage={paginationMeta.currentPage}
-                totalPages={paginationMeta.totalPages}
-                hasNextPage={paginationMeta.hasNextPage}
-                hasPreviousPage={paginationMeta.hasPreviousPage}
-            />
+            <Suspense fallback={
+                <div className="flex items-center justify-center py-20">
+                    <Spinner className="size-8" />
+                </div>
+            }>
+                <EventResultsContainer initialEvents={events} initialBookmarks={bookmarks} totalItems={paginationMeta.totalItems} />
+                <PaginationContainer
+                    currentPage={paginationMeta.currentPage}
+                    totalPages={paginationMeta.totalPages}
+                    hasNextPage={paginationMeta.hasNextPage}
+                    hasPreviousPage={paginationMeta.hasPreviousPage}
+                />
+            </Suspense>
         </>
     );
 }
