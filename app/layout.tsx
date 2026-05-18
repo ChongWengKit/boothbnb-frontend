@@ -6,7 +6,7 @@ import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "../components/theme-provider";
 import ThemeToggle from "../components/ThemeToggle";
 import "./globals.css";
-
+import NextTopLoader from "nextjs-toploader";
 const inter = Inter({
   subsets: ["latin"],
   display: "swap", 
@@ -27,6 +27,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <App>{children}</App>
+        <NextTopLoader 
+          color="var(--primary)" 
+        />
         <Toaster position="top-center" />
       </body>
     </html>
