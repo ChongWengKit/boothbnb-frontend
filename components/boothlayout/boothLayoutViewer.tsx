@@ -46,12 +46,12 @@ export default function BoothLayoutViewer({
     };
 
     return (
-        <div className="mx-auto flex max-h-screen w-full max-w-lg flex-col rounded-lg border border-border bg-card shadow-lg">
-            <div className="flex w-full items-center justify-between border-b border-border p-4">
+        <div className="mx-4 my-4 flex max-h-[90vh] w-full max-w-lg flex-col rounded-lg border border-border bg-card shadow-lg">
+            <div className="flex w-full items-center justify-between border-b border-border p-5">
                 <h2 className="text-xl font-bold">Booth Layout</h2>
                 <IoClose size={24} onClick={onClose} className='cursor-pointer' />
             </div>
-            <div className="flex flex-col gap-4 overflow-y-scroll w-full p-4 flex-1">
+            <div className="flex flex-col gap-4 overflow-y-auto w-full p-4 flex-1 min-h-0">
                 <div className='flex flex-col gap-3 w-full'>
                     {booths.map((booth, index) => {
                         const isAvailable = booth.type === 'AVAILABLE';
