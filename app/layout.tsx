@@ -29,6 +29,7 @@ export default function RootLayout({
         <App>{children}</App>
         <NextTopLoader 
           color="var(--primary)" 
+          showSpinner={false}
         />
         <Toaster position="top-center" />
       </body>
