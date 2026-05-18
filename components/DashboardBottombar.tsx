@@ -29,14 +29,14 @@ const DashboardBottombar = () => {
 
     return (
         <>
-            <aside className="md:hidden sticky bottom-0 left-0 right-0 z-[100] w-full border-t border-border bg-card py-2 overflow-x-auto">
-                <nav className="flex w-max min-w-full items-center justify-around px-4">
+            <aside className="md:hidden sticky bottom-0 left-0 right-0 z-[100] w-full border-t border-border bg-card py-2">
+                <nav className="grid grid-flow-col auto-cols-fr w-full items-start px-2">
                     {navLinks.filter(link => link.show).map((link) => (
-                        <Link key={link.href} href={link.href} className="flex flex-col items-center gap-1 p-2 shrink-0">
+                        <Link key={link.href} href={link.href} className="flex flex-col items-center gap-1 px-0.5 py-1 min-w-0">
                             <div className="text-foreground hover:text-primary">
                                 {link.icon}
                             </div>
-                            <span className="text-[10px] font-medium text-foreground">{link.label}</span>
+                            <span className="text-[9px] leading-tight font-medium text-foreground text-center break-words line-clamp-2 w-full">{link.label}</span>
                         </Link>
                     ))}
                 </nav>
