@@ -82,12 +82,12 @@ export default async function DashboardEventDetailClient({ event, isHost = false
                     <EventCarousel images={event.images} />
                 </div>
 
-                <div className="flex flex-col gap-8 w-full p-4 m-2">
+                <div className="flex flex-col gap-8 p-4">
                     <div className="flex w-full items-start gap-12">
                         <div className="flex-1 rounded-xl border border-border bg-card px-8 py-6 shadow-sm">
 
                             <div className="flex items-center justify-between w-full mb-6">
-                                <h1 className="text-4xl font-bold flex items-center gap-4">
+                                <h1 className="text-2xl md:text-4xl font-bold flex items-center gap-4">
                                     {event.title}
                                     {isOwner && event.status === 'DRAFT' && (
                                         <Link href={`/host-dashboard/${event.slug}/edit`}>
