@@ -7,7 +7,7 @@ interface EmailLog {
     id: number;
     user_id: number;
     category: "VERIFICATION" | "PASSWORD_RESET" | "BOOKING_CONFIRMATION" | "HOST_APPROVED" | "ADMIN_INVITATION";
-        payload: {
+    payload: {
         email: string;
         name: string;
     };
@@ -46,31 +46,27 @@ const AdminDashboard = async ({ searchParams }: PageProps) => {
     let emailLogs: EmailLog[] = [];
     let paginationMeta: PaginationMeta | undefined;
     let response: Response | undefined;
-    try {
-        const queryParams = new URLSearchParams();
-        if (resolvedSearchParams.page) queryParams.set("page", resolvedSearchParams.page);
-        if (resolvedSearchParams.search) queryParams.set("search", resolvedSearchParams.search);
-        if (resolvedSearchParams.status) queryParams.set("status", resolvedSearchParams.status);
-        if (resolvedSearchParams.category) queryParams.set("category", resolvedSearchParams.category);
+    const queryParams = new URLSearchParams();
+    if (resolvedSearchParams.page) queryParams.set("page", resolvedSearchParams.page);
+    if (resolvedSearchParams.search) queryParams.set("search", resolvedSearchParams.search);
+    if (resolvedSearchParams.status) queryParams.set("status", resolvedSearchParams.status);
+    if (resolvedSearchParams.category) queryParams.set("category", resolvedSearchParams.category);
 
-        response = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/admin/email?${queryParams.toString()}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `bearer ${token}`,
-            },
-            cache: 'no-store',
-        });
+    response = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/admin/email?${queryParams.toString()}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `bearer ${token}`,
+        },
+        cache: 'no-store',
+    });
+    await validateResponse(response.status);
+    if (!response.ok) {
+        throw new Error(`Failed to fetch host events. Status: ${response.status}`);
+    }
+    const data = await response.json();
+    emailLogs = data.data || [];
+    paginationMeta = data.meta;
 
-        if (response.ok) {
-            const data = await response.json();
-            emailLogs = data.data || [];
-            paginationMeta = data.meta;
-        }
-    } catch (error) {
-    }
-    if (response) {
-        await validateResponse(response.status);
-    }
     return (
         <EmailLogsClient emailLogs={emailLogs} paginationMeta={paginationMeta} />
     );

@@ -5,18 +5,18 @@ import HostDashboardClient from "./HostDashboardClient";
 import { type EventStatus } from "@/app/(main)/(public)/components/EventCard";
 
 export interface HostEvent {
-  id: number;
-  title: string;
-  start_date: string;
-  end_date: string;
-  address: string;
-  thumbnail: string | null;
-  slug: string;
-  total_bookings: number;
-  total_capacity: number;
-  available_booths: number;
-  latitude: number;
-  longitude: number
+    id: number;
+    title: string;
+    start_date: string;
+    end_date: string;
+    address: string;
+    thumbnail: string | null;
+    slug: string;
+    total_bookings: number;
+    total_capacity: number;
+    available_booths: number;
+    latitude: number;
+    longitude: number
 }
 
 interface PaginationMeta {
@@ -42,31 +42,28 @@ const HostDashboard = async ({ searchParams }: PageProps) => {
     const token = await getAuthToken();
     let hostEvents: HostEvent[] = [];
     let paginationMeta: PaginationMeta | undefined;
-    let response: Response | undefined;
-    try {
-        const queryParams = new URLSearchParams();
-        if (resolvedSearchParams.page) queryParams.set("page", resolvedSearchParams.page);
-        if (resolvedSearchParams.search) queryParams.set("search", resolvedSearchParams.search);
-        if (resolvedSearchParams.status) queryParams.set("status", resolvedSearchParams.status);
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/host/event?${queryParams.toString()}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `bearer ${token}`,
-            },
-            cache: 'no-store',
-        });
+    const queryParams = new URLSearchParams();
+    if (resolvedSearchParams.page) queryParams.set("page", resolvedSearchParams.page);
+    if (resolvedSearchParams.search) queryParams.set("search", resolvedSearchParams.search);
+    if (resolvedSearchParams.status) queryParams.set("status", resolvedSearchParams.status);
 
-        if (response.ok) {
-            const data = await response.json();
-            hostEvents = data.data || [];
-            paginationMeta = data.meta;
-        }
-    } catch (error) {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/host/event?${queryParams.toString()}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `bearer ${token}`,
+        },
+        cache: 'no-store',
+    });
+    await validateResponse(response.status);
+
+    if (!response.ok) {
+        throw new Error(`Failed to fetch host events. Status: ${response.status}`);
     }
-    if (response) {
-        await validateResponse(response.status);
-    }
+    const data = await response.json();
+    hostEvents = data.data || [];
+    paginationMeta = data.meta;
+
     return (
         <HostDashboardClient events={hostEvents} paginationMeta={paginationMeta} />
     );

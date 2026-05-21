@@ -26,24 +26,22 @@ const Bookmark = async ({ searchParams }: PageProps) => {
     let bookmarks: Event[] = [];
     let paginationMeta: PaginationMeta | undefined;
 
-    try {
-        const queryParams = new URLSearchParams();
-        if (resolvedSearchParams.page) queryParams.set("page", resolvedSearchParams.page);
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/bookmark/favorite?${queryParams.toString()}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `bearer ${token}`,
-            },
-            cache: 'no-store',
-        });
-        await validateResponse(response.status);
-                if (response.ok) {
-            const data = await response.json();
-            bookmarks = data.data || [];
-            paginationMeta = data.meta;
-        }
-    } catch (error) {
+    const queryParams = new URLSearchParams();
+    if (resolvedSearchParams.page) queryParams.set("page", resolvedSearchParams.page);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/bookmark/favorite?${queryParams.toString()}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `bearer ${token}`,
+        },
+        cache: 'no-store',
+    });
+    await validateResponse(response.status);
+    if (!response.ok) {
+        throw new Error(`Failed to fetch host events. Status: ${response.status}`);
     }
+    const data = await response.json();
+    bookmarks = data.data || [];
+    paginationMeta = data.meta;
 
     return <BookmarkClient initialBookmarks={bookmarks} paginationMeta={paginationMeta} />;
 };
