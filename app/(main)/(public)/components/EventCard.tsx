@@ -66,8 +66,8 @@ const EventCard: React.FC<EventCardProps> = ({
       <div className={`${isHorizontal ? 'py-2 md:p-0' : 'p-2'} flex flex-col flex-grow min-w-0`}>
         <h3 className="line-clamp-1 text-lg font-bold text-card-foreground">{event.title}</h3>
         <p className="mb-2 text-sm text-muted-foreground">
-          <ClientFormattedDate dateString={event.start_date} /> -{" "}
-          <ClientFormattedDate dateString={event.end_date} />
+          <ClientFormattedDate dateString={event.start_date} formatString="MMM d" /> -{" "}
+          <ClientFormattedDate dateString={event.end_date} formatString="MMM d, yyyy" />
         </p>
         <div className="mt-auto">
           {showStatus && event.status ? (
