@@ -49,7 +49,7 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
                             <DetailItem label="Event ID" value={booth.event_id} />
                             <DetailItem label="Booth ID" value={booking.booth_id} />
                             <DetailItem label="Vendor ID" value={booking.vendor_id} />
-                            <DetailItem label="Price Paid" value={`${booking.currency_code?.toUpperCase()} ${Number(booth.price).toLocaleString()}`} />
+                            <DetailItem label="Price Paid" value={`${booking.currency_code?.toUpperCase()} ${Number(booking.amount).toLocaleString()}`} />
                             {booking.cardBrand && (
                                 <DetailItem
                                     label="Payment Method"
