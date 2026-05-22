@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 import Image from "next/image";
 import { formatEventDate } from "@/app/lib/util";
 import PrintButton from "./components/printButton";
-
+import ClientFormattedDate from "../../../../../components/ClientFormattedDate";
 
 export default async function BookingDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
@@ -65,7 +65,9 @@ export default async function BookingDetailPage({ params }: { params: Promise<{ 
                                     {booking.payment_status}
                                 </span>
                             } />
-                            <DetailItem label="Booked On" value={formatEventDate(booking.booked_at)} />
+                            <DetailItem label="Booked On" value={
+                                <ClientFormattedDate dateString={booking.booked_at} />
+                            } />
 
                             {booking.receiptUrl && (
                                 <div className="pt-2 no-print">

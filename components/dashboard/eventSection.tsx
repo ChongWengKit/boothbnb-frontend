@@ -16,6 +16,7 @@ import { User, useUserContext } from "@/app/contexts/UserContext";
 import { formatEventDate } from "@/app/lib/util";
 import { Booth } from "@/app/(main)/(host)/create-event/actions";
 import { getAuthToken } from "@/app/contexts/auth";
+import ClientFormattedDate from "../../components/ClientFormattedDate";
 
 interface BookingSummary {
     booth_name: string;
@@ -128,7 +129,7 @@ export default async function DashboardEventDetailClient({ event, isHost = false
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <MdCalendarToday className="text-muted-foreground" />
-                                    <span>{formatEventDate(event.start_date)} - {formatEventDate(event.end_date)}</span>
+                                    <span><ClientFormattedDate dateString={event.start_date} /> - <ClientFormattedDate dateString={event.end_date} /></span>
                                 </div>
                             </div>
 
