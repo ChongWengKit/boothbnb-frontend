@@ -9,6 +9,7 @@ import { useUserContext } from "@/app/contexts/UserContext";
 import { publishEventAction, closeEventAction } from "@/app/(main)/(host)/host-dashboard/[slug]/actions";
 import { checkoutAction } from "@/app/(main)/(public)/dashboard/[slug]/actions";
 import { Booth } from "@/app/(main)/(host)/create-event/actions";
+import { getCurrency } from "@/app/contexts/currency";
 
 const BoothLayoutViewer = dynamic(() => import("@/components/boothlayout/boothLayoutViewer"), { ssr: false });
 
@@ -31,6 +32,7 @@ interface DashboardEvent {
   title: string;
   slug: string;
   status: string;
+  currency_code: string;
   available_booths: number;
   total_capacity: number;
   total_money_made?: number;
@@ -45,6 +47,7 @@ interface BoothSectionProps {
 export default function BoothSection({ event, isHost = false }: BoothSectionProps) {
   const router = useRouter();
   const { user } = useUserContext();
+  const currency = getCurrency();
   const [isLayoutOpen, setIsLayoutOpen] = useState(false);
   const [hoveredButton, setHoveredButton] = useState<string | null>(null);
 
@@ -80,12 +83,12 @@ export default function BoothSection({ event, isHost = false }: BoothSectionProp
   const handleExportCSV = () => {
     const summary = [
       ["Event Report", `"${event.title}"`],
-      ["Total Revenue", `"${event.total_money_made || 0}"`],
+      ["Total Revenue", `"${currency} ${event.total_money_made || 0}"`],
       ["Generated At", `"${new Date().toLocaleString()}"`],
       [""]
     ].map(row => row.join(",")).join("\n");
 
-    const headers = ["ID", "Name", "Status", "Price", "Vendor", "Email", "Booked At"].join(",");
+    const headers = ["ID", "Name", "Status", `Price (${event.currency_code})`, "Vendor", "Email", "Booked At"].join(",");
     const rows = event.booths.map((booth) => {
       const booking = booth.bookings?.find((b) => b.payment_status !== 'FAILED');
       return [

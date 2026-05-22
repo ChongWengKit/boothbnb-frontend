@@ -47,6 +47,7 @@ interface EventDetail {
     latitude: number;
     longitude: number;
     start_date: string;
+    currency_code: string;
     end_date: string;
     category: string;
     available_booths: number;
