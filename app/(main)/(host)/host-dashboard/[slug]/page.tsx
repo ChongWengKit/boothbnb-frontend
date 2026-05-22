@@ -15,8 +15,8 @@ async function getEvent(slug: string) {
         cache: 'no-store',
         headers,
     });
-        await validateResponse(response.status);
-        if (!response.ok) {
+    await validateResponse(response.status);
+    if (!response.ok) {
         throw new Error('Failed to fetch event');
     }
     const data = await response.json();
@@ -32,7 +32,7 @@ export default async function DashboardEventDetailPage({ params }: { params: Pro
             <Link href="/host-dashboard" className="m-8 flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground">
                 <IoArrowBack /> Back to dashboard
             </Link>
-            <DashboardEventDetailClient event={event} isHost={true} />;
+            <DashboardEventDetailClient event={event} isHost={true} isHostDashboard={true} />;
         </>
     )
 }

@@ -30,5 +30,5 @@ export default async function DashboardEventDetailPage({ params }: { params: Pro
         <Link href="/dashboard" className="mx-4 my-8 md:mx-8 flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground">
             <IoArrowBack /> Back to dashboard
         </Link>
-        <DashboardEventDetailClient event={event}/></>);
+        <DashboardEventDetailClient event={event} isHostDashboard={false} /></>);
 }

@@ -63,18 +63,26 @@ interface EventDetail {
     booking_summaries?: BookingSummary[];
 }
 
-export default async function DashboardEventDetailClient({ event, isHost = false }: { event: EventDetail; isHost?: boolean }) {
+interface DashboardEventDetailProps {
+    event: EventDetail;
+    isHost?: boolean;
+    isHostDashboard?: boolean;
+}
+
+export default async function DashboardEventDetailClient({ 
+    event, 
+    isHost = false, 
+    isHostDashboard = false 
+}: DashboardEventDetailProps) {
     const token = await getAuthToken();
-    const currency = await getCurrency();
-    const headerList = await headers();
-    const pathname = headerList.get("x-invoke-path") || "";
+
     let user: User | null = null;
     let isOwner = false;
 
     if (token) {
         user = jwtDecode<User>(token);
-        isHost = (user.role === "HOST" || user.role === "ADMIN");
-        isOwner = Number(user.id) === Number(event.host_id) && pathname.startsWith('/host-dashboard');
+        isHost = user.role === "HOST" || user.role === "ADMIN";
+        isOwner = Number(user.id) === Number(event.host_id);
     }
 
 
@@ -142,7 +150,7 @@ export default async function DashboardEventDetailClient({ event, isHost = false
                                 </p>
                             </section>
 
-                            {isOwner && (
+                            {isOwner && isHostDashboard && (
                                 <>
                                     <section className="mb-10 border-t pt-8">
                                         <h2 className="text-2xl font-bold mb-4">Bookings Summary</h2>
@@ -201,14 +209,13 @@ export default async function DashboardEventDetailClient({ event, isHost = false
                         </div>
 
                         <div className="hidden md:block">
-                            <BoothSection event={event} isHost={isHost} isOwner={isOwner} />
+                            <BoothSection event={event} isHost={isHost} isOwner={isOwner} isHostDashboard={isHostDashboard} />
                         </div>
                     </div>
 
                 </div>
                 <div className="sticky z-9999 bottom-0 left-0 right-0 md:hidden">
-
-                    <BoothSection event={event} isHost={isHost} isOwner={isOwner} />
+                    <BoothSection event={event} isHost={isHost} isOwner={isOwner} isHostDashboard={isHostDashboard} />
                 </div>
             </div>
         </>

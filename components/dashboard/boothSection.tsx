@@ -42,11 +42,11 @@ interface BoothSectionProps {
   event: DashboardEvent;
   isHost?: boolean;
   isOwner?: boolean;
+  isHostDashboard?: boolean;
 }
 
-export default function BoothSection({ event, isHost = false, isOwner = false }: BoothSectionProps) {
+export default function BoothSection({ event, isHost = false, isOwner = false, isHostDashboard = false}: BoothSectionProps) {
   const router = useRouter();
-  const pathname = usePathname();
   const { user } = useUserContext();
   const [isLayoutOpen, setIsLayoutOpen] = useState(false);
   const [hoveredButton, setHoveredButton] = useState<string | null>(null);
@@ -140,7 +140,7 @@ export default function BoothSection({ event, isHost = false, isOwner = false }:
         <div className="mb-6 space-y-2 leading-relaxed text-muted-foreground">
           <p>Available: <span className="font-semibold text-foreground">{event.available_booths} / {event.total_capacity}</span></p>
 
-          {isOwner && (
+          {isHost && isOwner && isHostDashboard && (
             <div className="pt-2 border-t text-sm">
               <div className="flex items-center gap-2">
                 <span className="w-3 h-3 bg-green-500 rounded-full"></span>
@@ -162,7 +162,7 @@ export default function BoothSection({ event, isHost = false, isOwner = false }:
             {isOwner ? "View Booths" : "View & Book Booths"}
           </button>
 
-          {isOwner && (
+          {isHost && isOwner && isHostDashboard && (
             <div className="flex flex-col gap-3 mt-4 pt-4 border-t">
               <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Admin Tools</p>
 
@@ -215,7 +215,7 @@ export default function BoothSection({ event, isHost = false, isOwner = false }:
             View & Book Booths
           </button>
 
-          {isOwner && (
+          {isHost && isOwner && isHostDashboard && (
             <div className="flex flex-col gap-3 mt-2 pt-4 border-t">
               <div className="grid grid-cols-2 gap-3">
                 {event.status === "DRAFT" ? (
