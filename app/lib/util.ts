@@ -1,3 +1,5 @@
+'use client'
+
 export const formatEventDate = (dateString: string) => {
   return new Date(dateString).toLocaleString(undefined, {
     day: 'numeric',
