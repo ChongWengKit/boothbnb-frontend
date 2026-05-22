@@ -86,7 +86,7 @@ export default function BoothSection({ event, isHost = false }: BoothSectionProp
       [""]
     ].map(row => row.join(",")).join("\n");
 
-    const headers = ["ID", "Name", "Status", `Price (${event.currency_code})`, "Vendor", "Email", "Booked At"].join(",");
+    const headers = ["ID", "Name", "Status", `Price (${currency})`, "Vendor", "Email", "Booked At"].join(",");
     const rows = event.booths.map((booth) => {
       const booking = booth.bookings?.find((b) => b.payment_status !== 'FAILED');
       return [
