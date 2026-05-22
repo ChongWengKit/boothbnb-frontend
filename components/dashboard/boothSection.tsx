@@ -35,7 +35,6 @@ interface DashboardEvent {
   currency_code: string;
   available_booths: number;
   total_capacity: number;
-  total_money_made?: number;
   booths: BoothWithBookings[];
 }
 
@@ -83,7 +82,6 @@ export default function BoothSection({ event, isHost = false }: BoothSectionProp
   const handleExportCSV = () => {
     const summary = [
       ["Event Report", `"${event.title}"`],
-      ["Total Revenue", `"${currency} ${event.total_money_made || 0}"`],
       ["Generated At", `"${new Date().toLocaleString()}"`],
       [""]
     ].map(row => row.join(",")).join("\n");

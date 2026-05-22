@@ -60,7 +60,6 @@ interface EventDetail {
     is_bookmarked: boolean;
     bookmarks_count: number;
     status: string;
-    total_money_made?: number;
     booking_summaries?: BookingSummary[];
 }
 
@@ -143,21 +142,6 @@ export default async function DashboardEventDetailClient({ event, isHost = false
 
                             {isOwner && (
                                 <>
-                                    <section className="mb-10 border-t pt-8">
-                                        <h2 className="text-2xl font-bold mb-4">Financial Summary</h2>
-                                        <div className="bg-green-50 border border-green-200 rounded-xl p-6 flex items-center gap-4">
-                                            <div className="p-3 bg-green-500 rounded-full text-foreground text-2xl shadow-sm">
-                                                <IoWalletOutline />
-                                            </div>
-                                            <div>
-                                                <p className="text-green-700 text-xs font-bold uppercase tracking-wider">Total Revenue (Paid)</p>
-                                                <p className="text-3xl font-bold text-green-900">
-                                                    {currency}{event.total_money_made?.toLocaleString() ?? "0"}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </section>
-
                                     <section className="mb-10 border-t pt-8">
                                         <h2 className="text-2xl font-bold mb-4">Bookings Summary</h2>
                                         <div className="flex flex-col gap-3">
