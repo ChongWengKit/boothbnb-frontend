@@ -20,6 +20,10 @@ interface Booking {
     email: string;
   };
   booked_at?: string;
+  stripeChargeId?: string;
+  receiptUrl?: string;
+  cardBrand?: string;
+  cardLast4?: string;
 }
 
 interface BoothWithBookings extends Booth {
@@ -84,11 +88,13 @@ export default function BoothSection({ event, isHost = false, isOwner = false, i
 
     const summary = [
       ["Event Report", `"${event.title}"`],
+      ["Event Status", `"${event.status}"`],
+      ["Booth Capacity", `"${event.available_booths} / ${event.total_capacity}"`],
       ["Generated At", `"${new Date().toLocaleString()}"`],
       [""]
     ].map(row => row.join(",")).join("\n");
 
-    const headers = ["ID", "Name", "Status", `Price (${currency})`, "Vendor", "Email", "Booked At"].join(",");
+    const headers = ["ID", "Name", "Status", `Price (${currency})`, "Vendor", "Email", "Booked At", "Stripe Charge ID", "Receipt URL", "Card Brand", "Card Last 4"].join(",");
     const rows = event.booths.map((booth) => {
       const booking = booth.bookings?.find((b) => b.payment_status !== 'FAILED');
       return [
@@ -98,7 +104,11 @@ export default function BoothSection({ event, isHost = false, isOwner = false, i
         booth.price || 0,
         `"${booking?.vendor?.username || ''}"`,
         `"${booking?.vendor?.email || ''}"`,
-        `"${booking?.booked_at ? new Date(booking.booked_at).toLocaleString() : ''}"`
+        `"${booking?.booked_at ? new Date(booking.booked_at).toLocaleString() : ''}"`,
+        `"${booking?.stripeChargeId || ''}"`,
+        `"${booking?.receiptUrl || ''}"`,
+        `"${booking?.cardBrand || ''}"`,
+        `"${booking?.cardLast4 || ''}"`
       ].join(",");
     });
 

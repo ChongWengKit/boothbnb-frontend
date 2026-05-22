@@ -36,6 +36,10 @@ interface Booking {
         email: string;
     };
     booked_at?: string;
+    stripeChargeId?: string;
+    receiptUrl?: string;
+    cardBrand?: string;
+    cardLast4?: string;
 }
 
 interface EventDetail {
