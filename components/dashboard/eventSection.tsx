@@ -7,7 +7,6 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import { jwtDecode } from "jwt-decode";
 import Image from "next/image";
-
 import { EventCarousel } from "@/components/event-detail/Carousel";
 import BoothSection from "@/components/dashboard/boothSection";
 import EventMap from "@/components/event-detail/EventMap";
@@ -17,11 +16,12 @@ import { formatEventDate } from "@/app/lib/util";
 import { Booth } from "@/app/(main)/(host)/create-event/actions";
 import { getAuthToken } from "@/app/contexts/auth";
 import ClientFormattedDate from "../../components/ClientFormattedDate";
-
+import { getCurrency } from "@/app/contexts/currency";
 interface BookingSummary {
     booth_name: string;
     booked_at: string;
     price: number | string;
+    currency: string;
     status: string;
     vendor: {
         username: string;
@@ -30,12 +30,12 @@ interface BookingSummary {
 }
 
 interface Booking {
-  payment_status: string;
-  vendor?: {
-    username: string;
-    email: string;
-  };
-  booked_at?: string;
+    payment_status: string;
+    vendor?: {
+        username: string;
+        email: string;
+    };
+    booked_at?: string;
 }
 
 interface EventDetail {
@@ -65,7 +65,7 @@ interface EventDetail {
 
 export default async function DashboardEventDetailClient({ event, isHost = false }: { event: EventDetail; isHost?: boolean }) {
     const token = await getAuthToken();
-    
+    const currency = await getCurrency();
     let user: User | null = null;
     let isOwner = false;
 
@@ -96,9 +96,9 @@ export default async function DashboardEventDetailClient({ event, isHost = false
                                         </Link>
                                     )}
                                 </h1>
-                                <BookmarkToggle 
-                                    eventId={event.id} 
-                                    initialIsBookmarked={event.is_bookmarked} 
+                                <BookmarkToggle
+                                    eventId={event.id}
+                                    initialIsBookmarked={event.is_bookmarked}
                                     initialCount={event.bookmarks_count}
                                     isHost={isHost}
                                 />
@@ -151,7 +151,7 @@ export default async function DashboardEventDetailClient({ event, isHost = false
                                             <div>
                                                 <p className="text-green-700 text-xs font-bold uppercase tracking-wider">Total Revenue (Paid)</p>
                                                 <p className="text-3xl font-bold text-green-900">
-                                                    ${event.total_money_made?.toLocaleString() ?? "0"}
+                                                    {currency}{event.total_money_made?.toLocaleString() ?? "0"}
                                                 </p>
                                             </div>
                                         </div>
@@ -179,7 +179,7 @@ export default async function DashboardEventDetailClient({ event, isHost = false
 
                                                         <div className="flex gap-4 items-center">
                                                             <div className="text-right">
-                                                                <p className="font-bold text-foreground">${Number(booking.price).toLocaleString()}</p>
+                                                                <p className="font-bold text-foreground">{booking.currency} {Number(booking.price).toLocaleString()}</p>
                                                                 <p className="text-[10px] text-muted-foreground">
                                                                     {new Date(booking.booked_at).toLocaleDateString()}
                                                                 </p>
