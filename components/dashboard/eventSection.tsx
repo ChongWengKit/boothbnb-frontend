@@ -3,8 +3,8 @@ import { FaLocationDot } from "react-icons/fa6";
 import { MdCalendarToday, MdModeEdit } from "react-icons/md";
 import { IoArrowBack, IoWalletOutline } from "react-icons/io5";
 import { BookmarkIcon } from 'lucide-react';
-import Link from "next/link";
-import { cookies } from "next/headers";
+import Link from "next/dist/client/link";
+import { headers } from "next/headers";
 import { jwtDecode } from "jwt-decode";
 import Image from "next/image";
 import { EventCarousel } from "@/components/event-detail/Carousel";
@@ -66,13 +66,15 @@ interface EventDetail {
 export default async function DashboardEventDetailClient({ event, isHost = false }: { event: EventDetail; isHost?: boolean }) {
     const token = await getAuthToken();
     const currency = await getCurrency();
+    const headerList = await headers();
+    const pathname = headerList.get("x-invoke-path") || "";
     let user: User | null = null;
     let isOwner = false;
 
     if (token) {
         user = jwtDecode<User>(token);
-        isHost = user.role === "HOST" || user.role === "ADMIN";
-        isOwner = Number(user.id) === Number(event.host_id);
+        isHost = (user.role === "HOST" || user.role === "ADMIN");
+        isOwner = Number(user.id) === Number(event.host_id) && pathname.startsWith('/host-dashboard');
     }
 
 
@@ -199,14 +201,14 @@ export default async function DashboardEventDetailClient({ event, isHost = false
                         </div>
 
                         <div className="hidden md:block">
-                            <BoothSection event={event} isHost={isHost} />
+                            <BoothSection event={event} isHost={isHost} isOwner={isOwner} />
                         </div>
                     </div>
 
                 </div>
                 <div className="sticky z-9999 bottom-0 left-0 right-0 md:hidden">
 
-                    <BoothSection event={event} isHost={isHost} />
+                    <BoothSection event={event} isHost={isHost} isOwner={isOwner} />
                 </div>
             </div>
         </>

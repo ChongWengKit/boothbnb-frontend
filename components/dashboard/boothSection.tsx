@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import toast from "react-hot-toast";
 import { useUserContext } from "@/app/contexts/UserContext";
 
@@ -41,19 +41,19 @@ interface DashboardEvent {
 interface BoothSectionProps {
   event: DashboardEvent;
   isHost?: boolean;
+  isOwner?: boolean;
 }
 
-export default function BoothSection({ event, isHost = false }: BoothSectionProps) {
+export default function BoothSection({ event, isHost = false, isOwner = false }: BoothSectionProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const { user } = useUserContext();
-  const currency = getCurrency();
   const [isLayoutOpen, setIsLayoutOpen] = useState(false);
   const [hoveredButton, setHoveredButton] = useState<string | null>(null);
 
-  const isOwner = user && Number(user.id) === Number(event.host_id);
 
   useEffect(() => {
-    if (isHost && user && user.role === "HOST" && !user.is_stripe_connected) {
+    if (isOwner && user && user.role === "HOST" && !user.is_stripe_connected) {
       toast.error("Please connect your Stripe account to manage events.");
       router.push("/dashboard");
     }
@@ -79,7 +79,9 @@ export default function BoothSection({ event, isHost = false }: BoothSectionProp
     }
   };
 
-  const handleExportCSV = () => {
+  const handleExportCSV =async  () => {
+      const currency = await getCurrency();
+
     const summary = [
       ["Event Report", `"${event.title}"`],
       ["Generated At", `"${new Date().toLocaleString()}"`],
