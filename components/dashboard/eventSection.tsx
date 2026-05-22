@@ -21,7 +21,7 @@ interface BookingSummary {
     booth_name: string;
     booked_at: string;
     price: number | string;
-    currency: string;
+    currency_code: string;
     status: string;
     vendor: {
         username: string;
@@ -149,13 +149,17 @@ export default async function DashboardEventDetailClient({ event, isHost = false
                                                 event.booking_summaries.map((booking: BookingSummary, idx: number) => (
                                                     <div key={idx} className="flex items-center justify-between rounded-lg border border-border bg-background p-4 transition-colors hover:bg-accent/30">
                                                         <Link href={`/account/${booking.vendor.username}`} className="flex items-center gap-3">
-                                                            <Image
-                                                                src={booking.vendor.profile_photo || ""}
-                                                                className="w-10 h-10 rounded-full bg-secondary object-cover border"
-                                                                alt={booking.vendor.username}
-                                                                width={40}
-                                                                height={40}
-                                                            />
+                                                            {booking.vendor.profile_photo ? (
+                                                                <Image
+                                                                    src={booking.vendor.profile_photo}
+                                                                    className="w-10 h-10 rounded-full bg-secondary object-cover border"
+                                                                    alt={booking.vendor.username}
+                                                                    width={40}
+                                                                    height={40}
+                                                                />
+                                                            ) : (
+                                                                <div className="h-10 w-10 rounded-full bg-muted border"></div>
+                                                            )}
                                                             <div>
                                                                 <p className="font-semibold text-foreground">{booking.vendor.username}</p>
                                                                 <p className="text-xs text-muted-foreground">Booth: {booking.booth_name}</p>
@@ -164,7 +168,7 @@ export default async function DashboardEventDetailClient({ event, isHost = false
 
                                                         <div className="flex gap-4 items-center">
                                                             <div className="text-right">
-                                                                <p className="font-bold text-foreground">{booking.currency} {Number(booking.price).toLocaleString()}</p>
+                                                                <p className="font-bold text-foreground">{booking.currency_code} {Number(booking.price).toLocaleString()}</p>
                                                                 <p className="text-[10px] text-muted-foreground">
                                                                     {new Date(booking.booked_at).toLocaleDateString()}
                                                                 </p>
