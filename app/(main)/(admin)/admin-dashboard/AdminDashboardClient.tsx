@@ -51,7 +51,8 @@ const AdminDashboardClient: React.FC<AdminDashboardClientProps> = ({ adminReques
         router.push(`?${params.toString()}`);
     };
 
-    const handleApplyFilters = () => {
+    const handleApplyFilters = (e?: React.FormEvent) => {
+        e?.preventDefault();
         const params = new URLSearchParams(searchParams.toString());
         if (search) params.set("search", search); else params.delete("search");
         if (actionType) params.set("actionType", actionType); else params.delete("actionType");
@@ -61,7 +62,10 @@ const AdminDashboardClient: React.FC<AdminDashboardClientProps> = ({ adminReques
 
     return (
         <>
-            <div className="mb-8 flex flex-wrap items-center gap-4 rounded-lg bg-background p-4">
+            <form 
+                onSubmit={handleApplyFilters}
+                className="mb-8 flex flex-wrap items-center gap-4 rounded-lg bg-background p-4"
+            >
                 <div className="flex-1 min-w-[200px]">
                     <input
                         type="text"
@@ -81,8 +85,8 @@ const AdminDashboardClient: React.FC<AdminDashboardClientProps> = ({ adminReques
                         <option value="HOST_APPROVAL">Host Approval</option>
                     </select>
                 </div>
-                <Button className="cursor-pointer" onClick={handleApplyFilters}>Filter</Button>
-            </div>
+                <Button type="submit" className="cursor-pointer">Filter</Button>
+            </form>
 
             <AdminApproval requests={adminRequests} />
 

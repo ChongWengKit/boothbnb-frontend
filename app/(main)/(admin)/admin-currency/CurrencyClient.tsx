@@ -38,7 +38,8 @@ const CurrencyClient: React.FC<CurrencyClientProps> = ({ currencies, paginationM
         router.push(`?${params.toString()}`);
     };
 
-    const handleApplyFilters = () => {
+    const handleApplyFilters = (e?: React.FormEvent) => {
+        e?.preventDefault();
         const params = new URLSearchParams(searchParams.toString());
         if (search) params.set("search", search); else params.delete("search");
         if (status) params.set("status", status); else params.delete("status");
@@ -48,7 +49,10 @@ const CurrencyClient: React.FC<CurrencyClientProps> = ({ currencies, paginationM
 
     return (
         <>
-            <div className="mb-8 flex flex-wrap items-center gap-4 rounded-lg bg-background p-4">
+            <form 
+                onSubmit={handleApplyFilters}
+                className="mb-8 flex flex-wrap items-center gap-4 rounded-lg bg-background p-4"
+            >
                 <div className="flex-1 min-w-[200px]">
                     <input
                         type="text"
@@ -69,8 +73,8 @@ const CurrencyClient: React.FC<CurrencyClientProps> = ({ currencies, paginationM
                         <option value="false">Inactive</option>
                     </select>
                 </div>
-                <Button className="cursor-pointer" onClick={handleApplyFilters}>Filter</Button>
-            </div>
+                <Button type="submit" className="cursor-pointer">Filter</Button>
+            </form>
 
             <CurrencyAdmin requests={currencies} />
 

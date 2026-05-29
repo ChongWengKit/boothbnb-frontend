@@ -46,7 +46,8 @@ const EmailLogsClient: React.FC<EmailLogsClientProps> = ({ emailLogs, pagination
         router.push(`?${params.toString()}`);
     };
 
-    const handleApplyFilters = () => {
+    const handleApplyFilters = (e?: React.FormEvent) => {
+        e?.preventDefault();
         const params = new URLSearchParams(searchParams.toString());
         if (search) params.set("search", search); else params.delete("search");
         if (status) params.set("status", status); else params.delete("status");
@@ -58,8 +59,9 @@ const EmailLogsClient: React.FC<EmailLogsClientProps> = ({ emailLogs, pagination
     return (
         <>
             <div className="flex flex-col gap-6">
-
-                <div className="flex flex-wrap items-center gap-4 rounded-lg bg-background p-4">
+                <form 
+                    onSubmit={handleApplyFilters}
+                    className="flex flex-wrap items-center gap-4 rounded-lg bg-background p-4">
                     <div className="flex-1 min-w-[200px]">
                         <input
                             type="text"
@@ -98,8 +100,8 @@ const EmailLogsClient: React.FC<EmailLogsClientProps> = ({ emailLogs, pagination
                             <option value="ADMIN_INVITATION">Admin Invitation</option>
                         </select>
                     </div>
-                    <Button className="cursor-pointer" onClick={handleApplyFilters}>Filter</Button>
-                </div>
+                    <Button type="submit" className="cursor-pointer">Filter</Button>
+                </form>
             </div>
 
             <div className="mt-6">
