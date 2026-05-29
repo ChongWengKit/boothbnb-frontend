@@ -55,7 +55,8 @@ const HostDashboardClient: React.FC<HostDashboardClientProps> = ({ events, pagin
         router.push(`?${params.toString()}`);
     };
 
-    const handleApplyFilters = () => {
+    const handleApplyFilters = (e?: React.FormEvent) => {
+        e?.preventDefault();
         const params = new URLSearchParams(searchParams.toString());
         if (search) params.set("search", search); else params.delete("search");
         if (status) params.set("status", status); else params.delete("status");
@@ -75,7 +76,10 @@ const HostDashboardClient: React.FC<HostDashboardClientProps> = ({ events, pagin
                 </Link>
             </div>
 
-            <div className="mb-8 bg-background flex flex-wrap items-center gap-4 rounded-lg p-4">
+            <form 
+                onSubmit={handleApplyFilters}
+                className="mb-8 bg-background flex flex-wrap items-center gap-4 rounded-lg p-4"
+            >
                 <div className="flex-1 min-w-[200px]">
                     <input
                         type="text"
@@ -98,8 +102,8 @@ const HostDashboardClient: React.FC<HostDashboardClientProps> = ({ events, pagin
                         <option value="CANCELLED">Cancelled</option>
                     </select>
                 </div>
-                <Button className="cursor-pointer" onClick={handleApplyFilters}>Filter</Button>
-            </div>
+                <Button type="submit" className="cursor-pointer">Filter</Button>
+            </form>
 
             <EventResultsList
                 events={events}
