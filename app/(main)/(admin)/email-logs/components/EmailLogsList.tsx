@@ -67,7 +67,8 @@ const EmailLogsList: React.FC<EmailLogsListProps> = ({ logs }) => {
 
                     <div className="border-t border-border pt-4 md:col-span-3 md:border-t-0 md:border-l md:pt-0 md:pl-6">
                         <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Recipient</p>
-                        <p className="text-xs font-medium text-foreground truncate">{log.payload.email || log.payload.name}</p>
+                        <p className="text-xs font-medium text-foreground truncate">{log.payload.name}</p>
+                        <p className="text-xs font-medium text-foreground truncate">{log.payload.email}</p>
                         <p className="text-[10px] text-muted-foreground">Resend ID: {log.email_id || 'N/A'}</p>
                     </div>
 
@@ -88,7 +89,7 @@ const EmailLogsList: React.FC<EmailLogsListProps> = ({ logs }) => {
                     </div>
 
                     <div className="md:col-span-2 flex md:justify-end gap-2">
-    
+
                         {log.status === "SUCCESSFUL" && (
                             <div className="bg-green-500/10 border border-green-500/20 p-2 rounded-lg">
                                 <p className="text-green-600 text-xs font-bold text-center">Sent</p>
