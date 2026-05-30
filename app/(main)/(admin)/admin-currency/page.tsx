@@ -14,12 +14,13 @@ interface PageProps {
 
 const AdminCurrencyPage = async (props : PageProps) => {
      const searchParams = await props.searchParams;
+    const suspenseKey = JSON.stringify(searchParams);
 
     return (
         <div className="flex flex-col justify-center">
             <CurrencySearch />
             <Suspense
-                key={searchParams.toString()}
+                key={suspenseKey}
                 fallback={
                     <div className="flex items-center justify-center py-20">
                         <Spinner className="size-8" />
