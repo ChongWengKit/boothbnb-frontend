@@ -1,36 +1,9 @@
-import { getAuthToken, validateResponse } from "@/app/contexts/auth";
-import EmailLogsClient from "./EmailLogsClient";
 
-
-
-interface EmailLog {
-    id: number;
-    user_id: number;
-    category: "VERIFICATION" | "PASSWORD_RESET" | "BOOKING_CONFIRMATION" | "HOST_APPROVED" | "ADMIN_INVITATION";
-    payload: {
-        email: string;
-        name: string;
-    };
-    status: "PENDING" | "SUCCESSFUL" | "FAILED" | "BOUNCED" | "COMPLAINED";
-    email_id: string | null;
-    attempts: number;
-}
-
-
-enum ActionType {
-    HOST_APPROVAL = "HOST_APPROVAL"
-}
-interface PaginationMeta {
-    totalItems: number;
-    totalPages: number;
-    currentPage: number;
-    itemsPerPage: number;
-    hasNextPage: boolean;
-    hasPreviousPage: boolean;
-}
-
-
-interface PageProps {
+import { Suspense } from "react";
+import { Spinner } from "@/components/ui/spinner";
+import EmailLogsSearch from "./components/EmailLogsSearch";
+import EmailLogsResultsLoader from "./components/EmailLogsResultLoader";
+interface EmailLogsPageProps {
     searchParams: Promise<{
         page?: string;
         limit?: string;
@@ -39,37 +12,25 @@ interface PageProps {
         status?: "PENDING" | "SUCCESSFUL" | "FAILED" | "BOUNCED" | "COMPLAINED";
     }>;
 }
-
-const AdminDashboard = async ({ searchParams }: PageProps) => {
-    const resolvedSearchParams = await searchParams;
-    const token = await getAuthToken();
-    let emailLogs: EmailLog[] = [];
-    let paginationMeta: PaginationMeta | undefined;
-    let response: Response | undefined;
-    const queryParams = new URLSearchParams();
-    if (resolvedSearchParams.page) queryParams.set("page", resolvedSearchParams.page);
-    if (resolvedSearchParams.search) queryParams.set("search", resolvedSearchParams.search);
-    if (resolvedSearchParams.status) queryParams.set("status", resolvedSearchParams.status);
-    if (resolvedSearchParams.category) queryParams.set("category", resolvedSearchParams.category);
-
-    response = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/admin/email?${queryParams.toString()}`, {
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `bearer ${token}`,
-        },
-        cache: 'no-store',
-    });
-    await validateResponse(response.status);
-    if (!response.ok) {
-        throw new Error(`Failed to fetch host events. Status: ${response.status}`);
-    }
-    const data = await response.json();
-    emailLogs = data.data || [];
-    paginationMeta = data.meta;
+const EmailLogsPage = async (props: EmailLogsPageProps) => {
+    const searchParams = await props.searchParams;
+    const suspenseKey = JSON.stringify(searchParams);
 
     return (
-        <EmailLogsClient emailLogs={emailLogs} paginationMeta={paginationMeta} />
-    );
-};
+        <div className="flex flex-col justify-center">
+            <EmailLogsSearch />
+            <Suspense
+                key={suspenseKey}
+                fallback={
+                    <div className="flex items-center justify-center py-20">
+                        <Spinner className="size-8" />
+                    </div>
+                }
+            >
+                <EmailLogsResultsLoader searchParams={searchParams} />
+            </Suspense>
+        </div>
+    )
+}
 
-export default AdminDashboard;
+export default EmailLogsPage;
