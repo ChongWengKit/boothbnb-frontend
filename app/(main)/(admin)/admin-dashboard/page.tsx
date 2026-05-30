@@ -1,34 +1,9 @@
-import { getAuthToken, validateResponse } from "@/app/contexts/auth";
-import AdminDashboardClient from "@/app/(main)/(admin)/admin-dashboard/AdminDashboardClient";
 
-interface AdminRequest {
-    user: {
-        id: number;
-        username: string;
-        email: string;
-    };
-    action_type: ActionType;
-    status: "PENDING" | "APPROVED" | "REJECTED";
-    created_at: string;
-    updated_at: Date | null;
-    id: number;
-    user_id: number;
-}
-
-enum ActionType {
-    HOST_APPROVAL = "HOST_APPROVAL"
-}
-interface PaginationMeta {
-    totalItems: number;
-    totalPages: number;
-    currentPage: number;
-    itemsPerPage: number;
-    hasNextPage: boolean;
-    hasPreviousPage: boolean;
-}
-
-
-interface PageProps {
+import { Suspense } from "react";
+import { Spinner } from "@/components/ui/spinner";
+import AdminDashboardResultsLoader from "../admin-dashboard/components/AdminDashboardResultLoader"
+import AdminDashboardSearch from "./components/AdminDashboardSearch";
+interface AdminDashboardPageProps {
     searchParams: Promise<{
         page?: string;
         limit?: string;
@@ -37,38 +12,25 @@ interface PageProps {
         actionType?: string;
     }>;
 }
-
-const AdminDashboard = async ({ searchParams }: PageProps) => {
-    const resolvedSearchParams = await searchParams;
-    const token = await getAuthToken();
-    let adminRequests: AdminRequest[] = [];
-    let paginationMeta: PaginationMeta | undefined;
-    let response: Response | undefined;
-
-    const queryParams = new URLSearchParams();
-    if (resolvedSearchParams.page) queryParams.set("page", resolvedSearchParams.page);
-    if (resolvedSearchParams.search) queryParams.set("search", resolvedSearchParams.search);
-    if (resolvedSearchParams.actionType) queryParams.set("actionType", resolvedSearchParams.actionType);
-
-    response = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/admin?${queryParams.toString()}`, {
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `bearer ${token}`,
-        },
-        cache: 'no-store',
-    });
-    await validateResponse(response.status);
-    if (!response.ok) {
-        throw new Error(`Failed to fetch host events. Status: ${response.status}`);
-    }
-    const data = await response.json();
-    adminRequests = data.data || [];
-    paginationMeta = data.meta;
-
+const AdminDashboardPage = async (props: AdminDashboardPageProps) => {
+    const searchParams = await props.searchParams;
+    const suspenseKey = JSON.stringify(searchParams);
 
     return (
-        <AdminDashboardClient adminRequests={adminRequests} paginationMeta={paginationMeta} />
-    );
-};
+        <div className="flex flex-col justify-center">
+            <AdminDashboardSearch />
+            <Suspense
+                key={suspenseKey}
+                fallback={
+                    <div className="flex items-center justify-center py-20">
+                        <Spinner className="size-8" />
+                    </div>
+                }
+            >
+                <AdminDashboardResultsLoader searchParams={searchParams} />
+            </Suspense>
+        </div>
+    )
+}
 
-export default AdminDashboard;
+export default AdminDashboardPage;
