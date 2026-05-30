@@ -1,72 +1,36 @@
-import React from "react";
-import { cookies } from "next/headers";
-import { deleteAuthToken, getAuthToken, validateResponse } from "@/app/contexts/auth";
-import HostDashboardClient from "./HostDashboardClient";
-import { type EventStatus } from "@/app/(main)/(public)/components/EventCard";
 
-export interface HostEvent {
-    id: number;
-    title: string;
-    start_date: string;
-    end_date: string;
-    address: string;
-    thumbnail: string | null;
-    slug: string;
-    total_bookings: number;
-    total_capacity: number;
-    available_booths: number;
-    latitude: number;
-    longitude: number
-}
-
-interface PaginationMeta {
-    totalItems: number;
-    totalPages: number;
-    currentPage: number;
-    itemsPerPage: number;
-    hasNextPage: boolean;
-    hasPreviousPage: boolean;
-}
-
-interface PageProps {
+import { Suspense } from "react";
+import { Spinner } from "@/components/ui/spinner";
+import HostDashboardSearch from "./components/HostDashboardSearch";
+import HostDashboardResultsLoader from "./components/HostDashboardResultLoader";
+interface HostDashboardPageProps {
     searchParams: Promise<{
         page?: string;
         limit?: string;
         search?: string;
-        status?: string;
+        category?: "VERIFICATION" | "PASSWORD_RESET" | "BOOKING_CONFIRMATION" | "HOST_APPROVED" | "ADMIN_INVITATION";
+        status?: "PENDING" | "SUCCESSFUL" | "FAILED" | "BOUNCED" | "COMPLAINED";
     }>;
 }
-
-const HostDashboard = async ({ searchParams }: PageProps) => {
-    const resolvedSearchParams = await searchParams;
-    const token = await getAuthToken();
-    let hostEvents: HostEvent[] = [];
-    let paginationMeta: PaginationMeta | undefined;
-
-    const queryParams = new URLSearchParams();
-    if (resolvedSearchParams.page) queryParams.set("page", resolvedSearchParams.page);
-    if (resolvedSearchParams.search) queryParams.set("search", resolvedSearchParams.search);
-    if (resolvedSearchParams.status) queryParams.set("status", resolvedSearchParams.status);
-
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/host/event?${queryParams.toString()}`, {
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `bearer ${token}`,
-        },
-        cache: 'no-store',
-    });
-    await validateResponse(response.status);
-
-    if (!response.ok) {
-        throw new Error(`Failed to fetch host events. Status: ${response.status}`);
-    }
-    const data = await response.json();
-    hostEvents = data.data || [];
-    paginationMeta = data.meta;
+const HostDashboardPage = async (props: HostDashboardPageProps) => {
+    const searchParams = await props.searchParams;
+    const suspenseKey = JSON.stringify(searchParams);
 
     return (
-        <HostDashboardClient events={hostEvents} paginationMeta={paginationMeta} />
-    );
-};
+        <div className="flex flex-col justify-center">
+            <HostDashboardSearch />
+            <Suspense
+                key={suspenseKey}
+                fallback={
+                    <div className="flex items-center justify-center py-20">
+                        <Spinner className="size-8" />
+                    </div>
+                }
+            >
+                <HostDashboardResultsLoader searchParams={searchParams} />
+            </Suspense>
+        </div>
+    )
+}
 
-export default HostDashboard;
+export default HostDashboardPage;
