@@ -9,7 +9,6 @@ export interface User {
   email: string;
   username: string;
   role: string;
-  is_stripe_connected: boolean;
   profile_photo?: string | null;
 }
 

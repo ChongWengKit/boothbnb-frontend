@@ -17,7 +17,7 @@ const DashboardBottombar = () => {
         { href: "/dashboard", label: "Dashboard", icon: <MdSpaceDashboard className="w-6 h-6" />, show: true },
         { href: "/host-dashboard", label: "My Booths", icon: <FaStore className="w-6 h-6" />, show: user?.role === 'HOST' },
         { href: "/bookmark", label: "Bookmarks", icon: <MdBookmarks className="w-6 h-6" />, show: user?.role === 'VENDOR' },
-        { href: "/stripe-connect", label: user?.is_stripe_connected ? "Stripe" : "Connect", icon: <SiStripe className="w-6 h-6" />, show: user?.role === 'HOST' },
+        { href: "/stripe-connect", label: "Stripe", icon: <SiStripe className="w-6 h-6" />, show: user?.role === 'HOST' },
         { href: "/payment", label: "Payments", icon: <MdOutlinePayment className="w-6 h-6" />, show: user?.role === 'VENDOR' },
         { href: "/booking", label: "Bookings", icon: <FaRegCalendar className="w-6 h-6" />, show: user?.role === 'VENDOR' },
         { href: "/admin-dashboard", label: "Approvals", icon: <CiSquareQuestion className="w-6 h-6" />, show: user?.role === 'ADMIN' },

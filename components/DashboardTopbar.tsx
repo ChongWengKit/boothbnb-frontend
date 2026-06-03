@@ -40,9 +40,9 @@ const DashboardTopbar = () => {
           <div className="hidden md:flex items-center gap-2">
             <Link
               href="/stripe-connect"
-              className={`rounded-lg border px-4 py-2 text-sm font-semibold transition-colors ${user?.is_stripe_connected ? "border-border bg-background text-foreground" : "border-primary bg-primary text-primary-foreground hover:bg-primary/90"}`}
+              className={`rounded-lg border px-4 py-2 text-sm font-semibold transition-colors border-border bg-background text-foreground`}
             >
-              {user?.is_stripe_connected ? "Stripe Status" : "Connect Stripe"}
+              Stripe Status
             </Link>
           </div>
         )}

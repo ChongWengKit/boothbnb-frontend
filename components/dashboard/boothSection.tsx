@@ -56,13 +56,6 @@ export default function BoothSection({ event, isHost = false, isOwner = false, i
   const [hoveredButton, setHoveredButton] = useState<string | null>(null);
 
 
-  useEffect(() => {
-    if (isOwner && user && user.role === "HOST" && !user.is_stripe_connected) {
-      toast.error("Please connect your Stripe account to manage events.");
-      router.push("/dashboard");
-    }
-  }, [user, router, isHost]);
-
   const handlePublish = async () => {
     const result = await publishEventAction(event.slug);
     if (result.success) {
