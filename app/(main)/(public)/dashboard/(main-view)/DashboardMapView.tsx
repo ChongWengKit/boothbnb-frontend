@@ -175,9 +175,6 @@ export default function DashboardMapView({ events: serverEvents }: { events: Eve
                 .leaflet-popup-tip-container, .leaflet-popup-close-button {
                     display: none !important;
                 }
-                .leaflet-container a {
-                    color: inherit !important;
-                }
     .leaflet-control-zoom {
     filter: invert(0) !important; /* Ensure no dark mode inversion is leaking in */
 }
