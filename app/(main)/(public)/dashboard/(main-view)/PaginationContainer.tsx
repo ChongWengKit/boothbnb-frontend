@@ -24,7 +24,7 @@ export default function PaginationContainer({ currentPage, totalPages, hasNextPa
     }
 
     return (
-        <div className="fixed bottom-[72px] left-0 right-0 py-2 border-t z-[1002] md:relative md:bottom-0 md:bg-transparent md:border-none md:z-auto">
+        <div className="fixed bottom-[72px] left-0 right-0 py-2 z-[1002] md:relative md:bottom-0 md:bg-transparent md:border-none md:z-auto">
             <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
