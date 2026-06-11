@@ -16,6 +16,7 @@ export async function getProfilePhoto() {
 export async function setProfilePhoto(url: string) {
   const cookieStore = await cookies();
   cookieStore.set('profile_photo', url, {
+    httpOnly: true,
     expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
     secure: true,
     sameSite: 'lax',
@@ -38,16 +39,34 @@ export async function setAuthToken(token: string, profile_photo?: string) {
   const cookieStore = await cookies();
   cookieStore.set('authentication_token', token, {
     expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    httpOnly: true,
     secure: true,
     sameSite: 'lax',
     path: '/'
   });
   if (profile_photo !== undefined) {
     cookieStore.set('profile_photo', profile_photo || '', {
+      httpOnly: true,
       expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
       secure: true,
       sameSite: 'lax',
       path: '/'
     });
   }
+}
+
+export async function setGoogleToken(token: string) {
+  const cookieStore = await cookies();
+  cookieStore.set('google_token', token, {
+    expires: new Date(Date.now() + 60 * 60 * 1000),
+    httpOnly: true,
+    secure: true,
+    sameSite: 'lax',
+    path: '/'
+  });
+}
+
+export async function getGoogleToken() {
+  const cookieStore = await cookies();
+  return cookieStore.get('google_token')?.value;
 }

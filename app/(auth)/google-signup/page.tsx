@@ -19,24 +19,15 @@ const GoogleSignup = () => {
   const { googleSignUp } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const googleCredential = searchParams.get('token');
-
-  useEffect(() => {
-    if (!googleCredential) {
-      router.push('/getstarted');
-    }
-  }, [googleCredential, router]);
 
   const methods = useForm<RoleSchemaType>({
     resolver: zodResolver(roleSchema)
   });
 
   const handleRoleSubmit = async (data: RoleSchemaType) => {
-    if (!googleCredential) return;
-    await googleSignUp(googleCredential, data.role);
+    await googleSignUp(data.role);
   };
 
-  if (!googleCredential) return null;
 
   return (
         <div className="bg-background p-8 rounded-2xl shadow-lg w-full max-w-md">

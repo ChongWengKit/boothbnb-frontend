@@ -1,6 +1,7 @@
 import toast from 'react-hot-toast';
 import { useHandleAuthSuccess } from '@/app/(auth)/hooks/useHandleAuthSuccess';
 import { useRouter } from 'next/navigation';
+import { getGoogleToken, setGoogleToken } from '@/app/contexts/auth';
 interface credentials {
   email: string;
   password: string;
@@ -53,31 +54,35 @@ export const useAuth = () => {
       const data = await res.json();
       if (res.ok) {
         handleAuthSuccess(data.data.authentication_token, data.data.profile_photo);
-      } else {
-        router.push(`/google-signup?token=${credential}`);
+      }
+      else if (res.status === 404) {
+        setGoogleToken(credential);
+        router.push(`/google-signup`);
+      }
+       else {
+        toast.error(data.message || 'Google Sign-In failed');
       }
     } catch (error) {
       toast.error('An error occurred during Google Sign-In.');
     }
   };
 
-  const googleSignUp = async (credential: string, role: string) => {
+  const googleSignUp = async (role: string) => {
     try {
       const res = await fetch(`${API_DOMAIN}/auth/google-signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token: credential, role }),
+        body: JSON.stringify({ token: await getGoogleToken(), role }),
       });
       const result = await res.json();
       if (!res.ok) return toast.error(result.message || 'Sign up failed');
       if (result.data.authentication_token) {
         await handleAuthSuccess(result.data.authentication_token, result.data.profile_photo, 'Sign up successful!');
       }
-      else if(role == "HOST")
-      {
+      else if (role == "HOST") {
         toast.success(result.message)
       }
-     
+
       return result;
     } catch (error) {
       toast.error('An error occurred during Google Sign-Up.');
