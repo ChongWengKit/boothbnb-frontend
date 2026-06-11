@@ -9,12 +9,14 @@ export default function AdminDashboardSearch() {
     const searchParams = useSearchParams();
     const [actionType, setActionType] = React.useState(searchParams.get("actionType") || "");
     const [search, setSearch] = React.useState(searchParams.get("search") || "");
+    const [status, setStatus] = React.useState(searchParams.get("status") || "");
 
     const handleApplyFilters = (e?: React.FormEvent) => {
         e?.preventDefault();
         const params = new URLSearchParams(searchParams.toString());
         if (search) params.set("search", search); else params.delete("search");
         if (actionType) params.set("actionType", actionType); else params.delete("actionType");
+        if (status) params.set("status", status); else params.delete("status");
         params.set("page", "1");
         router.push(`?${params.toString()}`);
     };
@@ -42,6 +44,18 @@ export default function AdminDashboardSearch() {
                     >
                         <option value="">All Actions</option>
                         <option value="HOST_APPROVAL">Host Approval</option>
+                    </select>
+                </div>
+                <div className="w-48">
+                    <select
+                        className="w-full rounded-lg border border-border bg-background px-4 py-1 text-foreground"
+                        value={status}
+                        onChange={(e) => setStatus(e.target.value)}
+                    >
+                        <option value="">All Status</option>
+                        <option value="PENDING">PENDING</option>
+                        <option value="APPROVED">APPROVED</option>
+                        <option value="REJECTED">REJECTED</option>
                     </select>
                 </div>
                 <Button type="submit" className="cursor-pointer">Filter</Button>

@@ -49,7 +49,7 @@ async function fetchAdminDashboard(searchParams: SearchParams, token: string | u
         if (searchParams.page) queryParams.set("page", searchParams.page);
         if (searchParams.search) queryParams.set("search", searchParams.search);
         if (searchParams.actionType) queryParams.set("actionType", searchParams.actionType);
-
+        if (searchParams.status) queryParams.set("status", searchParams.status);
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/admin?${queryParams.toString()}`, {
             headers: {
                 'Content-Type': 'application/json',

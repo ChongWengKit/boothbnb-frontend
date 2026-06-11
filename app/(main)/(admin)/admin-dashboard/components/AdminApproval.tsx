@@ -60,8 +60,7 @@ const AdminApproval: React.FC<AdminApprovalProps> = ({ requests: initialRequests
     if (requests.length === 0) {
         return (
             <div className="mt-8 rounded-lg border-2 border-dashed border-border bg-card py-20 text-center">
-                <p className="text-xl font-semibold text-foreground">No pending requests</p>
-                <p className="text-muted-foreground">Everything is currently up to date.</p>
+                <p className="text-xl font-semibold text-foreground">No requests found.</p>
             </div>
         );
     }
