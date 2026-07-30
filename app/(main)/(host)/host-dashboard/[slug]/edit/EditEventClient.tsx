@@ -1,17 +1,17 @@
 'use client'
-import { useForm, Controller, FormProvider } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useState } from "react";
+import React from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { format } from "date-fns";
-import { FormField } from "@/components/event-form/form-field";
-import { DateTimeSection } from "@/components/event-form//date-field";
+import { FormField } from "@/components/event-form/FormField";
+import { DateTimeSection } from "@/components/event-form/DateField";
 import ImageUploader from "@/app/(main)/(host)/components/ImageUploader";
 import { updateEventAction } from "./actions";
-import { LocationSection } from "@/components/event-form/location-field";
-import { BoothSection } from "@/components/event-form/booth-field";
+import { LocationSection } from "@/components/event-form/LocationField";
+import { BoothSection } from "@/components/event-form/BoothField";
 
 
 const combineDateTime = (date: Date, time: string) => {
@@ -27,8 +27,6 @@ const combineDateTime = (date: Date, time: string) => {
     }
     return combined.toISOString();
 };
-
-import { Booth } from "@/app/(main)/(host)/create-event/actions";
 
 const CATEGORIES = [
     { value: "ART_CRAFT", label: "Art & Craft" },
@@ -144,7 +142,7 @@ const EditEventClient: React.FC<EditEventClientProps> = ({ event }) => {
         }
     });
 
-    const { register, handleSubmit, formState: { errors }, setValue, watch } = methods;
+    const { register, handleSubmit, formState: { errors }, watch } = methods;
 
     const onSubmit = async (data: z.infer<typeof eventSchema>) => {
         try {

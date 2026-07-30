@@ -6,7 +6,7 @@ import { format } from "date-fns";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import { formatEventDate } from "@/app/lib/util";
-import PrintButton from "./components/printButton";
+import PrintButton from "./components/PrintButton";
 import ClientFormattedDate from "../../../../../components/ClientFormattedDate";
 
 export default async function BookingDetailPage({ params }: { params: Promise<{ id: string }> }) {

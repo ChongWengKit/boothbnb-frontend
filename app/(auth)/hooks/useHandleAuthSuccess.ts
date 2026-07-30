@@ -6,7 +6,6 @@ import { jwtDecode } from "jwt-decode";
 import toast from 'react-hot-toast';
 import type { User } from '@/app/contexts/UserContext';
 import { setAuthToken } from '@/app/contexts/auth';
-import { profile } from 'node:console';
 //test
 export const useHandleAuthSuccess = () => {
   const router = useRouter();

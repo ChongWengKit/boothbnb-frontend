@@ -1,4 +1,4 @@
-import DashboardEventDetailClient from "@/components/dashboard/eventSection";
+import DashboardEventDetailClient from "@/components/dashboard/EventSection";
 import { getAuthToken, validateResponse } from "@/app/contexts/auth";
 import { getCurrency } from "@/app/contexts/currency";
 import Link from "next/dist/client/link";

@@ -9,10 +9,10 @@ import toast from "react-hot-toast";
 import { format } from "date-fns";
 import { createEventAction } from "@/app/(main)/(host)/create-event/actions";
 import ImageUploader from "@/app/(main)/(host)/components/ImageUploader";
-import { FormField } from "@/components/event-form/form-field";
-import { DateTimeSection } from "@/components/event-form/date-field";
-import { LocationSection } from "@/components/event-form/location-field";
-import { BoothSection } from "@/components/event-form/booth-field";
+import { FormField } from "@/components/event-form/FormField";
+import { DateTimeSection } from "@/components/event-form/DateField";
+import { LocationSection } from "@/components/event-form/LocationField";
+import { BoothSection } from "@/components/event-form/BoothField";
 import { validateResponse } from "@/app/contexts/auth";
 
 const combineDateTime = (date: Date, time: string) => {

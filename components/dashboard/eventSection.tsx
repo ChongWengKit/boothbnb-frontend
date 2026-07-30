@@ -8,7 +8,7 @@ import { headers } from "next/headers";
 import { jwtDecode } from "jwt-decode";
 import Image from "next/image";
 import { EventCarousel } from "@/components/event-detail/Carousel";
-import BoothSection from "@/components/dashboard/boothSection";
+import BoothSection from "@/components/dashboard/BoothSection";
 import EventMap from "@/components/event-detail/EventMap";
 import BookmarkToggle from "@/components/dashboard/BookmarkToggle";
 import { User, useUserContext } from "@/app/contexts/UserContext";

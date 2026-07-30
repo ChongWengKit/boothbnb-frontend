@@ -1,6 +1,6 @@
 "use client";
 import { useUserContext } from "@/app/contexts/UserContext";
-import { useCurrency } from "@/app/contexts/currency-provider";
+import { useCurrency } from "@/app/contexts/CurrencyProvider";
 import { getAvailableCurrencies } from "@/app/actions/currency";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";

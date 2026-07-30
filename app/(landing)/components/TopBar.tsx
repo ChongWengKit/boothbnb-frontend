@@ -3,7 +3,6 @@ import { useState } from "react";
 import Link from "next/link";
 import { useUserContext } from "@/app/contexts/UserContext";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { Button } from "@/components/ui/button"; 
 
 export default function TopBar() {
     const { user, isLoading } = useUserContext();
