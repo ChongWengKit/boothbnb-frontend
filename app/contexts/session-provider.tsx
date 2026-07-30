@@ -1,8 +1,7 @@
 import React from 'react';
-import { cookies } from 'next/headers';
 import { jwtDecode } from "jwt-decode";
 import { UserProvider, type User } from "@/app/contexts/UserContext";
-import { getAuthToken, getProfilePhoto } from '../app/contexts/auth';
+import { getAuthToken, getProfilePhoto } from '@/app/contexts/auth';
 
 const SessionProvider = async ({ children }: { children: React.ReactNode }) => {
     const token = await getAuthToken();

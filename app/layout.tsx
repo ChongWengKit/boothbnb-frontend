@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import App from "./App";
-import SessionProvider from "../components/SessionProvider";
 import { Toaster } from "react-hot-toast";
-import { ThemeProvider } from "../components/theme-provider";
-import ThemeToggle from "../components/ThemeToggle";
 import "./globals.css";
 import NextTopLoader from "nextjs-toploader";
 const inter = Inter({

@@ -3,7 +3,7 @@ import { useFormContext } from "react-hook-form";
 import { Trash2, Plus } from "lucide-react";
 import { useRef } from "react";
 import { Booth } from "@/app/(main)/(host)/create-event/actions";
-import { useCurrency } from "@/components/CurrencyProvider";
+import { useCurrency } from "@/app/contexts/currency-provider";
 
 export const BoothSection = () => {
   const { watch, setValue } = useFormContext();

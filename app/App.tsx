@@ -3,10 +3,10 @@ import { SideBarProvider } from '@/app/contexts/SideBarContext';
 import GlobalInterceptor from '@/components/GlobalInterceptor';
 import { getSidebarCookie } from '@/app/contexts/sideBar';
 import ThemeToggle from '@/components/ThemeToggle';
-import { ThemeProvider } from '@/components/theme-provider';
-import SessionProvider from '@/components/SessionProvider';
+import { ThemeProvider } from '@/app/contexts/theme-provider';
+import SessionProvider from '@/app/contexts/session-provider';
 import { headers } from 'next/headers';
-import CurrencyProvider from '@/components/CurrencyProvider';
+import CurrencyProvider from '@/app/contexts/currency-provider';
 import { getCurrency } from './contexts/currency';
 async function App({ children }: { children: React.ReactNode }) {
   const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;

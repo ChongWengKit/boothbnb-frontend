@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { useCurrency } from "@/components/CurrencyProvider";
+import { useCurrency } from "@/app/contexts/currency-provider";
 import { IoClose } from "react-icons/io5";
 import { Spinner } from '@/components/ui/spinner';
 interface BoothLayoutViewerProps {

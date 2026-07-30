@@ -3,7 +3,6 @@
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import toast from 'react-hot-toast';
 
 export async function getAuthToken() {
   const cookieStore = await cookies();

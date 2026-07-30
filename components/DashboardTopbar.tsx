@@ -1,7 +1,7 @@
 "use client";
 import { useUserContext } from "@/app/contexts/UserContext";
-import { useCurrency } from "@/components/CurrencyProvider";
-import { getAvailableCurrencies } from "@/components/action";
+import { useCurrency } from "@/app/contexts/currency-provider";
+import { getAvailableCurrencies } from "@/app/actions/currency";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
