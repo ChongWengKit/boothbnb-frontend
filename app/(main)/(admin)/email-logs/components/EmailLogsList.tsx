@@ -56,7 +56,7 @@ const EmailLogsList: React.FC<EmailLogsListProps> = ({ logs }) => {
     }
 
     return (
-        <div className="flex flex-col gap-4 bg-secondary rounded-lg p-4">
+        <div className="flex flex-col gap-4 bg-secondary rounded-lg p-4 m-4">
             {logs.map((log) => (
                 <div key={log.id} className="grid grid-cols-1 items-center gap-4 rounded-xl border border-transparent bg-background p-6 transition-colors md:grid-cols-12 shadow-sm">
                     <div className="md:col-span-3 min-w-0">

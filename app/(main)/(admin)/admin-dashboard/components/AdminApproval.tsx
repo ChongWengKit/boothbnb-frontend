@@ -66,7 +66,7 @@ const AdminApproval: React.FC<AdminApprovalProps> = ({ requests: initialRequests
     }
 
     return (
-        <div className="flex flex-col gap-4 bg-secondary rounded-lg p-4">
+        <div className="flex flex-col gap-4 bg-secondary rounded-lg p-4 m-4">
             {requests.map((request) => (
                 <div key={request.id} className="grid grid-cols-1 items-center gap-4 rounded-xl border border-transparent bg-background p-6 transition-colors md:grid-cols-12">
                     <div className="md:col-span-4 min-w-0">
