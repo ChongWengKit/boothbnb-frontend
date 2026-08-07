@@ -95,7 +95,7 @@ async function Landing() {
                 </section>
 
                 <section className="mx-8 flex flex-col items-center py-20" aria-labelledby="suitable-heading">
-                    <h2 id="suitable-heading" className="mb-10 text-3xl font-bold text-primary-foreground">Suitable for</h2>
+                    <h2 id="suitable-heading" className="mb-10 text-3xl font-bold text-white">Suitable for</h2>
                     <div className="flex flex-col md:flex-row gap-6 md:gap-8 px-8 w-full max-w-4xl justify-center">
                         {['Event', 'Exhibition', 'Food & Beverage'].map((item, index) => (
                             <article key={index} className="rounded-xl border-2 border-border bg-card p-6 text-center text-xl font-bold text-card-foreground shadow-lg transition-shadow hover:shadow-2xl md:p-8">
