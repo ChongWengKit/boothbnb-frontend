@@ -223,5 +223,5 @@ export default async function DashboardEventDetailClient({
                 </div>
             </div>
         </>
-    );
+    )
 }
