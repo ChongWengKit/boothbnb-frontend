@@ -89,12 +89,6 @@ const EmailLogsList: React.FC<EmailLogsListProps> = ({ logs }) => {
                     </div>
 
                     <div className="md:col-span-2 flex md:justify-end gap-2">
-
-                        {log.status === "SUCCESSFUL" && (
-                            <div className="bg-green-500/10 border border-green-500/20 p-2 rounded-lg">
-                                <p className="text-green-600 text-xs font-bold text-center">Sent</p>
-                            </div>
-                        )}
                         {(log.status === "SUCCESSFUL" || log.status === "FAILED") && (
                             <Button
                                 className="text-xs cursor-pointer"
