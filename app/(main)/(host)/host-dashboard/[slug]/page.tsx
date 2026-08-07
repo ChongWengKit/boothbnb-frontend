@@ -32,7 +32,7 @@ export default async function DashboardEventDetailPage({ params }: { params: Pro
             <Link href="/host-dashboard" className="m-8 flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground">
                 <IoArrowBack /> Back to dashboard
             </Link>
-            <DashboardEventDetailClient event={event} isHost={true} isHostDashboard={true} />;
+            <DashboardEventDetailClient event={event} isHost={true} isHostDashboard={true} />
         </>
     )
 }
