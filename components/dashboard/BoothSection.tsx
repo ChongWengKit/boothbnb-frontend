@@ -179,7 +179,7 @@ export default function BoothSection({ event, isHost = false, isOwner = false, i
         <div className="flex flex-col gap-3">
           <button
             onClick={() => setIsLayoutOpen(true)}
-            className="w-full rounded-lg bg-primary py-4 font-bold text-primary-foreground transition-colors hover:bg-primary/90"
+            className="w-full rounded-lg bg-primary py-4 font-bold text-primary-foreground transition-colors hover:bg-primary/90 cursor-pointer"
           >
             {isOwner ? "View Booths" : "View & Book Booths"}
           </button>
@@ -194,7 +194,7 @@ export default function BoothSection({ event, isHost = false, isOwner = false, i
                   onMouseEnter={() => setHoveredButton('publish')}
                   onMouseLeave={() => setHoveredButton(null)}
                   disabled={isStatusUpdating}
-                  className="flex w-full items-center justify-center rounded-lg bg-primary py-3 font-semibold text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-70"
+                  className="flex w-full items-center justify-center rounded-lg bg-primary py-3 font-semibold text-primary-foreground transition-colors hover:bg-primary/90 cursor-pointer disabled:cursor-not-allowed disabled:opacity-70"
                 >
                   {isStatusUpdating ? (
                     <span className="flex items-center gap-2">
@@ -211,7 +211,7 @@ export default function BoothSection({ event, isHost = false, isOwner = false, i
                   onMouseEnter={() => setHoveredButton('status')}
                   onMouseLeave={() => setHoveredButton(null)}
                   disabled={isStatusUpdating}
-                  className={`flex w-full items-center justify-center rounded-lg py-3 font-semibold text-white transition-colors disabled:cursor-not-allowed disabled:opacity-70 ${eventStatus === "PUBLISHED" ? "bg-green-600 hover:bg-red-600" : "bg-red-600 hover:bg-green-600"}`}
+                  className={`flex w-full items-center justify-center rounded-lg py-3 font-semibold text-white transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-70 ${eventStatus === "PUBLISHED" ? "bg-green-600 hover:bg-red-600" : "bg-red-600 hover:bg-green-600"}`}
                 >
                   {isStatusUpdating ? (
                     <span className="flex items-center gap-2">
@@ -248,7 +248,7 @@ export default function BoothSection({ event, isHost = false, isOwner = false, i
         <div className="flex flex-col gap-3">
           <button
             onClick={() => setIsLayoutOpen(true)}
-            className="w-full rounded-lg bg-primary py-2 font-bold text-primary-foreground transition-all active:scale-[0.98]"
+            className="w-full rounded-lg bg-primary py-2 font-bold text-primary-foreground transition-all active:scale-[0.98] cursor-pointer"
           >
             View & Book Booths
           </button>
@@ -260,7 +260,7 @@ export default function BoothSection({ event, isHost = false, isOwner = false, i
                   <button
                     onClick={handlePublish}
                     disabled={isStatusUpdating}
-                    className="flex w-full items-center justify-center rounded-lg bg-primary py-3 text-xs font-semibold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-70"
+                    className="flex w-full items-center justify-center rounded-lg bg-primary py-3 text-xs font-semibold text-primary-foreground cursor-pointer disabled:cursor-not-allowed disabled:opacity-70"
                   >
                     {isStatusUpdating ? (
                       <span className="flex items-center gap-2">
@@ -287,7 +287,7 @@ export default function BoothSection({ event, isHost = false, isOwner = false, i
                     )}
                   </button>
                 )}
-                <button onClick={handleExportCSV} className="w-full rounded-lg border border-border py-3 text-xs font-semibold text-foreground curosr-pointer">
+                <button onClick={handleExportCSV} className="w-full rounded-lg border border-border py-3 text-xs font-semibold text-foreground cursor-pointer">
                   Export CSV
                 </button>
               </div>
