@@ -45,7 +45,7 @@ export default function EmailLogsSearch() {
                         <option value="SUCCESSFUL">Successful</option>
                         <option value="FAILED">Failed</option>
                         <option value="BOUNCED">Bounced</option>
-                        <option value="COMPLAINED">Completed</option>
+                        <option value="COMPLAINED">Complained</option>
 
                     </select>
                 </div>
