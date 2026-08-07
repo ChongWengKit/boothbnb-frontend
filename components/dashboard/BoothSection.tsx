@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import dynamic from "next/dynamic";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { useUserContext } from "@/app/contexts/UserContext";
 
@@ -54,26 +54,45 @@ export default function BoothSection({ event, isHost = false, isOwner = false, i
   const { user } = useUserContext();
   const [isLayoutOpen, setIsLayoutOpen] = useState(false);
   const [hoveredButton, setHoveredButton] = useState<string | null>(null);
-
+  const [eventStatus, setEventStatus] = useState(event.status);
+  const [isStatusUpdating, setIsStatusUpdating] = useState(false);
 
   const handlePublish = async () => {
+    if (isStatusUpdating) return;
+
+    const previousStatus = eventStatus;
+    setIsStatusUpdating(true);
+    setEventStatus("PUBLISHED");
+
     const result = await publishEventAction(event.slug);
+
     if (result.success) {
       toast.success("Event published successfully");
-      router.refresh();
     } else {
+      setEventStatus(previousStatus);
       toast.error(result.message);
     }
+
+    setIsStatusUpdating(false);
   };
 
   const handleClose = async () => {
+    if (isStatusUpdating) return;
+
+    const previousStatus = eventStatus;
+    setIsStatusUpdating(true);
+    setEventStatus("CLOSED");
+
     const result = await closeEventAction(event.slug);
+
     if (result.success) {
       toast.success("Event closed successfully");
-      router.refresh();
     } else {
+      setEventStatus(previousStatus);
       toast.error(result.message);
     }
+
+    setIsStatusUpdating(false);
   };
 
   const handleExportCSV =async  () => {
@@ -81,7 +100,7 @@ export default function BoothSection({ event, isHost = false, isOwner = false, i
 
     const summary = [
       ["Event Report", `"${event.title}"`],
-      ["Event Status", `"${event.status}"`],
+      ["Event Status", `"${eventStatus}"`],
       ["Booth Capacity", `"${event.available_booths} / ${event.total_capacity}"`],
       ["Generated At", `"${new Date().toLocaleString()}"`],
       [""]
@@ -169,31 +188,47 @@ export default function BoothSection({ event, isHost = false, isOwner = false, i
             <div className="flex flex-col gap-3 mt-4 pt-4 border-t">
               <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Admin Tools</p>
 
-              {event.status === "DRAFT" ? (
+              {eventStatus === "DRAFT" ? (
                 <button
                   onClick={handlePublish}
                   onMouseEnter={() => setHoveredButton('publish')}
                   onMouseLeave={() => setHoveredButton(null)}
-                  className="w-full rounded-lg bg-primary py-3 font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+                  disabled={isStatusUpdating}
+                  className="flex w-full items-center justify-center rounded-lg bg-primary py-3 font-semibold text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-70"
                 >
-                  {hoveredButton === 'publish' ? "Confirm Publish" : "Publish Event"}
+                  {isStatusUpdating ? (
+                    <span className="flex items-center gap-2">
+                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                      Updating...
+                    </span>
+                  ) : (
+                    hoveredButton === 'publish' ? "Confirm Publish" : "Publish Event"
+                  )}
                 </button>
               ) : (
                 <button
-                  onClick={event.status === "PUBLISHED" ? handleClose : handlePublish}
+                  onClick={eventStatus === "PUBLISHED" ? handleClose : handlePublish}
                   onMouseEnter={() => setHoveredButton('status')}
                   onMouseLeave={() => setHoveredButton(null)}
-                  className={`w-full rounded-lg py-3 font-semibold text-white transition-colors ${event.status === "PUBLISHED" ? "bg-green-600 hover:bg-red-600" : "bg-red-600 hover:bg-green-600"}`}
+                  disabled={isStatusUpdating}
+                  className={`flex w-full items-center justify-center rounded-lg py-3 font-semibold text-white transition-colors disabled:cursor-not-allowed disabled:opacity-70 ${eventStatus === "PUBLISHED" ? "bg-green-600 hover:bg-red-600" : "bg-red-600 hover:bg-green-600"}`}
                 >
-                  {hoveredButton === 'status'
-                    ? (event.status === "PUBLISHED" ? "Close Event" : "Open Event")
-                    : (event.status === "PUBLISHED" ? "Status: Live" : "Status: Closed")}
+                  {isStatusUpdating ? (
+                    <span className="flex items-center gap-2">
+                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                      Updating...
+                    </span>
+                  ) : (
+                    hoveredButton === 'status'
+                      ? (eventStatus === "PUBLISHED" ? "Close Event" : "Open Event")
+                      : (eventStatus === "PUBLISHED" ? "Status: Live" : "Status: Closed")
+                  )}
                 </button>
               )}
 
               <button
                 onClick={handleExportCSV}
-                className="w-full rounded-lg border border-border py-3 font-semibold text-foreground hover:bg-accent"
+                className="w-full rounded-lg border border-border py-3 font-semibold text-foreground cursor-pointer hover:bg-accent"
               >
                 Export Sales (CSV)
               </button>
@@ -221,19 +256,38 @@ export default function BoothSection({ event, isHost = false, isOwner = false, i
           {isHost && isOwner && isHostDashboard && (
             <div className="flex flex-col gap-3 mt-2 pt-4 border-t">
               <div className="grid grid-cols-2 gap-3">
-                {event.status === "DRAFT" ? (
-                  <button onClick={handlePublish} className="w-full rounded-lg bg-primary py-3 text-xs font-semibold text-primary-foreground">
-                    Publish Event
+                {eventStatus === "DRAFT" ? (
+                  <button
+                    onClick={handlePublish}
+                    disabled={isStatusUpdating}
+                    className="flex w-full items-center justify-center rounded-lg bg-primary py-3 text-xs font-semibold text-primary-foreground disabled:cursor-not-allowed disabled:opacity-70"
+                  >
+                    {isStatusUpdating ? (
+                      <span className="flex items-center gap-2">
+                        <span className="h-3 w-3 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                        Updating...
+                      </span>
+                    ) : (
+                      "Publish Event"
+                    )}
                   </button>
                 ) : (
                   <button
-                    onClick={event.status === "PUBLISHED" ? handleClose : handlePublish}
-                    className={`w-full rounded-lg py-3 text-xs font-semibold text-white ${event.status === "PUBLISHED" ? "bg-green-600" : "bg-red-600"}`}
+                    onClick={eventStatus === "PUBLISHED" ? handleClose : handlePublish}
+                    disabled={isStatusUpdating}
+                    className={`flex w-full items-center justify-center rounded-lg py-3 text-xs font-semibold text-white cursor-pointer disabled:cursor-not-allowed disabled:opacity-70 ${eventStatus === "PUBLISHED" ? "bg-green-600" : "bg-red-600"}`}
                   >
-                    {event.status === "PUBLISHED" ? "Status: Live" : "Status: Closed"}
+                    {isStatusUpdating ? (
+                      <span className="flex items-center gap-2">
+                        <span className="h-3 w-3 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                        Updating...
+                      </span>
+                    ) : (
+                      eventStatus === "PUBLISHED" ? "Status: Live" : "Status: Closed"
+                    )}
                   </button>
                 )}
-                <button onClick={handleExportCSV} className="w-full rounded-lg border border-border py-3 text-xs font-semibold text-foreground">
+                <button onClick={handleExportCSV} className="w-full rounded-lg border border-border py-3 text-xs font-semibold text-foreground curosr-pointer">
                   Export CSV
                 </button>
               </div>
