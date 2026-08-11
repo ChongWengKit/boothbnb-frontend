@@ -82,8 +82,6 @@ export const BoothSection = () => {
                     className="rounded-md border border-border bg-background px-2 py-1 text-xs font-bold uppercase text-foreground focus:ring-1 focus:ring-ring"
                   >
                     <option value="AVAILABLE">Available</option>
-                    <option value="RESERVED">Reserved</option>
-                    <option value="SOLD">Sold</option>
                     <option value="LOCKED">Locked</option>
                   </select>
 

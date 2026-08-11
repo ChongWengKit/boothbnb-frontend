@@ -31,7 +31,7 @@ const combineDateTime = (date: Date, time: string) => {
 const boothSchema = z.object({
     id: z.string(),
     name: z.string().min(1, "Booth name is required"),
-    type: z.enum(["AVAILABLE", "RESERVED", "SOLD", "LOCKED"]),
+    type: z.enum(["AVAILABLE", "LOCKED"]),
     price: z.number().min(0),
     width: z.number().min(1),
     height: z.number().min(1),
