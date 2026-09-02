@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useState } from "react";
+import React from "react";
 import EventResultsList from "@/app/(main)/(public)/components/EventResultsList";
-import { useToggleBookmark } from "@/app/(main)/(vendor)/actions/useToggleBookmark";
 import { useUserContext } from "@/app/contexts/UserContext";
 import type { Event } from "@/app/(main)/(vendor)/actions/useBookmarks";
 import { Button } from "@/components/ui/button";
@@ -12,30 +11,11 @@ import dynamic from "next/dynamic";
 
 const DashboardMapView = dynamic(() => import("./DashboardMapView"), { ssr: false });
 
-export default function EventResultsContainer({ initialEvents, initialBookmarks, totalItems }: { initialEvents: Event[], initialBookmarks: Event[], totalItems: number}) {
+export default function EventResultsContainer({ initialEvents, totalItems }: { initialEvents: Event[], totalItems: number}) {
     const router = useRouter();
     const searchParams = useSearchParams();
     const viewMode = (searchParams.get("view") as 'list' | 'map') || 'list';
-    const [bookmarks, setBookmarks] = useState<Event[]>(initialBookmarks);
-    const { toggleBookmark } = useToggleBookmark();
     const { user } = useUserContext();
-
-    const handleToggleBookmark = async (event: Event) => {
-        const isBookmarked = bookmarks.some((b) => b.id === event.id);
-        const originalBookmarks = [...bookmarks];
-
-        if (isBookmarked) {
-            setBookmarks(prev => prev.filter(b => b.id !== event.id));
-        } else {
-            setBookmarks(prev => [...prev, event]);
-        }
-
-        try {
-            await toggleBookmark(event, isBookmarked);
-        } catch (error) {
-            setBookmarks(originalBookmarks);
-        }
-    };
 
     const handleToggleView = () => {
         const nextMode = viewMode === 'list' ? 'map' : 'list';
@@ -79,8 +59,7 @@ export default function EventResultsContainer({ initialEvents, initialBookmarks,
                     emptyTitle="No events found"
                     emptySubtitle="Try adjusting your search area or dates."
                     title={totalItems> 0 ? `Found ${totalItems} events` : undefined}
-                    bookmarks={bookmarks}
-                    onToggleBookmark={user?.role !== 'HOST' ? handleToggleBookmark : undefined}
+                    enableBookmark={user?.role === 'VENDOR'}
                 />
             ) : (
                 <DashboardMapView events={initialEvents} />

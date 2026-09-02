@@ -10,8 +10,8 @@ interface EventResultsListProps {
   emptyTitle: string;
   emptySubtitle: string;
   title?: string;
-  bookmarks?: Event[];
-  onToggleBookmark?: (event: Event) => void;
+  enableBookmark?: boolean;
+  onBookmarkChange?: (event: Event, isBookmarked: boolean) => void;
   showStatus?: boolean;
   className?: string;
   baseUrl?: string;
@@ -23,8 +23,8 @@ const EventResultsList: React.FC<EventResultsListProps> = ({
   emptyTitle,
   emptySubtitle,
   title,
-  bookmarks = [],
-  onToggleBookmark,
+  enableBookmark = false,
+  onBookmarkChange,
   showStatus = false,
   className = "m-2 rounded-lg bg-card p-4",
   baseUrl = "dashboard"
@@ -54,8 +54,8 @@ const EventResultsList: React.FC<EventResultsListProps> = ({
           <Link key={event.id} href={`/${baseUrl}/${event.slug}`}>
             <EventCard
               event={event}
-              isBookmarked={bookmarks.some((b) => b.id === event.id)}
-              onToggleBookmark={onToggleBookmark}
+              enableBookmark={enableBookmark}
+              onBookmarkChange={onBookmarkChange}
               showStatus={showStatus}
             />
           </Link>

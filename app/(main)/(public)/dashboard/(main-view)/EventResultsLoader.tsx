@@ -1,9 +1,8 @@
 import React from "react";
-import { getAuthToken, validateResponse } from "@/app/contexts/auth";
+import { getAuthToken } from "@/app/contexts/auth";
 import type { Event } from "@/app/(main)/(vendor)/actions/useBookmarks";
 import EventResultsContainer from "./EventResultsContainer";
 import PaginationContainer from "./PaginationContainer";
-import { Spinner } from "@/components/ui/spinner";
 
 interface PaginationMeta {
     totalItems: number;
@@ -40,25 +39,6 @@ const paginationMetaDefault: PaginationMeta = {
     hasNextPage: false,
     hasPreviousPage: false,
 };
-
-async function fetchBookmarks(token: string | undefined): Promise<number[]> {
-    if (!token) return [];
-    try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/bookmark/favorite-id`, {
-            headers: token ? { Authorization: `bearer ${token}` } : {},
-            cache: 'no-store'
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            return data.data || [];
-        }
-
-        await validateResponse(response.status);
-    } catch (e) {
-    }
-    return [];
-}
 
 async function fetchEvents(searchParams: SearchParams, token: string | undefined): Promise<{ data: Event[]; meta: PaginationMeta }> {
     try {
@@ -103,17 +83,13 @@ async function fetchEvents(searchParams: SearchParams, token: string | undefined
 export default async function EventResultsLoader({ searchParams }: { searchParams: SearchParams }) {
     const token = await getAuthToken();
 
-    const [eventsResult, bookmarksResult] = await Promise.all([
-        fetchEvents(searchParams, token),
-        fetchBookmarks(token)
-    ]);
+    const eventsResult = await fetchEvents(searchParams, token);
     const events = eventsResult.data;
     const paginationMeta = eventsResult.meta;
-    const bookmarks = bookmarksResult.map((id: number) => ({ id } as Event));
 
     return (
         <>
-            <EventResultsContainer initialEvents={events} initialBookmarks={bookmarks} totalItems={paginationMeta.totalItems} />
+            <EventResultsContainer initialEvents={events} totalItems={paginationMeta.totalItems} />
             <PaginationContainer
                 currentPage={paginationMeta.currentPage}
                 totalPages={paginationMeta.totalPages}

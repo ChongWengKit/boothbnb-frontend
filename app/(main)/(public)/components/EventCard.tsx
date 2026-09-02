@@ -1,7 +1,10 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import { Toggle } from '@/components/ui/toggle';
 import { BookmarkIcon } from 'lucide-react';
 import type { Event } from '@/app/(main)/(vendor)/actions/useBookmarks';
+import { useToggleBookmark } from '@/app/(main)/(vendor)/actions/useToggleBookmark';
 import Image from "next/image";
 import ClientFormattedDate from '@/components/ClientFormattedDate';
 
@@ -16,20 +19,33 @@ export type EventStatus = keyof typeof statusConfig;
 
 interface EventCardProps {
   event: Event & { status?: EventStatus };
-  isBookmarked?: boolean;
-  onToggleBookmark?: (event: Event) => void;
+  enableBookmark?: boolean;
+  onBookmarkChange?: (event: Event, isBookmarked: boolean) => void;
   showStatus?: boolean;
   variant?: 'grid' | 'horizontal';
 }
 
 const EventCard: React.FC<EventCardProps> = ({
   event,
-  isBookmarked,
-  onToggleBookmark,
+  enableBookmark = false,
+  onBookmarkChange,
   showStatus = false,
   variant = 'grid'
 }) => {
   const isHorizontal = variant === 'horizontal';
+  const { toggleBookmark } = useToggleBookmark();
+  const [isBookmarked, setIsBookmarked] = useState<boolean>(() => event.is_bookmarked ?? false);
+
+  const handleToggleBookmark = async () => {
+    const prevIsBookmarked = isBookmarked;
+    setIsBookmarked(!prevIsBookmarked);
+    try {
+      await toggleBookmark(event, prevIsBookmarked);
+      onBookmarkChange?.(event, !prevIsBookmarked);
+    } catch {
+      setIsBookmarked(prevIsBookmarked);
+    }
+  };
 
   return (
     <div className={`group flex w-full rounded-lg bg-card p-4 shadow-md transition-all hover:shadow-lg ${isHorizontal ? 'flex-col gap-4 lg:h-44 lg:flex-row' : 'h-full flex-col'}`}>
@@ -44,7 +60,7 @@ const EventCard: React.FC<EventCardProps> = ({
         ) : (
           <div className=" w-full h-full bg-secondary rounded-t-lg"></div>
         )}
-        {onToggleBookmark && (
+        {enableBookmark && (
           <div className="absolute top-0 right-0 p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
             onClick={(e) => {
               e.preventDefault();
@@ -56,7 +72,7 @@ const EventCard: React.FC<EventCardProps> = ({
               variant="outline"
               className="cursor-pointer bg-background hover:bg-muted"
               pressed={isBookmarked}
-              onPressedChange={() => onToggleBookmark(event)}
+              onPressedChange={handleToggleBookmark}
             >
               <BookmarkIcon className="group-data-[state=on]/toggle:fill-foreground" />
             </Toggle>

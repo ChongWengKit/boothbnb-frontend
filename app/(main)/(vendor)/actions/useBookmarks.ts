@@ -14,6 +14,7 @@ export interface Event {
   available_booths: number;
   latitude: number;
   longitude: number;
+  is_bookmarked?: boolean;
 }
 
 export const useBookmarks = () => {

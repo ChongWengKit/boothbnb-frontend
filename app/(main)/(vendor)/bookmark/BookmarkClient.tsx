@@ -2,11 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import toast from "react-hot-toast";
 import EventResultsList from "@/app/(main)/(public)/components/EventResultsList";
 import Pagination from "@/components/Pagination";
 import type { Event } from "@/app/(main)/(vendor)/actions/useBookmarks";
-import { useToggleBookmark} from "@/app/(main)/(vendor)/actions/useToggleBookmark";
 
 interface PaginationMeta {
     totalItems: number;
@@ -27,8 +25,7 @@ const BookmarkClient: React.FC<BookmarkClientProps> = ({ initialBookmarks, pagin
     const searchParams = useSearchParams();
     const [bookmarks, setBookmarks] = useState<Event[]>(() => initialBookmarks);
     const lastProcessedInitialBookmarksRef = React.useRef<Event[]>(initialBookmarks);
-    const { toggleBookmark } = useToggleBookmark();
-    
+
     useEffect(() => {
 
         const hasContentChanged = initialBookmarks.length !== lastProcessedInitialBookmarksRef.current.length ||
@@ -40,17 +37,9 @@ const BookmarkClient: React.FC<BookmarkClientProps> = ({ initialBookmarks, pagin
         }
     }, [initialBookmarks]); 
 
-    const handleToggleBookmark = async (eventToToggle: Event) => {
-
-        const originalBookmarks = [...bookmarks];
-        
-        setBookmarks(prev => prev.filter(b => b.id !== eventToToggle.id));
-
-        try {
-            await toggleBookmark(eventToToggle, true);
-        } catch (error) {
-            toast.error('Failed to update bookmark');
-            setBookmarks(originalBookmarks);
+    const handleBookmarkChange = (eventToToggle: Event, isNowBookmarked: boolean) => {
+        if (!isNowBookmarked) {
+            setBookmarks(prev => prev.filter(b => b.id !== eventToToggle.id));
         }
     };
 
@@ -68,8 +57,8 @@ const BookmarkClient: React.FC<BookmarkClientProps> = ({ initialBookmarks, pagin
                 emptyTitle="No bookmarks found"
                 emptySubtitle="Try bookmarking some events."
                 title="Your Bookmarks"
-                bookmarks={bookmarks}
-                onToggleBookmark={handleToggleBookmark}
+                enableBookmark
+                onBookmarkChange={handleBookmarkChange}
             />
             {paginationMeta && (
                 <Pagination
