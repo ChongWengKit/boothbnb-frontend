@@ -147,6 +147,7 @@ export default function AccountDetailClient({ account, paginationMeta }: { accou
                         emptyTitle="No events found"
                         emptySubtitle="Try adjusting your search area or dates."
                         title={"Listing"}
+                        enableBookmark={user?.role === 'VENDOR'}
                     />
                     {paginationMeta && (
                         <Pagination
