@@ -49,7 +49,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ maxImages = 5 }) => {
           <p className="text-sm text-foreground">
             <span className="font-semibold">
               {isUploading ? "Uploading..." : "Click to upload"}
-            </span> (png, jpeg, webp, max 5MB)
+            </span> (png, jpeg, webp, max 10MB)
           </p>
         </div>
 

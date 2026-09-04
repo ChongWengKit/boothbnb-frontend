@@ -55,7 +55,7 @@ export default function AccountDetailClient({ account, paginationMeta }: { accou
         const file = e.target.files?.[0];
         if (!file) return;
 
-        const url = await uploadFile(file);
+        const url = await uploadFile(file, { folder: 'Avatars' });
         if (url) {
             setTempPhoto(url);
             toast.success("Photo uploaded! Click save to update profile.");

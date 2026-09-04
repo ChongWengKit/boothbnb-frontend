@@ -1,30 +1,33 @@
-'use client'
+'use client';
 
 import { useState } from 'react';
-import { getAuthToken, validateResponse } from '@/app/contexts/auth';
+import { getAuthToken } from '@/app/contexts/auth';
+
 interface UseCloudinaryUpload {
   isUploading: boolean;
-  uploadFile: (file: File) => Promise<string | undefined>;
+  uploadFile: (file: File, options?: { folder?: string }) => Promise<string | undefined>;
 }
+
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+const MAX_SIZE = 10 * 1024 * 1024; 
+const DEFAULT_FOLDER = 'Events';
 
 export const useCloudinaryUpload = (): UseCloudinaryUpload => {
   const [isUploading, setIsUploading] = useState(false);
 
-  const uploadFile = async (file: File): Promise<string | undefined> => {
+  const uploadFile = async (file: File, options?: { folder?: string }): Promise<string | undefined> => {
     setIsUploading(true);
     try {
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-      if (!allowedTypes.includes(file.type)) {
-        alert("Only JPG, PNG, and WebP are allowed.");
+      if (!ALLOWED_TYPES.includes(file.type)) {
+        alert("Only JPG, PNG,and WebP are allowed.");
         return undefined;
       }
-      const maxSize = 5 * 1024 * 1024;
-      if (file.size > maxSize) {
-        alert("File is too heavy. Keep it under 5MB.");
+      if (file.size > MAX_SIZE) {
+        alert("File is too heavy. Keep it under 10MB.");
         return undefined;
       }
       const timestamp = Math.floor(Date.now() / 1000);
-      const folder = 'Events';
+      const folder = options?.folder ?? DEFAULT_FOLDER;
       const token = await getAuthToken();
       const signatureResponse = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/upload/signature`, {
         method: 'POST',
@@ -40,13 +43,14 @@ export const useCloudinaryUpload = (): UseCloudinaryUpload => {
       }
 
       const signatureData = await signatureResponse.json();
-      const { signature } = signatureData.data;
+      const { signature, allowedFormats } = signatureData.data;
 
       const formData = new FormData();
       formData.append('file', file);
       formData.append('api_key', process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY || '');
       formData.append('timestamp', String(timestamp));
       formData.append('folder', folder);
+      formData.append('allowed_formats', allowedFormats.join(','));
       formData.append('signature', signature);
 
       const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
@@ -55,19 +59,16 @@ export const useCloudinaryUpload = (): UseCloudinaryUpload => {
         method: 'POST',
         body: formData,
       });
-
+      const uploadedImageData = await uploadResponse.json();
       if (!uploadResponse.ok) {
         throw new Error('Cloudinary upload failed.');
       }
-
-      const uploadedImageData = await uploadResponse.json();
-      return uploadedImageData.secure_url || uploadedImageData.url;
-    } catch (error) {
-      return undefined;
+      return uploadedImageData.secure_url || uploadedImageData.url; 
+    } catch {
+      return undefined; 
     } finally {
       setIsUploading(false);
     }
   };
-
   return { isUploading, uploadFile };
 };
