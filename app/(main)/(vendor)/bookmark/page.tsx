@@ -37,7 +37,8 @@ const Bookmark = async ({ searchParams }: PageProps) => {
     });
     await validateResponse(response.status);
     if (!response.ok) {
-        throw new Error(`Failed to fetch host events. Status: ${response.status}`);
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Something went wrong');
     }
     const data = await response.json();
     bookmarks = data.data || [];

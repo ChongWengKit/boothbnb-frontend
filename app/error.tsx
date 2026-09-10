@@ -3,6 +3,9 @@ export default function Error({ error, reset }: { error: Error; reset: () => voi
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <h2 className="text-xl font-bold">Something went wrong</h2>
+      {error.message && (
+        <p className="text-muted-foreground">{error.message}</p>
+      )}
       <button 
         onClick={() => reset()} 
         className="mt-4 p-2 bg-primary text-white rounded"

@@ -7,7 +7,8 @@ async function getAccountDetail(slug: string, page: string = '1') {
         cache: 'no-store'
     });
         if (!response.ok) {
-        throw new Error('Failed to fetch event');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Something went wrong');
     }
     const data = await response.json();
     return { 

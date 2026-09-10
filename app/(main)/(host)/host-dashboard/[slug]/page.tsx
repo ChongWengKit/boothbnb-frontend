@@ -17,7 +17,8 @@ async function getEvent(slug: string) {
     });
     await validateResponse(response.status);
     if (!response.ok) {
-        throw new Error('Failed to fetch event');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Something went wrong');
     }
     const data = await response.json();
     return data.data;
