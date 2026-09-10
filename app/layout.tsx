@@ -4,6 +4,7 @@ import App from "./App";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
 import NextTopLoader from "nextjs-toploader";
+import { getThemeCookie } from "./contexts/theme";
 const inter = Inter({
   subsets: ["latin"],
   display: "swap", 
@@ -14,16 +15,17 @@ export const metadata: Metadata = {
   title: "BoothBnb",
   description: "Unlock your own booth space in minutes. Host your event, exhibition, or food & beverage service with ease.",
 };
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const theme = await getThemeCookie();
   return (
 
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className={theme === 'dark' ? 'dark' : undefined} suppressHydrationWarning>
       <body className={inter.className}>
-        <App>{children}</App>
+        <App initialTheme={theme === 'dark' ? 'dark' : 'light'}>{children}</App>
         <NextTopLoader 
           color="var(--primary)" 
           showSpinner={false}

@@ -8,7 +8,7 @@ import SessionProvider from '@/app/contexts/SessionProvider';
 import { headers } from 'next/headers';
 import CurrencyProvider from '@/app/contexts/CurrencyProvider';
 import { getCurrency } from './contexts/currency';
-async function App({ children }: { children: React.ReactNode }) {
+async function App({ children, initialTheme }: { children: React.ReactNode; initialTheme: "light" | "dark" }) {
   const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
   const sidebarExpanded = await getSidebarCookie();
   const headersList = await headers();
@@ -20,7 +20,7 @@ async function App({ children }: { children: React.ReactNode }) {
         <GlobalInterceptor />
 
         <CurrencyProvider initialCountryCode={countryCode} initialCurrencyCode={currency}>
-          <ThemeProvider>
+          <ThemeProvider initialTheme={initialTheme}>
             <SideBarProvider initialExpanded={sidebarExpanded}>
               {children}
             </SideBarProvider>
