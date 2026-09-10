@@ -38,7 +38,12 @@ const Bookmark = async ({ searchParams }: PageProps) => {
     await validateResponse(response.status);
     if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Something went wrong');
+        return (
+            <div className="flex flex-col items-center justify-center h-screen">
+                <h2 className="text-xl font-bold">Something went wrong</h2>
+                <p className="text-muted-foreground">{errorData.message || 'Something went wrong'}</p>
+            </div>
+        );
     }
     const data = await response.json();
     bookmarks = data.data || [];

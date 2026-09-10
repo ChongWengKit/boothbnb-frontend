@@ -16,21 +16,32 @@ async function getEvent(slug: string) {
         headers,
     });
         await validateResponse(response.status);
+
     if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Something went wrong');
+        return { success: false, message: errorData.message || 'Something went wrong' };
     }
+
     const data = await response.json();
-    return data.data;
+    return { success: true, event: data.data };
 }
 
 export default async function DashboardEventDetailPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
-    const event = await getEvent(slug);
+    const result = await getEvent(slug);
+
+    if (!result.success) {
+        return (
+            <div className="flex flex-col items-center justify-center h-screen">
+                <h2 className="text-xl font-bold">Something went wrong</h2>
+                <p className="text-muted-foreground">{result.message}</p>
+            </div>
+        );
+    }
 
     return (<>
         <Link href="/dashboard" className="mx-4 my-8 md:mx-8 flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground">
             <IoArrowBack /> Back to dashboard
         </Link>
-        <DashboardEventDetailClient event={event} isHostDashboard={false} /></>);
+        <DashboardEventDetailClient event={result.event} isHostDashboard={false} /></>);
 }
