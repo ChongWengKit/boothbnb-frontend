@@ -67,7 +67,7 @@ export default function TopBar() {
                 </ul>
             </nav >
 
-            <nav className="relative z-50 flex justify-between items-center px-4 md:px-8 py-6 w-full" aria-label="Primary navigation">
+            <nav className="relative z-50 mx-auto flex w-full max-w-screen-2xl items-center justify-between px-4 md:px-8 py-6" aria-label="Primary navigation">
                 <div className="flex items-center gap-8">
                     <button
                         className="text-3xl text-white md:hidden cursor-pointer hover:opacity-80 transition-opacity flex-shrink-0"

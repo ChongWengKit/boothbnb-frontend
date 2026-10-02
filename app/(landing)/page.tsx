@@ -77,7 +77,7 @@ async function Landing() {
                     </div>
                 </section>
 
-                <section className="mx-4 md:mx-8 flex flex-col md:flex-row gap-8 py-8 px-4 md:px-8 bg-secondary rounded-3xl md:h-[650px]" aria-labelledby="latest-heading">
+                <section className="mx-auto flex w-full max-w-screen-2xl flex-col md:flex-row gap-8 py-8 px-4 md:px-8 bg-secondary rounded-3xl md:h-[650px]" aria-labelledby="latest-heading">
                     <div className="w-full overflow-hidden rounded-2xl border border-border bg-background shadow-inner aspect-square md:h-full md:flex-1 md:aspect-auto">
                         <EventMap zoom={1} events={events} interactive={false} />
                     </div>
@@ -94,7 +94,7 @@ async function Landing() {
                     </div>
                 </section>
 
-                <section className="mx-8 flex flex-col items-center py-20" aria-labelledby="suitable-heading">
+                <section className="mx-auto flex w-full max-w-screen-2xl flex-col items-center py-20" aria-labelledby="suitable-heading">
                     <h2 id="suitable-heading" className="mb-10 text-3xl font-bold text-white">Suitable for</h2>
                     <div className="flex flex-col md:flex-row gap-6 md:gap-8 px-8 w-full max-w-4xl justify-center">
                         {['Event', 'Exhibition', 'Food & Beverage'].map((item, index) => (
@@ -105,7 +105,7 @@ async function Landing() {
                     </div>
                 </section>
 
-                <section className="mx-8 mb-4 flex flex-col items-center justify-center rounded-xl bg-primary px-8 py-20 text-center text-primary-foreground" aria-labelledby="cta-heading">
+                <section className="mx-auto mb-4 flex w-full max-w-screen-2xl flex-col items-center justify-center rounded-xl bg-primary px-8 py-20 text-center text-primary-foreground" aria-labelledby="cta-heading">
                     <h2 id="cta-heading" className="text-2xl font-bold text-primary-foreground md:text-4xl">Have a space? Start Earning Today.</h2>
                     <Link href="/getstarted">
                         <button className="mt-8 cursor-pointer rounded-full border-2 border-primary-foreground/60 bg-background px-8 py-4 font-bold text-foreground shadow-lg transition-colors hover:bg-background/90">

@@ -10,7 +10,9 @@ const Navbar = ({ children }: React.PropsWithChildren) => {  return (
         <div className="flex min-h-screen">
           <DashboardSidebar />
           <main className="flex-1 min-w-0">
-            {children}
+            <div className="mx-auto h-full w-full max-w-screen-2xl">
+              {children}
+            </div>
           </main>
         </div>
       </RoleGuard>

@@ -15,7 +15,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
         />
       </div>
       <div className='h-[100dvh] flex flex-col'>
-        <header className="px-4 md:px-8 py-6">
+        <header className="mx-auto w-full max-w-screen-2xl px-4 md:px-8 py-6">
           <Link href="/" className="text-xl font-bold text-white tracking-tight md:text-2xl">
             BoothBnB
           </Link>
